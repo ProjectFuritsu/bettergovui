@@ -23,7 +23,7 @@ import {linkEntry} from "./link";
 import {listEntry} from "./list";
 import {loaderEntry} from "./loader";
 import {modalEntry} from "./modal";
-import {mobileNumberInputEntry, pesoInputEntry} from "./phfields";
+import {groupedNumberInputEntry, mobileNumberInputEntry, pesoInputEntry, philSysInputEntry, tinInputEntry} from "./phfields";
 import {navbarEntry} from "./navbar";
 import {paginationEntry} from "./pagination";
 import {progressEntry} from "./progress";
@@ -73,6 +73,7 @@ export const entries = [
     fieldsetEntry,
     fileUploadEntry,
     gridEntry,
+    groupedNumberInputEntry,
     groupEntry,
     headingEntry,
     inputEntry,
@@ -85,6 +86,7 @@ export const entries = [
     navbarEntry,
     paginationEntry,
     pesoInputEntry,
+    philSysInputEntry,
     progressEntry,
     radioEntry,
     scaffoldEntry,
@@ -97,6 +99,7 @@ export const entries = [
     tabsEntry,
     textEntry,
     textareaEntry,
+    tinInputEntry,
     toastEntry,
     tooltipEntry,
     // Blocks: the whole page first, then each section in the order it appears on a page

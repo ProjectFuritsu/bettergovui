@@ -74,6 +74,19 @@ export interface Messages {
         belowMin: (amount: string) => string;
         aboveMax: (amount: string) => string;
     };
+    /** GroupedNumberInput, when the number is incomplete */
+    idNumber: {
+        incomplete: string;
+    };
+    philsys: {
+        label: string;
+        invalid: string;
+    };
+    tin: {
+        label: string;
+        invalid: string;
+        invalidWithBranch: string;
+    };
     blocks: {
         faqTitle: string;
         newsTitle: string;
@@ -140,6 +153,18 @@ export const en: Messages = {
     peso: {
         belowMin: amount => `Enter at least ₱${amount}.`,
         aboveMax: amount => `Enter no more than ₱${amount}.`,
+    },
+    idNumber: {
+        incomplete: "Enter all the digits.",
+    },
+    philsys: {
+        label: "PhilSys Card Number (PCN)",
+        invalid: "Enter all 16 digits of your PhilSys Card Number.",
+    },
+    tin: {
+        label: "TIN",
+        invalid: "Enter the 9 digits of your TIN.",
+        invalidWithBranch: "Enter your 9-digit TIN and its branch code.",
     },
     blocks: {
         faqTitle: "Frequently asked questions",
@@ -209,6 +234,18 @@ export const fil: Messages = {
         belowMin: amount => `Maglagay ng hindi bababa sa ₱${amount}.`,
         aboveMax: amount => `Maglagay ng hindi hihigit sa ₱${amount}.`,
     },
+    idNumber: {
+        incomplete: "Ilagay ang lahat ng numero.",
+    },
+    philsys: {
+        label: "PhilSys Card Number (PCN)",
+        invalid: "Ilagay ang lahat ng 16 na numero ng iyong PhilSys Card Number.",
+    },
+    tin: {
+        label: "TIN",
+        invalid: "Ilagay ang 9 na numero ng iyong TIN.",
+        invalidWithBranch: "Ilagay ang iyong 9 na numerong TIN at ang branch code nito.",
+    },
     blocks: {
         faqTitle: "Mga madalas itanong",
         newsTitle: "Pinakabagong balita",
@@ -276,6 +313,18 @@ export const ceb: Messages = {
     peso: {
         belowMin: amount => `Isulod ang dili moubos sa ₱${amount}.`,
         aboveMax: amount => `Isulod ang dili molapas sa ₱${amount}.`,
+    },
+    idNumber: {
+        incomplete: "Isulod ang tanang numero.",
+    },
+    philsys: {
+        label: "PhilSys Card Number (PCN)",
+        invalid: "Isulod ang tanang 16 ka numero sa imong PhilSys Card Number.",
+    },
+    tin: {
+        label: "TIN",
+        invalid: "Isulod ang 9 ka numero sa imong TIN.",
+        invalidWithBranch: "Isulod ang imong 9 ka numero nga TIN ug ang branch code niini.",
     },
     blocks: {
         faqTitle: "Kanunay nga pangutana",

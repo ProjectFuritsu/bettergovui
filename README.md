@@ -2,7 +2,7 @@
 
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
-- **43 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
+- **46 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
 - **9 ready-made blocks:** header, hero, stats, features, news, FAQ, contact, call to action and footer, to build a page in minutes
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
@@ -15,7 +15,7 @@ Most UI kits are general-purpose. This one is made for one job: **public service
 
 - **Made for citizen services.** The blocks and examples speak the language of government sites: services and permits,
   advisories, office hours, fees in pesos. Dates are handled in local time (no "day before" bug from UTC) and shown in
-  Philippine formats. There are fields for Philippine addresses, mobile numbers and peso amounts.
+  Philippine formats. There are fields for Philippine addresses, mobile numbers, peso amounts, PhilSys and TIN numbers.
 - **In English, Filipino and Bisaya.** Every built-in text (buttons, messages, labels read by screen readers) comes in
   all three. One `LanguageProvider` switches them all.
 - **Accessible by default.** Text contrast is checked in light and dark mode, pages use real HTML landmarks
@@ -80,7 +80,7 @@ export function SignUp() {
 | Typography | `Text`, `Heading`, `Link`, `List` / `ListItem`, `Code`, `Kbd` |
 | Layout | `Scaffold` (`ScaffoldHeader`, `ScaffoldNavbar`, `ScaffoldMain`, `ScaffoldAside`, `ScaffoldFooter`, `ScaffoldBurger`), `Container`, `Stack`, `Group`, `Grid`, `Divider` |
 | Buttons | `Button` |
-| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset`, `AddressPicker`, `MobileNumberInput`, `PesoInput` |
+| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset`, `AddressPicker`, `MobileNumberInput`, `PesoInput`, `PhilSysInput`, `TinInput`, `GroupedNumberInput` |
 | Feedback | `Alert`, `Badge`, `Loader`, `Progress`, `Skeleton`, `Toast` (`Toaster` + `toast()`) |
 | Navigation | `Navbar` + `NavLink`, `Tabs` (`TabList`, `Tab`, `TabPanel`), `Breadcrumbs`, `Pagination`, `Stepper` (`Step`, `StepperCompleted`) |
 | Data display | `Table`, `Accordion` (`AccordionItem`), `Card` (`CardTitle`, `CardDescription`, `CardSection`, `CardFooter`), `Avatar`, `Tooltip` |
@@ -165,6 +165,14 @@ import { MobileNumberInput, PesoInput } from "bettergovregiondavaoui";
 |---|---|---|
 | `MobileNumberInput` | the digits after +63, plus `{ valid, e164 }` | `+639171234567` (empty until complete) |
 | `PesoInput` | the amount as a number, or `null` | `15000.00` (no ₱ or commas) |
+| `PhilSysInput` | the 16 digits of the PhilSys Card Number (PCN) | `1234567890123456` |
+| `TinInput` | the digits, plus `{ tin, branch }` split out | `123456789` (or with the branch code: `branchCode`) |
+| `GroupedNumberInput` | any number in digit groups, e.g. SSS `groups={[2, 7, 1]}`, PhilHealth `[2, 9, 1]`, Pag-IBIG `[4, 4, 4]` | the digits |
+
+**ID numbers are personal data.** Under the Data Privacy Act, only ask for the ones a service really needs, and
+don't keep them longer than necessary. These fields don't send the numbers anywhere; they only go where your form sends them.
+PhilSysInput asks for the 16-digit card number (PCN) printed on the PhilID, not the 12-digit PhilSys Number (PSN),
+which is meant to stay private.
 
 `Input` also has `prefix` and `suffix` now, for fixed text in the field: `<Input prefix="https://" suffix=".gov.ph" />`.
 

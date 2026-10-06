@@ -38,6 +38,8 @@ export { Grid } from "./components/Grid/Grid";
 export type { GridProps } from "./components/Grid/Grid";
 export { Group } from "./components/Group/Group";
 export type { GroupProps } from "./components/Group/Group";
+export { GroupedNumberInput, formatGroups } from "./components/IdNumberInput/GroupedNumberInput";
+export type { GroupedNumberInputProps } from "./components/IdNumberInput/GroupedNumberInput";
 export { Heading } from "./components/Heading/Heading";
 export type { HeadingProps, HeadingLevel } from "./components/Heading/Heading";
 export { Input } from "./components/Input/Input";
@@ -59,6 +61,8 @@ export { Pagination } from "./components/Pagination/Pagination";
 export type { PaginationProps, PaginationLabels } from "./components/Pagination/Pagination";
 export { PesoInput, formatPeso } from "./components/PesoInput/PesoInput";
 export type { PesoInputProps } from "./components/PesoInput/PesoInput";
+export { PhilSysInput } from "./components/IdNumberInput/PhilSysInput";
+export type { PhilSysInputProps } from "./components/IdNumberInput/PhilSysInput";
 export { Progress } from "./components/Progress/Progress";
 export type { ProgressProps } from "./components/Progress/Progress";
 export { Radio, RadioGroup } from "./components/Radio/Radio";
@@ -101,6 +105,8 @@ export type {
     TabsVariant,
     TabsOrientation,
 } from "./components/Tabs/Tabs";
+export { TinInput } from "./components/IdNumberInput/TinInput";
+export type { TinInputProps } from "./components/IdNumberInput/TinInput";
 export { Text } from "./components/Text/Text";
 export type { TextProps, TextWeight } from "./components/Text/Text";
 export { Textarea } from "./components/Textarea/Textarea";
