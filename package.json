@@ -2,7 +2,15 @@
   "name": "bettergovregiondavaoui",
   "version": "1.0.0",
   "description": "Accessible React UI components with light and dark themes, made for government web services in the Davao Region.",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProjectFuritsu/bettergovui.git"
+  },
+  "homepage": "https://github.com/ProjectFuritsu/bettergovui#readme",
+  "bugs": {
+    "url": "https://github.com/ProjectFuritsu/bettergovui/issues"
+  },
+  "license": "CC0-1.0",
   "author": "",
   "type": "commonjs",
   "main": "./dist/index.js",

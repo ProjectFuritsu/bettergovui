@@ -494,3 +494,8 @@ npm pack           # creates bettergovregiondavaoui-1.0.0.tgz
 ```
 
 Then, in the other app, run `npm install ../path/to/bettergovregiondavaoui-1.0.0.tgz`.
+
+## License
+
+[CC0 1.0 Universal](LICENSE): dedicated to the public domain. Anyone, including other government offices, may use,
+change and share this kit, for any purpose, without asking.
