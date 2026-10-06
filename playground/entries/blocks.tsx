@@ -1,5 +1,5 @@
 import {Award, CreditCard, FileText, HandCoins, House, Stamp} from "lucide-react";
-import {CtaBlock, FaqBlock, FeaturesBlock, FooterBlock, HeaderBlock, HeroBlock} from "../../src";
+import {ContactBlock, CtaBlock, FaqBlock, FeaturesBlock, FooterBlock, HeaderBlock, HeroBlock, NewsBlock, StatsBlock} from "../../src";
 import {compact, openTag} from "../workbench/code";
 import {defineEntry, type Controls} from "../workbench/types";
 
@@ -310,4 +310,174 @@ export const footerBlockEntry = defineEntry({
     copyright="© 2026 BetterGov Region Davao"
     bottomLinks={[{ label: "Privacy", href: "/privacy" }, { label: "Accessibility", href: "/accessibility" }]}
 />`,
+});
+
+// ---------- Stats ----------
+
+const STATS = [
+    {value: "12,480", label: "Permits issued this year", description: "Up 18% from last year"},
+    {value: "3 days", label: "Average processing time", description: "Down from 2 weeks"},
+    {value: "86%", label: "Applications filed online"},
+    {value: "4.7 / 5", label: "Citizen satisfaction", description: "From 2,300 surveys"},
+];
+
+const statsControls = {
+    title: {type: "text", default: "Faster service, in numbers"},
+    description: {type: "text", default: ""},
+    // Not a prop: how many of the demo numbers to show
+    count: {type: "number", min: 2, max: 4, default: 4},
+} satisfies Controls;
+
+export const statsBlockEntry = defineEntry({
+    name: "StatsBlock",
+    category: "Blocks",
+    description: "A row of big numbers that show results. Screen readers read each as \"label: number\". Leave out the title for a plain band of numbers.",
+    layout: "page",
+    controls: statsControls,
+    render: values => (
+        <StatsBlock title={values.title || undefined} description={values.description || undefined} stats={STATS.slice(0, values.count)} />
+    ),
+    code: values => {
+        const props = compact([textProp("title", values.title), textProp("description", values.description), "stats={stats}"]);
+        return `import { StatsBlock } from "bettergovregiondavaoui";
+
+const stats = [
+    { value: "12,480", label: "Permits issued this year", description: "Up 18% from last year" },
+    { value: "3 days", label: "Average processing time" },
+];
+
+${openTag("StatsBlock", props, "", true)}`;
+    },
+});
+
+// ---------- News ----------
+
+// Colored placeholder pictures, so the demo needs no image files
+const banner = (from: string, to: string) =>
+    `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 9"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs><rect width="16" height="9" fill="url(#g)"/></svg>`)}`;
+
+const NEWS = [
+    {
+        title: "Business permit renewals now fully online",
+        href: "#renewals",
+        date: "2026-10-01",
+        category: "Announcement",
+        excerpt: "Renew your Mayor’s permit from home this January. Upload your documents and pay online; no need to visit City Hall.",
+        image: banner("#0d6efd", "#7048e8"),
+    },
+    {
+        title: "Road closures for the Kadayawan street parade",
+        href: "#kadayawan",
+        date: "2026-09-24",
+        category: "Advisory",
+        excerpt: "Parts of San Pedro Street and C.M. Recto Avenue will be closed from 6 AM to 6 PM. See the alternate routes.",
+        image: banner("#ff9800", "#e03131"),
+    },
+    {
+        title: "Free medical mission in Toril this Saturday",
+        href: "#medical-mission",
+        date: "2026-09-18",
+        category: "Event",
+        excerpt: "Check-ups, medicines and vaccines at the Toril District Hall. Bring a valid ID and your barangay certificate.",
+        image: banner("#278039", "#0b7d90"),
+    },
+];
+
+const newsControls = {
+    title: {type: "text", default: "Latest news"},
+    action: {type: "text", default: "All news"},
+    images: {type: "boolean", default: true},
+    columns: {type: "number", min: 1, max: 3, default: 3},
+} satisfies Controls;
+
+export const newsBlockEntry = defineEntry({
+    name: "NewsBlock",
+    category: "Blocks",
+    description: "The latest posts as cards: picture, category, date, title and a short excerpt. Each whole card is a link.",
+    layout: "page",
+    controls: newsControls,
+    render: values => (
+        <NewsBlock
+            title={values.title || undefined}
+            action={values.action ? {label: values.action, href: "#news"} : undefined}
+            columns={values.columns}
+            items={values.images ? NEWS : NEWS.map(({image: _image, ...post}) => post)}
+        />
+    ),
+    code: values => {
+        const props = compact([
+            values.title !== "Latest news" && textProp("title", values.title),
+            values.action && `action={{ label: "${values.action}", href: "/news" }}`,
+            values.columns !== 3 && `columns={${values.columns}}`,
+            "items={posts}",
+        ]);
+        const image = values.images ? `\n        image: "/news/renewals.jpg",` : "";
+        return `import { NewsBlock } from "bettergovregiondavaoui";
+
+const posts = [
+    {
+        title: "Business permit renewals now fully online",
+        href: "/news/permit-renewals",
+        date: "2026-10-01",
+        category: "Announcement",
+        excerpt: "Renew your permit from home this January.",${image}
+    },
+];
+
+${openTag("NewsBlock", props, "", true)}`;
+    },
+});
+
+// ---------- Contact ----------
+
+// A drawn map instead of a real one, so the demo doesn't load anything from the internet
+const MAP = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<rect width="400" height="300" fill="#e9f2e6"/><path d="M0 210 Q120 170 200 200 T400 180 V300 H0Z" fill="#a5d8ff"/>
+<g stroke="#fff" stroke-width="10" fill="none"><path d="M0 120 H400"/><path d="M150 0 V300"/><path d="M290 0 L250 300"/></g>
+<g stroke="#ced4da" stroke-width="4" fill="none"><path d="M0 60 H400"/><path d="M60 0 V300"/><path d="M220 0 V200"/></g>
+<path d="M200 70c-17 0-30 13-30 30 0 22 30 50 30 50s30-28 30-50c0-17-13-30-30-30z" fill="#e03131"/><circle cx="200" cy="100" r="11" fill="#fff"/>
+</svg>`)}`;
+
+const contactControls = {
+    title: {type: "text", default: "Visit or call us"},
+    description: {type: "text", default: "Our help desk can answer questions about any service."},
+    map: {type: "boolean", default: true},
+    hours: {type: "boolean", default: true},
+    action: {type: "text", default: "Get directions"},
+} satisfies Controls;
+
+export const contactBlockEntry = defineEntry({
+    name: "ContactBlock",
+    category: "Blocks",
+    description: "Address, phone, email and office hours, with a map beside them. The phone and email are links that call or open the mail app.",
+    layout: "page",
+    controls: contactControls,
+    render: values => (
+        <ContactBlock
+            title={values.title || undefined}
+            description={values.description || undefined}
+            address={<>City Hall, San Pedro Street<br />Davao City 8000</>}
+            phone="(082) 241 1000"
+            email="help@bettergov-davao.ph"
+            hours={values.hours ? [{days: "Monday – Friday", time: "8:00 AM – 5:00 PM"}, {days: "Saturday – Sunday", time: "Closed"}] : undefined}
+            action={values.action ? {label: values.action, href: "#directions"} : undefined}
+            map={values.map ? <img src={MAP} alt="Map showing City Hall on San Pedro Street" /> : undefined}
+        />
+    ),
+    code: values => {
+        const props = compact([
+            textProp("title", values.title),
+            textProp("description", values.description),
+            "address={<>City Hall, San Pedro Street<br />Davao City 8000</>}",
+            `phone="(082) 241 1000"`,
+            `email="help@bettergov-davao.ph"`,
+            values.hours && `hours={[{ days: "Monday – Friday", time: "8:00 AM – 5:00 PM" }]}`,
+            values.action && `action={{ label: "${values.action}", href: "https://maps.google.com/?q=Davao+City+Hall" }}`,
+            values.map && `map="https://www.google.com/maps/embed?pb=…"`,
+        ]);
+        return `import { ContactBlock } from "bettergovregiondavaoui";
+
+// map: in Google Maps, choose Share → Embed a map, and copy the link from the code it gives
+${openTag("ContactBlock", props, "", true)}`;
+    },
 });

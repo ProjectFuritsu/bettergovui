@@ -1,0 +1,42 @@
+/* A light band of the brand color, so the numbers stand apart from the sections around them */
+.stats {
+    background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--spacing-xl);
+    margin: 0;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding-left: var(--spacing-lg);
+    border-left: 3px solid var(--primary);
+}
+
+/* The label comes first for screen readers ("Permits issued: 12,480") but shows under the number */
+.label {
+    order: 1;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.value {
+    margin: 0;
+    font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.description {
+    order: 2;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}

@@ -3,7 +3,7 @@
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
 - **40 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
-- **6 ready-made blocks:** header, hero, features, FAQ, call to action and footer, to build a page in minutes
+- **9 ready-made blocks:** header, hero, stats, features, news, FAQ, contact, call to action and footer, to build a page in minutes
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
 - **Works on every screen size:** components adjust to phones on their own
@@ -162,8 +162,11 @@ import { HeaderBlock, HeroBlock, FeaturesBlock, FaqBlock, CtaBlock, FooterBlock 
 |---|---|
 | `HeaderBlock` | Logo, links and a button. On phones the links move into a ☰ menu. |
 | `HeroBlock` | The opening section: title, description, two buttons, optional picture. `header` and `footer` take any element. |
+| `StatsBlock` | A row of big numbers, e.g. permits issued and processing time. |
 | `FeaturesBlock` | A titled grid of cards, e.g. services. Cards with an `href` are clickable anywhere. |
+| `NewsBlock` | The latest posts as cards: picture, category, date, title and excerpt. Each card is a link. |
 | `FaqBlock` | Questions and answers, with an optional "contact us" button. |
+| `ContactBlock` | Address, phone, email and office hours, with an optional map (a Google Maps embed link or your own element). |
 | `CtaBlock` | A banner asking people to take the next step. |
 | `FooterBlock` | Logo, columns of links, copyright, and Privacy/Accessibility links. |
 

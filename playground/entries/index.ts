@@ -38,7 +38,17 @@ import {textEntry} from "./text";
 import {textareaEntry} from "./textarea";
 import {toastEntry} from "./toast";
 import {tooltipEntry} from "./tooltip";
-import {ctaBlockEntry, faqBlockEntry, featuresBlockEntry, footerBlockEntry, headerBlockEntry, heroBlockEntry} from "./blocks";
+import {
+    contactBlockEntry,
+    ctaBlockEntry,
+    faqBlockEntry,
+    featuresBlockEntry,
+    footerBlockEntry,
+    headerBlockEntry,
+    heroBlockEntry,
+    newsBlockEntry,
+    statsBlockEntry,
+} from "./blocks";
 
 // Every component in the toolkit. The sidebar groups them by `category`; within a group
 // they're shown in the order listed here (alphabetical). Add new ones here.
@@ -86,8 +96,11 @@ export const entries = [
     // Blocks, in the order they'd appear on a page
     headerBlockEntry,
     heroBlockEntry,
+    statsBlockEntry,
     featuresBlockEntry,
+    newsBlockEntry,
     faqBlockEntry,
+    contactBlockEntry,
     ctaBlockEntry,
     footerBlockEntry,
 ];

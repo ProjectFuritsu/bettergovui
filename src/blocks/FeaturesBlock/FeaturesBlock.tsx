@@ -4,7 +4,6 @@ import {Container} from "../../components/Container/Container";
 import {Grid} from "../../components/Grid/Grid";
 import {cx} from "../../utils/cx";
 import shared from "../blocks.module.css";
-import styles from "./FeaturesBlock.module.css";
 
 export interface FeaturesBlockItem {
     /** An icon, e.g. `<FileText />` from lucide-react. */
@@ -42,11 +41,11 @@ export function FeaturesBlock({eyebrow, title, description, features, columns = 
                 {/* A list, so screen readers say how many there are */}
                 <Grid as="ul" columns={columns} minColumnWidth="16rem" gap="lg">
                     {features.map((feature, index) => (
-                        <Card key={index} as="li" variant="outline" padding="xl" hoverable={Boolean(feature.href)} className={styles.card}>
-                            {feature.icon && <span className={styles.icon} aria-hidden="true">{feature.icon}</span>}
+                        <Card key={index} as="li" variant="outline" padding="xl" hoverable={Boolean(feature.href)} className={shared.linkCard}>
+                            {feature.icon && <span className={shared.iconTile} aria-hidden="true">{feature.icon}</span>}
                             <CardTitle as="h3">
-                                {/* The link covers the whole card (see .link::after), so the card is one big target */}
-                                {feature.href ? <a href={feature.href} className={styles.link}>{feature.title}</a> : feature.title}
+                                {/* The link covers the whole card (see .cardLink::after), so the card is one big target */}
+                                {feature.href ? <a href={feature.href} className={shared.cardLink}>{feature.title}</a> : feature.title}
                             </CardTitle>
                             {feature.description && <CardDescription>{feature.description}</CardDescription>}
                         </Card>
