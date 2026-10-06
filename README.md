@@ -2,7 +2,7 @@
 
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
-- **41 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
+- **43 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
 - **9 ready-made blocks:** header, hero, stats, features, news, FAQ, contact, call to action and footer, to build a page in minutes
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
@@ -78,7 +78,7 @@ export function SignUp() {
 | Typography | `Text`, `Heading`, `Link`, `List` / `ListItem`, `Code`, `Kbd` |
 | Layout | `Scaffold` (`ScaffoldHeader`, `ScaffoldNavbar`, `ScaffoldMain`, `ScaffoldAside`, `ScaffoldFooter`, `ScaffoldBurger`), `Container`, `Stack`, `Group`, `Grid`, `Divider` |
 | Buttons | `Button` |
-| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset`, `AddressPicker` |
+| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset`, `AddressPicker`, `MobileNumberInput`, `PesoInput` |
 | Feedback | `Alert`, `Badge`, `Loader`, `Progress`, `Skeleton`, `Toast` (`Toaster` + `toast()`) |
 | Navigation | `Navbar` + `NavLink`, `Tabs` (`TabList`, `Tab`, `TabPanel`), `Breadcrumbs`, `Pagination`, `Stepper` (`Step`, `StepperCompleted`) |
 | Data display | `Table`, `Accordion` (`AccordionItem`), `Card` (`CardTitle`, `CardDescription`, `CardSection`, `CardFooter`), `Avatar`, `Tooltip` |
@@ -144,7 +144,29 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 Show errors with the `error` prop, for example `<Input error="Enter a valid email address" />`.
 The form components also accept a `ref`, so form libraries like react-hook-form work with them.
 
-## Philippine addresses
+## Philippine fields
+
+Fields for things Philippine forms always ask for. They format as you type, clean up pasted text, and send plain
+values with the form (through a hidden field named with `name`).
+
+```tsx
+import { MobileNumberInput, PesoInput } from "bettergovregiondavaoui";
+
+// Shows +63 and "917 123 4567". Pasting "0917-123-4567" or "+63 917 123 4567" works too.
+<MobileNumberInput name="mobile" onValueChange={(number, { e164 }) => setMobile(e164)} />   // e164: "+639171234567"
+
+// Shows ₱ and "15,000.00". min/max block the form with a clear message.
+<PesoInput label="Amount to pay" name="amount" min={100} onValueChange={setAmount} />          // 15000 (a number)
+```
+
+| Field | Gives you | The form sends |
+|---|---|---|
+| `MobileNumberInput` | the digits after +63, plus `{ valid, e164 }` | `+639171234567` (empty until complete) |
+| `PesoInput` | the amount as a number, or `null` | `15000.00` (no ₱ or commas) |
+
+`Input` also has `prefix` and `suffix` now, for fixed text in the field: `<Input prefix="https://" suffix=".gov.ph" />`.
+
+### Philippine addresses
 
 `AddressPicker` asks for Region → Province → City / Municipality → Barangay, using the official
 Philippine Standard Geographic Code (PSGC) list. Each list loads when the field above it is chosen.

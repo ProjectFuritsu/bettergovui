@@ -3,7 +3,7 @@ import {cx} from "../../utils/cx";
 import {isSizePreset, toCssLength, type Size} from "../../utils/size";
 import styles from "./Input.module.css";
 
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "prefix"> {
     /** Text above the field. Clicking it focuses the field. */
     label?: ReactNode;
     /** Helper text between the label and the field. */
@@ -17,6 +17,10 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
     leftIcon?: ReactNode;
     /** An icon inside the field, after the text. */
     rightIcon?: ReactNode;
+    /** Fixed text before what's typed, e.g. "+63" or "₱". Screen readers read it with the field. */
+    prefix?: ReactNode;
+    /** Fixed text after what's typed, e.g. "kg" or ".gov.ph". */
+    suffix?: ReactNode;
     /** A preset ("xs"–"xl"), a number in pixels, or any CSS length. Default "md", the same height as a md Button. */
     size?: Size;
 }
@@ -29,6 +33,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         error,
         leftIcon,
         rightIcon,
+        prefix,
+        suffix,
         size = "md",
         id,
         required,
@@ -47,6 +53,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     // Screen readers read these after the label
     const descriptionId = description ? `${inputId}-description` : undefined;
     const errorId = errorMessage ? `${inputId}-error` : undefined;
+    const prefixId = prefix ? `${inputId}-prefix` : undefined;
+    const suffixId = suffix ? `${inputId}-suffix` : undefined;
     const preset = isSizePreset(size);
 
     const settings = {"--input-size": preset ? undefined : toCssLength(size)} as CSSProperties;
@@ -62,6 +70,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             {description && <p id={descriptionId} className={styles.description}>{description}</p>}
             <div className={styles.field} data-invalid={invalid || undefined} data-disabled={disabled || undefined}>
                 {leftIcon && <span className={styles.icon}>{leftIcon}</span>}
+                {prefix && <span id={prefixId} className={styles.affix} data-side="prefix">{prefix}</span>}
                 <input
                     ref={ref}
                     id={inputId}
@@ -69,9 +78,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
                     required={required}
                     disabled={disabled}
                     aria-invalid={invalid || undefined}
-                    aria-describedby={cx(descriptionId, errorId, describedBy) || undefined}
+                    aria-describedby={cx(prefixId, suffixId, descriptionId, errorId, describedBy) || undefined}
                     {...rest}
                 />
+                {suffix && <span id={suffixId} className={styles.affix} data-side="suffix">{suffix}</span>}
                 {rightIcon && <span className={styles.icon}>{rightIcon}</span>}
             </div>
             {errorMessage && <p id={errorId} className={styles.error}>{errorMessage}</p>}

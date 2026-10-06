@@ -23,6 +23,7 @@ import {linkEntry} from "./link";
 import {listEntry} from "./list";
 import {loaderEntry} from "./loader";
 import {modalEntry} from "./modal";
+import {mobileNumberInputEntry, pesoInputEntry} from "./phfields";
 import {navbarEntry} from "./navbar";
 import {paginationEntry} from "./pagination";
 import {progressEntry} from "./progress";
@@ -79,9 +80,11 @@ export const entries = [
     linkEntry,
     listEntry,
     loaderEntry,
+    mobileNumberInputEntry,
     modalEntry,
     navbarEntry,
     paginationEntry,
+    pesoInputEntry,
     progressEntry,
     radioEntry,
     scaffoldEntry,

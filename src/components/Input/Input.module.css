@@ -114,3 +114,24 @@
     width: 1.125em;
     height: 1.125em;
 }
+
+/* ---------- Prefix and suffix text, e.g. "+63" or "₱" ---------- */
+
+.affix {
+    flex: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+/* A thin line sets the fixed part apart from what's typed */
+.affix[data-side="prefix"] {
+    padding-right: 0.5em;
+    border-right: 1px solid var(--border);
+}
+
+.affix[data-side="suffix"] {
+    padding-left: 0.5em;
+    border-left: 1px solid var(--border);
+}
