@@ -1,0 +1,15 @@
+/* Two fields side by side (Region | Province, City | Barangay), one per row on phones */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--spacing-md);
+}
+
+.failed {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}

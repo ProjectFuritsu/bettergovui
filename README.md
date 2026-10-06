@@ -2,7 +2,7 @@
 
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
-- **40 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
+- **41 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
 - **9 ready-made blocks:** header, hero, stats, features, news, FAQ, contact, call to action and footer, to build a page in minutes
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
@@ -78,7 +78,7 @@ export function SignUp() {
 | Typography | `Text`, `Heading`, `Link`, `List` / `ListItem`, `Code`, `Kbd` |
 | Layout | `Scaffold` (`ScaffoldHeader`, `ScaffoldNavbar`, `ScaffoldMain`, `ScaffoldAside`, `ScaffoldFooter`, `ScaffoldBurger`), `Container`, `Stack`, `Group`, `Grid`, `Divider` |
 | Buttons | `Button` |
-| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset` |
+| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset`, `AddressPicker` |
 | Feedback | `Alert`, `Badge`, `Loader`, `Progress`, `Skeleton`, `Toast` (`Toaster` + `toast()`) |
 | Navigation | `Navbar` + `NavLink`, `Tabs` (`TabList`, `Tab`, `TabPanel`), `Breadcrumbs`, `Pagination`, `Stepper` (`Step`, `StepperCompleted`) |
 | Data display | `Table`, `Accordion` (`AccordionItem`), `Card` (`CardTitle`, `CardDescription`, `CardSection`, `CardFooter`), `Avatar`, `Tooltip` |
@@ -143,6 +143,31 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
 Show errors with the `error` prop, for example `<Input error="Enter a valid email address" />`.
 The form components also accept a `ref`, so form libraries like react-hook-form work with them.
+
+## Philippine addresses
+
+`AddressPicker` asks for Region → Province → City / Municipality → Barangay, using the official
+Philippine Standard Geographic Code (PSGC) list. Each list loads when the field above it is chosen.
+
+```tsx
+import { AddressPicker } from "bettergovregiondavaoui";
+
+<AddressPicker
+    legend="Business address"
+    name="address"                 // the form sends address.region, address.province, address.city, address.barangay (PSGC codes)
+    onChange={setAddress}          // { region, province, city, barangay }, each { code, name }
+    limitToRegion="110000000"      // optional: Davao Region only (the region field is hidden)
+    required
+/>
+```
+
+- **Save the codes, not just the names.** Codes like `112402000` (City of Davao) stay the same when names are respelled.
+- **Metro Manila** has no provinces, so that field says "None in this region" and the cities load from the region.
+- **Translate it** with `labels`, e.g. `labels={{ city: "Lungsod / Bayan", choose: "Pumili…" }}`.
+- **Where the data comes from:** by default, the free public PSGC API at `psgc.gitlab.io`. Users' browsers load it
+  directly, so your site works without a server of its own. For a production government site, host your own copy
+  with the same paths and use `source={psgcApi("https://your-site.gov.ph/psgc")}`, so you don't depend on a third party.
+  Or pass your own `source` (any object with `regions`, `provinces`, `cities` and `barangays` functions).
 
 ## Toasts
 

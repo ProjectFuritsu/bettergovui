@@ -1,6 +1,10 @@
 import "./styles/tokens.css";
 export { Accordion, AccordionItem } from "./components/Accordion/Accordion";
 export type { AccordionProps, AccordionItemProps } from "./components/Accordion/Accordion";
+export { AddressPicker } from "./components/AddressPicker/AddressPicker";
+export type { AddressPickerProps, AddressPickerLabels, AddressValue } from "./components/AddressPicker/AddressPicker";
+export { psgcApi } from "./components/AddressPicker/psgc";
+export type { AddressPlace, AddressDataSource } from "./components/AddressPicker/psgc";
 export { Alert } from "./components/Alert/Alert";
 export type { AlertProps, AlertVariant } from "./components/Alert/Alert";
 export { Avatar, getInitials } from "./components/Avatar/Avatar";

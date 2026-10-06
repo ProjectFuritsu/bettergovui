@@ -1,4 +1,5 @@
 import {accordionEntry} from "./accordion";
+import {addressPickerEntry} from "./addresspicker";
 import {alertEntry} from "./alert";
 import {avatarEntry} from "./avatar";
 import {badgeEntry} from "./badge";
@@ -55,6 +56,7 @@ import {
 // they're shown in the order listed here (alphabetical). Add new ones here.
 export const entries = [
     accordionEntry,
+    addressPickerEntry,
     alertEntry,
     avatarEntry,
     badgeEntry,
