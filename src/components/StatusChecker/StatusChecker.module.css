@@ -1,0 +1,176 @@
+/* ---------- The status pill: a colored dot and the word, so it never relies on color alone ---------- */
+
+.pill {
+    --status-color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.125rem 0.625rem 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--status-color) 14%, var(--surface));
+    color: var(--text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.pill[data-status="online"] { --status-color: var(--success); }
+.pill[data-status="slow"] { --status-color: var(--warning); }
+.pill[data-status="offline"] { --status-color: var(--danger); }
+.pill[data-status="unreachable"],
+.pill[data-status="no-connection"] { --status-color: var(--secondary); }
+
+.dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--status-color);
+}
+
+/* Online: a soft ring pulses out from the dot */
+.pill[data-status="online"] .dot {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-color) 60%, transparent);
+    animation: pulse 2s ease-out infinite;
+}
+
+.pill[data-status="checking"] .dot {
+    animation: blink 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    to { box-shadow: 0 0 0 0.375rem transparent; }
+}
+
+@keyframes blink {
+    to { opacity: 0.25; }
+}
+
+/* ---------- badge ---------- */
+
+.badge {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text);
+    font-size: 0.875rem;
+}
+
+.badgeName {
+    font-weight: 600;
+}
+
+/* ---------- card ---------- */
+
+.card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+}
+
+.main {
+    display: flex;
+    flex: 1 1 12rem;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.name {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.host {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    overflow-wrap: anywhere;
+}
+
+.side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.meta {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.recheck {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.recheck:hover:not(:disabled) {
+    background: var(--surface-muted);
+}
+
+.recheck:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.recheck:disabled {
+    cursor: wait;
+}
+
+.recheck svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.recheck svg[data-spinning] {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Phones: the status moves under the name, left-aligned */
+@media (width < 30em) {
+    .side {
+        align-items: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pill .dot,
+    .recheck svg[data-spinning] {
+        animation: none;
+    }
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}

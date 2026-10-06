@@ -33,6 +33,7 @@ import {scaffoldEntry} from "./scaffold";
 import {selectEntry} from "./select";
 import {skeletonEntry} from "./skeleton";
 import {stackEntry} from "./stack";
+import {statusCheckerEntry} from "./statuschecker";
 import {stepperEntry} from "./stepper";
 import {switchEntry} from "./switch";
 import {tableEntry} from "./table";
@@ -95,6 +96,7 @@ export const entries = [
     selectEntry,
     skeletonEntry,
     stackEntry,
+    statusCheckerEntry,
     stepperEntry,
     switchEntry,
     tableEntry,

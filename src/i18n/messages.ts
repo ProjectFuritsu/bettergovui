@@ -83,6 +83,19 @@ export interface Messages {
         hidden: string;
         capsLock: string;
     };
+    /** StatusChecker */
+    siteStatus: {
+        checking: string;
+        online: string;
+        slow: string;
+        offline: string;
+        /** No usable answer: down, or blocking checks from other sites */
+        unreachable: string;
+        /** The visitor's own internet is off, so the site can't be checked */
+        noConnection: string;
+        checkedAt: (time: string) => string;
+        recheck: string;
+    };
     /** GroupedNumberInput, when the number is incomplete */
     idNumber: {
         incomplete: string;
@@ -169,6 +182,16 @@ export const en: Messages = {
         shown: "Your password is shown.",
         hidden: "Your password is hidden.",
         capsLock: "Caps Lock is on",
+    },
+    siteStatus: {
+        checking: "Checking…",
+        online: "Online",
+        slow: "Slow",
+        offline: "Offline",
+        unreachable: "Can't reach",
+        noConnection: "You're offline",
+        checkedAt: time => `Checked ${time}`,
+        recheck: "Check again",
     },
     idNumber: {
         incomplete: "Enter all the digits.",
@@ -257,6 +280,16 @@ export const fil: Messages = {
         hidden: "Nakatago na ang iyong password.",
         capsLock: "Naka-on ang Caps Lock",
     },
+    siteStatus: {
+        checking: "Sinusuri…",
+        online: "Online",
+        slow: "Mabagal",
+        offline: "Offline",
+        unreachable: "Hindi maabot",
+        noConnection: "Wala kang internet",
+        checkedAt: time => `Sinuri noong ${time}`,
+        recheck: "Suriin muli",
+    },
     idNumber: {
         incomplete: "Ilagay ang lahat ng numero.",
     },
@@ -343,6 +376,16 @@ export const ceb: Messages = {
         shown: "Makita na ang imong password.",
         hidden: "Natago na ang imong password.",
         capsLock: "Naka-on ang Caps Lock",
+    },
+    siteStatus: {
+        checking: "Gisusi…",
+        online: "Online",
+        slow: "Hinay",
+        offline: "Offline",
+        unreachable: "Dili maabot",
+        noConnection: "Wala kay internet",
+        checkedAt: time => `Gisusi sa ${time}`,
+        recheck: "Susiha pag-usab",
     },
     idNumber: {
         incomplete: "Isulod ang tanang numero.",

@@ -92,6 +92,8 @@ export { Skeleton } from "./components/Skeleton/Skeleton";
 export type { SkeletonProps } from "./components/Skeleton/Skeleton";
 export { Stack } from "./components/Stack/Stack";
 export type { StackProps } from "./components/Stack/Stack";
+export { StatusChecker, serverCheck } from "./components/StatusChecker/StatusChecker";
+export type { StatusCheckerProps, SiteStatus, StatusCheckDetails } from "./components/StatusChecker/StatusChecker";
 export { Stepper, Step, StepperCompleted } from "./components/Stepper/Stepper";
 export type { StepperProps, StepProps } from "./components/Stepper/Stepper";
 export { Switch } from "./components/Switch/Switch";
