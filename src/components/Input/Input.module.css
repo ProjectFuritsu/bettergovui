@@ -135,3 +135,11 @@
     padding-left: 0.5em;
     border-left: 1px solid var(--border);
 }
+
+/* rightSection: buttons inside the field, close to its edge */
+.section {
+    display: flex;
+    flex: none;
+    align-items: center;
+    margin-right: -0.375em;
+}

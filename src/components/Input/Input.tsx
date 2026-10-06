@@ -21,6 +21,8 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
     prefix?: ReactNode;
     /** Fixed text after what's typed, e.g. "kg" or ".gov.ph". */
     suffix?: ReactNode;
+    /** Something you can click inside the field, at the end, e.g. a button that clears it. */
+    rightSection?: ReactNode;
     /** A preset ("xs"–"xl"), a number in pixels, or any CSS length. Default "md", the same height as a md Button. */
     size?: Size;
 }
@@ -35,6 +37,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         rightIcon,
         prefix,
         suffix,
+        rightSection,
         size = "md",
         id,
         required,
@@ -83,6 +86,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
                 />
                 {suffix && <span id={suffixId} className={styles.affix} data-side="suffix">{suffix}</span>}
                 {rightIcon && <span className={styles.icon}>{rightIcon}</span>}
+                {rightSection && <span className={styles.section}>{rightSection}</span>}
             </div>
             {errorMessage && <p id={errorId} className={styles.error}>{errorMessage}</p>}
         </div>

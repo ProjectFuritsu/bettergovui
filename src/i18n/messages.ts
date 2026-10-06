@@ -74,6 +74,15 @@ export interface Messages {
         belowMin: (amount: string) => string;
         aboveMax: (amount: string) => string;
     };
+    password: {
+        /** The eye button, while the password is hidden / shown */
+        show: string;
+        hide: string;
+        /** Said by screen readers after the button is pressed */
+        shown: string;
+        hidden: string;
+        capsLock: string;
+    };
     /** GroupedNumberInput, when the number is incomplete */
     idNumber: {
         incomplete: string;
@@ -153,6 +162,13 @@ export const en: Messages = {
     peso: {
         belowMin: amount => `Enter at least ₱${amount}.`,
         aboveMax: amount => `Enter no more than ₱${amount}.`,
+    },
+    password: {
+        show: "Show password",
+        hide: "Hide password",
+        shown: "Your password is shown.",
+        hidden: "Your password is hidden.",
+        capsLock: "Caps Lock is on",
     },
     idNumber: {
         incomplete: "Enter all the digits.",
@@ -234,6 +250,13 @@ export const fil: Messages = {
         belowMin: amount => `Maglagay ng hindi bababa sa ₱${amount}.`,
         aboveMax: amount => `Maglagay ng hindi hihigit sa ₱${amount}.`,
     },
+    password: {
+        show: "Ipakita ang password",
+        hide: "Itago ang password",
+        shown: "Nakikita na ang iyong password.",
+        hidden: "Nakatago na ang iyong password.",
+        capsLock: "Naka-on ang Caps Lock",
+    },
     idNumber: {
         incomplete: "Ilagay ang lahat ng numero.",
     },
@@ -313,6 +336,13 @@ export const ceb: Messages = {
     peso: {
         belowMin: amount => `Isulod ang dili moubos sa ₱${amount}.`,
         aboveMax: amount => `Isulod ang dili molapas sa ₱${amount}.`,
+    },
+    password: {
+        show: "Ipakita ang password",
+        hide: "Tagoa ang password",
+        shown: "Makita na ang imong password.",
+        hidden: "Natago na ang imong password.",
+        capsLock: "Naka-on ang Caps Lock",
     },
     idNumber: {
         incomplete: "Isulod ang tanang numero.",

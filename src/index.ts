@@ -59,6 +59,8 @@ export { Navbar, NavLink } from "./components/Navbar/Navbar";
 export type { NavbarProps, NavLinkProps } from "./components/Navbar/Navbar";
 export { Pagination } from "./components/Pagination/Pagination";
 export type { PaginationProps, PaginationLabels } from "./components/Pagination/Pagination";
+export { PasswordInput } from "./components/PasswordInput/PasswordInput";
+export type { PasswordInputProps } from "./components/PasswordInput/PasswordInput";
 export { PesoInput, formatPeso } from "./components/PesoInput/PesoInput";
 export type { PesoInputProps } from "./components/PesoInput/PesoInput";
 export { PhilSysInput } from "./components/IdNumberInput/PhilSysInput";

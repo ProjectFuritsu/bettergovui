@@ -2,7 +2,7 @@
 
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
-- **46 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
+- **47 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
 - **9 ready-made blocks:** header, hero, stats, features, news, FAQ, contact, call to action and footer, to build a page in minutes
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
@@ -80,7 +80,7 @@ export function SignUp() {
 | Typography | `Text`, `Heading`, `Link`, `List` / `ListItem`, `Code`, `Kbd` |
 | Layout | `Scaffold` (`ScaffoldHeader`, `ScaffoldNavbar`, `ScaffoldMain`, `ScaffoldAside`, `ScaffoldFooter`, `ScaffoldBurger`), `Container`, `Stack`, `Group`, `Grid`, `Divider` |
 | Buttons | `Button` |
-| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset`, `AddressPicker`, `MobileNumberInput`, `PesoInput`, `PhilSysInput`, `TinInput`, `GroupedNumberInput` |
+| Forms | `Input`, `PasswordInput`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset`, `AddressPicker`, `MobileNumberInput`, `PesoInput`, `PhilSysInput`, `TinInput`, `GroupedNumberInput` |
 | Feedback | `Alert`, `Badge`, `Loader`, `Progress`, `Skeleton`, `Toast` (`Toaster` + `toast()`) |
 | Navigation | `Navbar` + `NavLink`, `Tabs` (`TabList`, `Tab`, `TabPanel`), `Breadcrumbs`, `Pagination`, `Stepper` (`Step`, `StepperCompleted`) |
 | Data display | `Table`, `Accordion` (`AccordionItem`), `Card` (`CardTitle`, `CardDescription`, `CardSection`, `CardFooter`), `Avatar`, `Tooltip` |
@@ -174,7 +174,12 @@ don't keep them longer than necessary. These fields don't send the numbers anywh
 PhilSysInput asks for the 16-digit card number (PCN) printed on the PhilID, not the 12-digit PhilSys Number (PSN),
 which is meant to stay private.
 
-`Input` also has `prefix` and `suffix` now, for fixed text in the field: `<Input prefix="https://" suffix=".gov.ph" />`.
+`Input` also has `prefix` and `suffix` now, for fixed text in the field: `<Input prefix="https://" suffix=".gov.ph" />`,
+and `rightSection` for a button inside the field.
+
+`PasswordInput` has an eye button to show or hide the password, or control it yourself with `visible` and `onVisibleChange`.
+It warns when Caps Lock is on, hides the password again when the form is sent, and turns off spell-check (online
+spell-checkers can send what's typed to a server). Use `autoComplete="new-password"` on sign-up forms.
 
 ### Philippine addresses
 

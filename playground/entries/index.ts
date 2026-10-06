@@ -26,6 +26,7 @@ import {modalEntry} from "./modal";
 import {groupedNumberInputEntry, mobileNumberInputEntry, pesoInputEntry, philSysInputEntry, tinInputEntry} from "./phfields";
 import {navbarEntry} from "./navbar";
 import {paginationEntry} from "./pagination";
+import {passwordInputEntry} from "./passwordinput";
 import {progressEntry} from "./progress";
 import {radioEntry} from "./radio";
 import {scaffoldEntry} from "./scaffold";
@@ -85,6 +86,7 @@ export const entries = [
     modalEntry,
     navbarEntry,
     paginationEntry,
+    passwordInputEntry,
     pesoInputEntry,
     philSysInputEntry,
     progressEntry,
