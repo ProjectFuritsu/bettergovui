@@ -20,8 +20,8 @@ Most UI kits are general-purpose. This one is made for one job: **public service
   (`<header>`, `<nav>`, `<main>`, `<footer>`), lists, `<address>` and `<time>`, page layouts include a skip link, everything works
   with a keyboard, and animations stop for people who turn them off. Government sites serve everyone, including
   seniors and people with disabilities.
-- **Light for slow phones and connections.** No dependencies besides React; the whole kit is about 42 KB gzipped
-  (28 KB JavaScript + 14 KB CSS). It uses the browser's own date picker, dialogs and `<details>`, which work well on
+- **Light for slow phones and connections.** No dependencies besides React; the whole kit is under 50 KB gzipped
+  (about 30 KB JavaScript + 14 KB CSS). It uses the browser's own date picker, dialogs and `<details>`, which work well on
   low-cost phones.
 - **A page in minutes.** `LandingPage` and 9 blocks, plus a toolkit to try every component on phone, tablet and
   desktop and copy the code.
