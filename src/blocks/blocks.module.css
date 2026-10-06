@@ -1,0 +1,59 @@
+/* Shared by the blocks: the space around a section, and its eyebrow, title and description */
+
+.section {
+    padding-top: clamp(3rem, 8vw, 5.5rem);
+    padding-bottom: clamp(3rem, 8vw, 5.5rem);
+    background: var(--surface);
+    color: var(--text);
+}
+
+/* The title area above a block's content, centered */
+.intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    max-width: 42rem;
+    margin: 0 auto clamp(2rem, 5vw, 3rem);
+    text-align: center;
+}
+
+/* The small colored line above a title, e.g. "Online services" */
+.eyebrow {
+    margin: 0;
+    color: var(--primary);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Dark mode: a lighter shade of the color, so the small text stays readable */
+@supports (color: oklch(from red l c h)) {
+    [data-theme="dark"] .eyebrow {
+        color: oklch(from var(--primary) max(l, 0.72) c h);
+    }
+}
+
+.title {
+    margin: 0;
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance; /* evens out the line lengths of a title that wraps */
+}
+
+.description {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}

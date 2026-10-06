@@ -3,6 +3,7 @@
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
 - **40 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
+- **6 ready-made blocks:** header, hero, features, FAQ, call to action and footer, to build a page in minutes
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
 - **Works on every screen size:** components adjust to phones on their own
@@ -137,6 +138,39 @@ import { Toaster, toast } from "bettergovregiondavaoui";
 
 toast({ title: "Application submitted", description: "We'll email you.", color: "success" });
 ```
+
+## Blocks: ready-made page sections
+
+Blocks are whole sections of a page, built from the components. Fill in the text and buttons with props.
+
+```tsx
+import { HeaderBlock, HeroBlock, FeaturesBlock, FaqBlock, CtaBlock, FooterBlock } from "bettergovregiondavaoui";
+
+<HeroBlock
+    header={<HeaderBlock logo="BetterGov Davao" links={links} action="Sign in" />}   {/* or your own navbar */}
+    footer={<FooterBlock logo="BetterGov Davao" columns={footerColumns} />}          {/* or your own footer */}
+    title="Government services, without the long lines"
+    description="Apply for permits and pay your taxes online."
+    primaryAction={{ label: "Apply now", href: "/apply" }}
+    secondaryAction="See requirements"
+    image="/city-hall.jpg"                                                           {/* optional */}
+    imageAlt="Davao City Hall"
+/>
+```
+
+| Block | What it is |
+|---|---|
+| `HeaderBlock` | Logo, links and a button. On phones the links move into a ☰ menu. |
+| `HeroBlock` | The opening section: title, description, two buttons, optional picture. `header` and `footer` take any element. |
+| `FeaturesBlock` | A titled grid of cards, e.g. services. Cards with an `href` are clickable anywhere. |
+| `FaqBlock` | Questions and answers, with an optional "contact us" button. |
+| `CtaBlock` | A banner asking people to take the next step. |
+| `FooterBlock` | Logo, columns of links, copyright, and Privacy/Accessibility links. |
+
+**Buttons in blocks** (`primaryAction`, `action`…) can be plain text (`"Sign in"`), a link (`{ label: "Apply now", href: "/apply" }`),
+a click handler (`{ label: "Open", onClick: … }`), or your own element (`<Button leftIcon={<Send />}>Apply</Button>`).
+
+`Button` also takes an `href` now, which makes it a link that looks like a button: `<Button href="/apply">Apply now</Button>`.
 
 ## Page layout: Scaffold
 

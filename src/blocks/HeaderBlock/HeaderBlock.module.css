@@ -1,0 +1,110 @@
+.header {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+}
+
+.header[data-sticky] {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    min-height: 4rem;
+}
+
+.logo {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text);
+    font-size: 1.125rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.logo:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+}
+
+.logo img {
+    display: block;
+    height: 2rem;
+    width: auto;
+}
+
+.links {
+    flex: 1;
+    min-width: 0;
+}
+
+.end {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-left: auto;
+}
+
+.menuButton {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem; /* 44px: easy to tap */
+    height: 2.75rem;
+    margin-right: calc(var(--spacing-sm) * -1);
+    padding: 0;
+    border: none;
+    border-radius: var(--radius);
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.menuButton:hover {
+    background: var(--surface-muted);
+}
+
+.menuButton:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.menuButton svg {
+    width: 1.375rem;
+    height: 1.375rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.menu {
+    padding: var(--spacing-sm) 0 var(--spacing-md);
+    border-top: 1px solid var(--border);
+}
+
+/* Wide screens: the links are in the bar, so no ☰ button or menu */
+@media (width >= 48em) {
+    .menu {
+        display: none;
+    }
+}
+
+/* Phones: the links move into the ☰ menu */
+@media (width < 48em) {
+    .links {
+        display: none;
+    }
+
+    .menuButton {
+        display: inline-flex;
+    }
+}

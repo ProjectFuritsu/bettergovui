@@ -1,0 +1,18 @@
+.box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xl);
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--border));
+    border-radius: calc(var(--radius) * 2);
+    background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+}
+
+.text {
+    display: flex;
+    flex: 1 1 22rem;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}

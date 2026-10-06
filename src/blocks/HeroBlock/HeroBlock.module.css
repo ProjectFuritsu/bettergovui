@@ -1,0 +1,71 @@
+/* A soft glow of the brand color behind the hero */
+.hero {
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--primary) 10%, transparent), transparent),
+        var(--surface);
+}
+
+.inner {
+    display: grid;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4rem);
+}
+
+.hero[data-has-image] .inner {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.hero[data-align="center"] .text {
+    align-items: center;
+    max-width: 44rem;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.title {
+    margin: 0;
+    font-size: clamp(2.25rem, 1.4rem + 3.5vw, 3.75rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+}
+
+.description {
+    max-width: 38rem;
+}
+
+.actions {
+    margin-top: var(--spacing-sm);
+}
+
+.hero[data-align="center"] .actions {
+    justify-content: center;
+}
+
+.media {
+    min-width: 0;
+}
+
+.image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: calc(var(--radius) * 2);
+    object-fit: cover;
+    box-shadow: 0 20px 48px rgb(0 0 0 / 0.14);
+}
+
+/* Phones: full-width buttons are easier to tap */
+@media (width < 30em) {
+    .actions > * {
+        flex: 1 1 100%;
+    }
+}

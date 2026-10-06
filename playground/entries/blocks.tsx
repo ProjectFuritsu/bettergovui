@@ -1,0 +1,313 @@
+import {Award, CreditCard, FileText, HandCoins, House, Stamp} from "lucide-react";
+import {CtaBlock, FaqBlock, FeaturesBlock, FooterBlock, HeaderBlock, HeroBlock} from "../../src";
+import {compact, openTag} from "../workbench/code";
+import {defineEntry, type Controls} from "../workbench/types";
+
+// ---------- Demo content shared by the block pages ----------
+
+const LINKS = [
+    {label: "Services", href: "#services", active: true},
+    {label: "Payments", href: "#payments"},
+    {label: "News", href: "#news"},
+    {label: "Help", href: "#help"},
+];
+
+// A drawn city hall instead of a photo, so the demo needs no image file
+const CITY_HALL = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d6efd"/><stop offset="1" stop-color="#0b7d90"/></linearGradient></defs>
+<rect width="400" height="300" fill="url(#sky)"/><circle cx="320" cy="70" r="28" fill="#ffd43b" opacity=".9"/>
+<rect y="240" width="400" height="60" fill="#278039"/>
+<polygon points="200,70 90,130 310,130" fill="#f8f9fa"/><rect x="100" y="130" width="200" height="110" fill="#e9ecef"/>
+<g fill="#adb5bd"><rect x="118" y="145" width="14" height="80"/><rect x="152" y="145" width="14" height="80"/><rect x="234" y="145" width="14" height="80"/><rect x="268" y="145" width="14" height="80"/></g>
+<rect x="184" y="180" width="32" height="60" fill="#495057"/><rect x="198" y="30" width="3" height="42" fill="#495057"/><rect x="201" y="30" width="26" height="16" fill="#e03131"/>
+</svg>`)}`;
+
+const SERVICES = [
+    {icon: <Stamp />, title: "Business permit", description: "Apply for or renew your Mayor's permit without lining up.", href: "#business-permit"},
+    {icon: <House />, title: "Real property tax", description: "See what you owe on your land and buildings, and pay online.", href: "#property-tax"},
+    {icon: <FileText />, title: "Barangay clearance", description: "Request a clearance and pick it up at your barangay hall.", href: "#clearance"},
+    {icon: <Award />, title: "Civil registry", description: "Get copies of birth, marriage and death certificates.", href: "#civil-registry"},
+    {icon: <CreditCard />, title: "Online payments", description: "Pay fees with GCash, Maya or a debit card.", href: "#payments"},
+    {icon: <HandCoins />, title: "Assistance programs", description: "Check if you qualify for financial and medical assistance.", href: "#assistance"},
+];
+
+const FAQS = [
+    {question: "Do I need an account to apply?", answer: "Yes. An account lets you track your applications and get updates by email or text."},
+    {question: "How long does a business permit take?", answer: "Usually 3 to 5 working days once your documents are complete."},
+    {question: "Which payment methods can I use?", answer: "GCash, Maya, debit cards, or cash at the City Treasurer's Office."},
+    {question: "Is my information safe?", answer: "Your data is handled under the Data Privacy Act of 2012 and only used to process your requests."},
+];
+
+const FOOTER_COLUMNS = [
+    {title: "Services", links: [{label: "Business permit", href: "#bp"}, {label: "Property tax", href: "#rpt"}, {label: "Civil registry", href: "#cr"}]},
+    {title: "About", links: [{label: "The project", href: "#about"}, {label: "Offices", href: "#offices"}, {label: "News", href: "#news"}]},
+    {title: "Help", links: [{label: "FAQs", href: "#faq"}, {label: "Contact us", href: "#contact"}, {label: "Report a problem", href: "#report"}]},
+];
+
+const BOTTOM_LINKS = [{label: "Privacy", href: "#privacy"}, {label: "Accessibility", href: "#accessibility"}];
+
+const demoHeader = (action: string, sticky = false) => (
+    <HeaderBlock logo="BetterGov Davao" links={LINKS} action={action || undefined} sticky={sticky} />
+);
+
+const demoFooter = (columns = true) => (
+    <FooterBlock
+        logo="BetterGov Davao"
+        description="Government services for the Davao Region, online and in one place."
+        columns={columns ? FOOTER_COLUMNS : []}
+        copyright="© 2026 BetterGov Region Davao"
+        bottomLinks={BOTTOM_LINKS}
+    />
+);
+
+// `name="value"` when there's a value, nothing when it's empty
+const textProp = (name: string, value: string) => value !== "" && (value.includes('"') ? `${name}={${JSON.stringify(value)}}` : `${name}="${value}"`);
+
+// ---------- Hero ----------
+
+const heroControls = {
+    eyebrow: {type: "text", default: "Davao Region e-Services"},
+    title: {type: "text", default: "Government services, without the long lines"},
+    description: {type: "text", default: "Apply for permits, pay your taxes and request documents online, any time of day."},
+    primaryAction: {type: "text", default: "Apply for a permit"},
+    secondaryAction: {type: "text", default: "See requirements"},
+    image: {type: "boolean", default: true},
+    align: {type: "select", options: ["auto", "left", "center"] as const, default: "auto"},
+    // Not props of the hero itself: what goes in its header and footer slots
+    header: {type: "boolean", default: true},
+    headerAction: {type: "text", default: "Sign in"},
+    footer: {type: "boolean", default: false},
+} satisfies Controls;
+
+export const heroBlockEntry = defineEntry({
+    name: "HeroBlock",
+    category: "Blocks",
+    description: "The big opening section: title, description, two buttons and an optional picture. header and footer take any element, e.g. HeaderBlock and FooterBlock.",
+    layout: "page",
+    controls: heroControls,
+    render: values => (
+        <HeroBlock
+            header={values.header ? demoHeader(values.headerAction) : undefined}
+            footer={values.footer ? demoFooter() : undefined}
+            eyebrow={values.eyebrow || undefined}
+            title={values.title}
+            description={values.description || undefined}
+            primaryAction={values.primaryAction ? {label: values.primaryAction, href: "#apply"} : undefined}
+            secondaryAction={values.secondaryAction ? {label: values.secondaryAction, href: "#requirements"} : undefined}
+            image={values.image ? CITY_HALL : undefined}
+            imageAlt="Illustration of a city hall"
+            align={values.align === "auto" ? undefined : values.align}
+        />
+    ),
+    code: values => {
+        const props = compact([
+            values.header &&
+                `header={<HeaderBlock logo="BetterGov Davao" links={links}${values.headerAction ? ` action="${values.headerAction}"` : ""} />}`,
+            values.footer && `footer={<FooterBlock logo="BetterGov Davao" columns={footerColumns} />}`,
+            textProp("eyebrow", values.eyebrow),
+            textProp("title", values.title),
+            textProp("description", values.description),
+            values.primaryAction && `primaryAction={{ label: "${values.primaryAction}", href: "/apply" }}`,
+            values.secondaryAction && `secondaryAction={{ label: "${values.secondaryAction}", href: "/requirements" }}`,
+            values.image && `image="/city-hall.jpg"`,
+            values.image && `imageAlt="Davao City Hall"`,
+            values.align !== "auto" && `align="${values.align}"`,
+        ]);
+        const imports = compact(["HeroBlock", values.header && "HeaderBlock", values.footer && "FooterBlock"]);
+        return `import { ${imports.join(", ")} } from "bettergovregiondavaoui";
+
+${openTag("HeroBlock", props, "", true)}`;
+    },
+});
+
+// ---------- Header ----------
+
+const headerControls = {
+    logo: {type: "text", default: "BetterGov Davao"},
+    action: {type: "text", default: "Sign in"},
+    links: {type: "boolean", default: true},
+    sticky: {type: "boolean", default: false},
+} satisfies Controls;
+
+export const headerBlockEntry = defineEntry({
+    name: "HeaderBlock",
+    category: "Blocks",
+    description: "A site header: logo, links and a button. Try the Phone view: the links move into a ☰ menu.",
+    layout: "page",
+    controls: headerControls,
+    render: values => (
+        <HeaderBlock logo={values.logo || undefined} links={values.links ? LINKS : []} action={values.action || undefined} sticky={values.sticky} />
+    ),
+    code: values => {
+        const props = compact([
+            textProp("logo", values.logo),
+            values.links && "links={links}",
+            values.action && `action={{ label: "${values.action}", href: "/sign-in" }}`,
+            values.sticky && "sticky",
+        ]);
+        return `import { HeaderBlock } from "bettergovregiondavaoui";
+
+const links = [
+    { label: "Services", href: "/services", active: true },
+    { label: "Payments", href: "/payments" },
+    { label: "Help", href: "/help" },
+];
+
+${openTag("HeaderBlock", props, "", true)}`;
+    },
+});
+
+// ---------- Features ----------
+
+const featuresControls = {
+    eyebrow: {type: "text", default: "Online services"},
+    title: {type: "text", default: "What would you like to do today?"},
+    description: {type: "text", default: "Start any of these from home. You'll only visit an office when you pick up your documents."},
+    columns: {type: "number", min: 1, max: 4, default: 3},
+    // Not a prop: whether the demo cards have an href (clickable cards)
+    clickable: {type: "boolean", default: true},
+} satisfies Controls;
+
+export const featuresBlockEntry = defineEntry({
+    name: "FeaturesBlock",
+    category: "Blocks",
+    description: "A titled grid of cards, e.g. services. Cards with an href are clickable anywhere and lift on hover.",
+    layout: "page",
+    controls: featuresControls,
+    render: values => (
+        <FeaturesBlock
+            eyebrow={values.eyebrow || undefined}
+            title={values.title}
+            description={values.description || undefined}
+            columns={values.columns}
+            features={values.clickable ? SERVICES : SERVICES.map(({href: _href, ...service}) => service)}
+        />
+    ),
+    code: values => {
+        const props = compact([
+            textProp("eyebrow", values.eyebrow),
+            textProp("title", values.title),
+            textProp("description", values.description),
+            values.columns !== 3 && `columns={${values.columns}}`,
+            "features={services}",
+        ]);
+        return `import { FeaturesBlock } from "bettergovregiondavaoui";
+import { House, Stamp } from "lucide-react";
+
+const services = [
+    { icon: <Stamp />, title: "Business permit", description: "Apply or renew online."${values.clickable ? `, href: "/business-permit"` : ""} },
+    { icon: <House />, title: "Real property tax", description: "See what you owe and pay."${values.clickable ? `, href: "/property-tax"` : ""} },
+];
+
+${openTag("FeaturesBlock", props, "", true)}`;
+    },
+});
+
+// ---------- FAQ ----------
+
+const faqControls = {
+    eyebrow: {type: "text", default: "Help"},
+    title: {type: "text", default: "Frequently asked questions"},
+    description: {type: "text", default: "Can't find your answer? Our help desk replies within one working day."},
+    action: {type: "text", default: "Contact the help desk"},
+    multiple: {type: "boolean", default: false},
+} satisfies Controls;
+
+export const faqBlockEntry = defineEntry({
+    name: "FaqBlock",
+    category: "Blocks",
+    description: "Questions and answers (an Accordion) with the title beside them on wide screens and above them on phones.",
+    layout: "page",
+    controls: faqControls,
+    render: values => (
+        <FaqBlock
+            eyebrow={values.eyebrow || undefined}
+            title={values.title || undefined}
+            description={values.description || undefined}
+            action={values.action ? {label: values.action, href: "#help"} : undefined}
+            multiple={values.multiple}
+            items={FAQS}
+        />
+    ),
+    code: values => {
+        const props = compact([
+            textProp("eyebrow", values.eyebrow),
+            values.title !== "Frequently asked questions" && textProp("title", values.title),
+            textProp("description", values.description),
+            values.action && `action={{ label: "${values.action}", href: "/help" }}`,
+            values.multiple && "multiple",
+            "items={faqs}",
+        ]);
+        return `import { FaqBlock } from "bettergovregiondavaoui";
+
+const faqs = [
+    { question: "Do I need an account to apply?", answer: "Yes. An account lets you track your applications." },
+    { question: "Which payment methods can I use?", answer: "GCash, Maya, debit cards, or cash." },
+];
+
+${openTag("FaqBlock", props, "", true)}`;
+    },
+});
+
+// ---------- CTA ----------
+
+const ctaControls = {
+    title: {type: "text", default: "Ready to start your application?"},
+    description: {type: "text", default: "It takes about 10 minutes. Have a valid ID ready."},
+    primaryAction: {type: "text", default: "Start now"},
+    secondaryAction: {type: "text", default: "Check requirements"},
+} satisfies Controls;
+
+export const ctaBlockEntry = defineEntry({
+    name: "CtaBlock",
+    category: "Blocks",
+    description: "A tinted banner that invites people to take the next step, usually near the end of a page.",
+    layout: "page",
+    controls: ctaControls,
+    render: values => (
+        <CtaBlock
+            title={values.title}
+            description={values.description || undefined}
+            primaryAction={values.primaryAction ? {label: values.primaryAction, href: "#apply"} : undefined}
+            secondaryAction={values.secondaryAction ? {label: values.secondaryAction, href: "#requirements"} : undefined}
+        />
+    ),
+    code: values => {
+        const props = compact([
+            textProp("title", values.title),
+            textProp("description", values.description),
+            values.primaryAction && `primaryAction={{ label: "${values.primaryAction}", href: "/apply" }}`,
+            values.secondaryAction && `secondaryAction={{ label: "${values.secondaryAction}", href: "/requirements" }}`,
+        ]);
+        return `import { CtaBlock } from "bettergovregiondavaoui";
+
+${openTag("CtaBlock", props, "", true)}`;
+    },
+});
+
+// ---------- Footer ----------
+
+const footerControls = {
+    columns: {type: "boolean", default: true},
+} satisfies Controls;
+
+export const footerBlockEntry = defineEntry({
+    name: "FooterBlock",
+    category: "Blocks",
+    description: "The bottom of a site: logo and description, columns of links, and the copyright line with Privacy and Accessibility links.",
+    layout: "page",
+    controls: footerControls,
+    render: values => demoFooter(values.columns),
+    code: values => `import { FooterBlock } from "bettergovregiondavaoui";
+
+<FooterBlock
+    logo="BetterGov Davao"
+    description="Government services for the Davao Region, online and in one place."${values.columns ? `
+    columns={[
+        { title: "Services", links: [{ label: "Business permit", href: "/business-permit" }] },
+        { title: "Help", links: [{ label: "Contact us", href: "/contact" }] },
+    ]}` : ""}
+    copyright="© 2026 BetterGov Region Davao"
+    bottomLinks={[{ label: "Privacy", href: "/privacy" }, { label: "Accessibility", href: "/accessibility" }]}
+/>`,
+});

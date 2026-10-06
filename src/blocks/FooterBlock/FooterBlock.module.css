@@ -1,0 +1,92 @@
+.footer {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--border);
+    background: var(--surface-muted);
+    color: var(--text);
+    font-size: 0.9375rem;
+}
+
+/* The brand on the left, the link columns on the right; they stack on phones */
+.top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.brand {
+    display: flex;
+    flex: 1 1 16rem;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-width: 22rem;
+}
+
+.logo {
+    font-size: 1.125rem;
+    font-weight: 800;
+}
+
+.description,
+.copyright {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.columns {
+    display: grid;
+    flex: 2 1 24rem;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.columnTitle {
+    margin: 0 0 var(--spacing-md);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.link {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.link:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.link:focus-visible {
+    border-radius: 2px;
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) 0;
+    border-top: 1px solid var(--border);
+    font-size: 0.875rem;
+}
+
+.bottomLinks {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+}

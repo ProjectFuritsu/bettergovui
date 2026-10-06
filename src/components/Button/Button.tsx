@@ -1,4 +1,4 @@
-import type {ButtonHTMLAttributes, CSSProperties, ReactNode} from "react";
+import type {AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactNode} from "react";
 import {isLightThemeColor, resolveColor, type Color} from "../../utils/color";
 import {cx} from "../../utils/cx";
 import {hasContent} from "../../utils/hasContent";
@@ -40,6 +40,15 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
      * (instead of always white). Useful for light colors like yellow or orange.
      */
     autoContrast?: boolean;
+    /**
+     * Makes it a link (an `<a>`) that looks like a button, for buttons that go to another page,
+     * e.g. "Apply now". Screen readers then call it a link, which is what it is.
+     */
+    href?: string;
+    /** With href: where to open the link, e.g. "_blank" for a new tab. */
+    target?: string;
+    /** With href: the link's rel. Default "noopener noreferrer" when target is "_blank". */
+    rel?: string;
 }
 
 /**
@@ -58,6 +67,9 @@ export default function Button({
     fullWidth = false,
     autoContrast = false,
     disabled,
+    href,
+    target,
+    rel,
     className,
     style,
     ...rest
@@ -81,6 +93,31 @@ export default function Button({
         "--btn-color": color === undefined ? undefined : resolveColor(color),
     } as CSSProperties;
 
+    const content = (
+        <span className={styles.content}>
+            {leftIcon && <span className={styles.icon}>{leftIcon}</span>}
+            {children}
+            {rightIcon && <span className={styles.icon}>{rightIcon}</span>}
+        </span>
+    );
+
+    if (href !== undefined) {
+        return (
+            <a
+                className={classes}
+                style={{...settings, ...style}}
+                // A disabled link has no href, so it can't be followed
+                href={disabled ? undefined : href}
+                target={target}
+                rel={rel ?? (target === "_blank" ? "noopener noreferrer" : undefined)}
+                aria-disabled={disabled || undefined}
+                data-auto-contrast={autoContrast || isLightThemeColor(color) || undefined}
+                {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}>
+                {content}
+            </a>
+        );
+    }
+
     return (<button
         className={classes}
         style={{...settings, ...style}}
@@ -89,11 +126,7 @@ export default function Button({
         data-auto-contrast={autoContrast || isLightThemeColor(color) || undefined}
         aria-busy={loading || undefined}
         {...rest}>
-        <span className={styles.content}>
-            {leftIcon && <span className={styles.icon}>{leftIcon}</span>}
-            {children}
-            {rightIcon && <span className={styles.icon}>{rightIcon}</span>}
-        </span>
+        {content}
         {loading && (
             // Same size as an icon. Hidden from screen readers because aria-busy already says it's loading.
             <Loader type={loaderType} size="1.125em" className={styles.loader} aria-hidden="true" />

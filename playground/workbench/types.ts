@@ -36,6 +36,7 @@ export const CATEGORIES = [
     "Navigation",
     "Data display",
     "Overlays",
+    "Blocks",
 ] as const;
 
 export type Category = typeof CATEGORIES[number];

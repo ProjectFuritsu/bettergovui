@@ -106,3 +106,18 @@ export type { TooltipProps, TooltipPlacement } from "./components/Tooltip/Toolti
 export type { Color, ThemeColor } from "./utils/color";
 export type { Size, SizePreset } from "./utils/size";
 export type { LayoutElement } from "./utils/element";
+
+// Blocks: ready-made page sections built from the components above
+export type { BlockAction, BlockActionLink } from "./blocks/action";
+export { HeaderBlock } from "./blocks/HeaderBlock/HeaderBlock";
+export type { HeaderBlockProps, HeaderBlockLink } from "./blocks/HeaderBlock/HeaderBlock";
+export { HeroBlock } from "./blocks/HeroBlock/HeroBlock";
+export type { HeroBlockProps } from "./blocks/HeroBlock/HeroBlock";
+export { FeaturesBlock } from "./blocks/FeaturesBlock/FeaturesBlock";
+export type { FeaturesBlockProps, FeaturesBlockItem } from "./blocks/FeaturesBlock/FeaturesBlock";
+export { FaqBlock } from "./blocks/FaqBlock/FaqBlock";
+export type { FaqBlockProps, FaqBlockItem } from "./blocks/FaqBlock/FaqBlock";
+export { CtaBlock } from "./blocks/CtaBlock/CtaBlock";
+export type { CtaBlockProps } from "./blocks/CtaBlock/CtaBlock";
+export { FooterBlock } from "./blocks/FooterBlock/FooterBlock";
+export type { FooterBlockProps, FooterBlockColumn, FooterBlockLink } from "./blocks/FooterBlock/FooterBlock";
