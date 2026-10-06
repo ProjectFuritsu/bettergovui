@@ -5,4 +5,4 @@ dist/
 
 # Editor and personal settings
 .idea/
-.claude/settings.local.json
+.claude/
