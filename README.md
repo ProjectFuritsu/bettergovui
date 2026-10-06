@@ -9,6 +9,23 @@ Accessible React UI components with light and dark themes, made for government w
 - **Works on every screen size:** components adjust to phones on their own
 - **No extra dependencies:** only React
 
+## What makes it different
+
+Most UI kits are general-purpose. This one is made for one job: **public service websites in the Philippines**.
+
+- **Made for citizen services.** The blocks and examples speak the language of government sites: services and permits,
+  advisories, office hours, fees in pesos. Dates are handled in local time (no "day before" bug from UTC) and shown in
+  Philippine formats.
+- **Accessible by default.** Text contrast is checked in light and dark mode, pages use real HTML landmarks
+  (`<header>`, `<nav>`, `<main>`, `<footer>`), lists, `<address>` and `<time>`, page layouts include a skip link, everything works
+  with a keyboard, and animations stop for people who turn them off. Government sites serve everyone, including
+  seniors and people with disabilities.
+- **Light for slow phones and connections.** No dependencies besides React; the whole kit is about 40 KB gzipped
+  (26 KB JavaScript + 14 KB CSS). It uses the browser's own date picker, dialogs and `<details>`, which work well on
+  low-cost phones.
+- **A page in minutes.** `LandingPage` and 9 blocks, plus a toolkit to try every component on phone, tablet and
+  desktop and copy the code.
+
 ## Installation
 
 ```bash
@@ -160,6 +177,7 @@ import { HeaderBlock, HeroBlock, FeaturesBlock, FaqBlock, CtaBlock, FooterBlock 
 
 | Block | What it is |
 |---|---|
+| `LandingPage` | A whole page from the blocks below, with a skip link and the `<main>` landmark. Pass each section's props, your own element, or leave it out. |
 | `HeaderBlock` | Logo, links and a button. On phones the links move into a ☰ menu. |
 | `HeroBlock` | The opening section: title, description, two buttons, optional picture. `header` and `footer` take any element. |
 | `StatsBlock` | A row of big numbers, e.g. permits issued and processing time. |

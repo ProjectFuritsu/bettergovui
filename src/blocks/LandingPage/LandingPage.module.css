@@ -1,0 +1,47 @@
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--surface);
+    color: var(--text);
+}
+
+/* The content fills the space, so the footer stays at the bottom on short pages */
+.main {
+    flex: 1;
+}
+
+/* Focus only lands here from the skip link; outlining the whole page would just be noise */
+.main:focus {
+    outline: none;
+}
+
+/* Hidden until it gets keyboard focus, then shown at the top left */
+.skipLink {
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    z-index: 400;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.skipLink:not(:focus) {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skipLink:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+}

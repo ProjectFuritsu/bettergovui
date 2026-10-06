@@ -127,3 +127,5 @@ export { NewsBlock } from "./blocks/NewsBlock/NewsBlock";
 export type { NewsBlockProps, NewsBlockItem } from "./blocks/NewsBlock/NewsBlock";
 export { ContactBlock } from "./blocks/ContactBlock/ContactBlock";
 export type { ContactBlockProps, ContactBlockHours } from "./blocks/ContactBlock/ContactBlock";
+export { LandingPage } from "./blocks/LandingPage/LandingPage";
+export type { LandingPageProps, LandingPageSection } from "./blocks/LandingPage/LandingPage";

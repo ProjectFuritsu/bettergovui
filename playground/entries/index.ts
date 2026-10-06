@@ -46,6 +46,7 @@ import {
     footerBlockEntry,
     headerBlockEntry,
     heroBlockEntry,
+    landingPageEntry,
     newsBlockEntry,
     statsBlockEntry,
 } from "./blocks";
@@ -93,7 +94,8 @@ export const entries = [
     textareaEntry,
     toastEntry,
     tooltipEntry,
-    // Blocks, in the order they'd appear on a page
+    // Blocks: the whole page first, then each section in the order it appears on a page
+    landingPageEntry,
     headerBlockEntry,
     heroBlockEntry,
     statsBlockEntry,

@@ -1,5 +1,16 @@
 import {Award, CreditCard, FileText, HandCoins, House, Stamp} from "lucide-react";
-import {ContactBlock, CtaBlock, FaqBlock, FeaturesBlock, FooterBlock, HeaderBlock, HeroBlock, NewsBlock, StatsBlock} from "../../src";
+import {
+    ContactBlock,
+    CtaBlock,
+    FaqBlock,
+    FeaturesBlock,
+    FooterBlock,
+    HeaderBlock,
+    HeroBlock,
+    LandingPage,
+    NewsBlock,
+    StatsBlock,
+} from "../../src";
 import {compact, openTag} from "../workbench/code";
 import {defineEntry, type Controls} from "../workbench/types";
 
@@ -479,5 +490,87 @@ export const contactBlockEntry = defineEntry({
 
 // map: in Google Maps, choose Share → Embed a map, and copy the link from the code it gives
 ${openTag("ContactBlock", props, "", true)}`;
+    },
+});
+
+// ---------- Landing page: all the blocks together ----------
+
+const landingControls = {
+    // Not props: which sections the demo page has
+    stats: {type: "boolean", default: true},
+    features: {type: "boolean", default: true},
+    news: {type: "boolean", default: true},
+    faq: {type: "boolean", default: true},
+    contact: {type: "boolean", default: true},
+    cta: {type: "boolean", default: true},
+    stickyHeader: {type: "boolean", default: true},
+} satisfies Controls;
+
+export const landingPageEntry = defineEntry({
+    name: "LandingPage",
+    category: "Blocks",
+    description: "A whole page from the blocks, with a skip link and the <main> landmark added for you. Turn sections off, try Phone, and press Tab once to see the skip link.",
+    layout: "page",
+    controls: landingControls,
+    render: values => (
+        <LandingPage
+            header={{logo: "BetterGov Davao", links: LINKS, action: {label: "Sign in", href: "#sign-in"}, sticky: values.stickyHeader}}
+            hero={{
+                eyebrow: "Davao Region e-Services",
+                title: "Government services, without the long lines",
+                description: "Apply for permits, pay your taxes and request documents online, any time of day.",
+                primaryAction: {label: "Apply for a permit", href: "#apply"},
+                secondaryAction: {label: "See requirements", href: "#requirements"},
+                image: CITY_HALL,
+                imageAlt: "Illustration of a city hall",
+            }}
+            stats={values.stats && {stats: STATS}}
+            features={values.features && {eyebrow: "Online services", title: "What would you like to do today?", features: SERVICES}}
+            news={values.news && {items: NEWS, action: {label: "All news", href: "#news"}}}
+            faq={values.faq && {eyebrow: "Help", items: FAQS, action: {label: "Contact the help desk", href: "#help"}}}
+            contact={
+                values.contact && {
+                    title: "Visit or call us",
+                    address: <>City Hall, San Pedro Street<br />Davao City 8000</>,
+                    phone: "(082) 241 1000",
+                    email: "help@bettergov-davao.ph",
+                    hours: [{days: "Monday – Friday", time: "8:00 AM – 5:00 PM"}],
+                    map: <img src={MAP} alt="Map showing City Hall on San Pedro Street" />,
+                }
+            }
+            cta={values.cta && {title: "Ready to start your application?", description: "It takes about 10 minutes. Have a valid ID ready.", primaryAction: {label: "Start now", href: "#apply"}}}
+            footer={{
+                logo: "BetterGov Davao",
+                description: "Government services for the Davao Region, online and in one place.",
+                columns: FOOTER_COLUMNS,
+                copyright: "© 2026 BetterGov Region Davao",
+                bottomLinks: BOTTOM_LINKS,
+            }}
+        />
+    ),
+    code: values => {
+        const sections = compact([
+            `    header={{ logo: "BetterGov Davao", links, action: "Sign in"${values.stickyHeader ? ", sticky: true" : ""} }}`,
+            `    hero={{
+        title: "Government services, without the long lines",
+        primaryAction: { label: "Apply for a permit", href: "/apply" },
+        image: "/city-hall.jpg",
+        imageAlt: "Davao City Hall",
+    }}`,
+            values.stats && `    stats={{ stats }}`,
+            values.features && `    features={{ title: "What would you like to do today?", features: services }}`,
+            values.news && `    news={{ items: posts, action: { label: "All news", href: "/news" } }}`,
+            values.faq && `    faq={{ items: faqs }}`,
+            values.contact && `    contact={{ address: "City Hall, Davao City", phone: "(082) 241 1000", email: "help@bettergov-davao.ph" }}`,
+            values.cta && `    cta={{ title: "Ready to start your application?", primaryAction: { label: "Start now", href: "/apply" } }}`,
+            `    footer={{ logo: "BetterGov Davao", columns: footerColumns, copyright: "© 2026 BetterGov Region Davao" }}`,
+        ]);
+        return `import { LandingPage } from "bettergovregiondavaoui";
+
+// Each section takes that block's props (see its page under Blocks),
+// your own element instead (hero={<MyHero />}), or leave it out to skip it.
+<LandingPage
+${sections.join("\n")}
+/>`;
     },
 });
