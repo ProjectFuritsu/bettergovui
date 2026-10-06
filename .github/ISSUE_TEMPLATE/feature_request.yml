@@ -1,0 +1,28 @@
+name: Component or block idea
+description: Suggest something government websites need
+labels: ["idea"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What would it be?
+      placeholder: e.g. A timeline that shows each step of an application, with dates
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Which service or page needs it?
+      description: Who would use it, and for what? Real examples from government services help most.
+    validations:
+      required: true
+  - type: textarea
+    id: philippine
+    attributes:
+      label: Anything specific to the Philippines?
+      description: Formats, IDs, agencies, languages or rules it should follow.
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples elsewhere
+      description: Links or screenshots of something similar, if you know any.

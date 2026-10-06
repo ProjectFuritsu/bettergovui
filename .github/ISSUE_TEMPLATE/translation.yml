@@ -1,0 +1,34 @@
+name: Translation fix
+description: Suggest better Filipino or Bisaya wording
+labels: ["translation"]
+body:
+  - type: markdown
+    attributes:
+      value: Salamat! All the texts are in src/i18n/messages.ts, in English, Filipino (fil) and Bisaya (ceb).
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - Filipino
+        - Bisaya (Cebuano)
+    validations:
+      required: true
+  - type: input
+    id: current
+    attributes:
+      label: Current text
+      placeholder: e.g. Pagpili una sa ibabaw
+    validations:
+      required: true
+  - type: input
+    id: suggested
+    attributes:
+      label: Your suggestion
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it better?
+      description: More natural, more common in your area, clearer for older readers…

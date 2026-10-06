@@ -1,0 +1,45 @@
+name: Bug report
+description: Something doesn't work, look right, or make sense
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting! For security problems, please use the Security tab instead (see SECURITY.md).
+  - type: input
+    id: component
+    attributes:
+      label: Component or block
+      placeholder: e.g. AddressPicker
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: how-to-see-it
+    attributes:
+      label: How can we see it?
+      description: Steps, or a short code example. A screenshot helps a lot.
+      render: tsx
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did it happen?
+      multiple: true
+      options:
+        - Desktop browser
+        - Phone
+        - Tablet
+        - Dark mode
+        - Keyboard only
+        - With a screen reader
+        - In Filipino or Bisaya
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, device and screen reader (if any)
+      placeholder: e.g. Chrome 140 on Android 14, with TalkBack
