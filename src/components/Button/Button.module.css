@@ -1,0 +1,189 @@
+.button {
+    /* The color prop overrides this (see Button.tsx) */
+    --btn-color: var(--primary);
+    /*
+     * The color used for text and borders (outline and text variants): a darker shade
+     * (80% color + 20% black) so it's readable on a light background.
+     */
+    --btn-text-color: color-mix(in srgb, var(--btn-color) 80%, black);
+    position: relative; /* the loading spinner is placed on top, in the center */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Everything scales from --btn-size: padding uses em, so it grows with the font size */
+    font-size: var(--btn-size, 1rem);
+    line-height: 1.25;
+    padding: 0.625em 1em;
+    /* Every variant has a 1px border (invisible unless colored) so all variants are the same height */
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+/*
+ * Dark mode: colored text and borders get a lighter shade (75% color + 25% white) instead, so
+ * they're readable on the dark background. In both modes, filled backgrounds keep the real color.
+ * Works for any color, including the color prop.
+ */
+[data-theme="dark"] .button {
+    --btn-text-color: color-mix(in srgb, var(--btn-color) 75%, white);
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Icon and text sit in a row with a small gap between them */
+.content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+/* ---------- Variants ---------- */
+
+/* filled: solid background, no border */
+.filled {
+    background: var(--btn-color);
+    color: white;
+}
+
+.filled:hover:not(:disabled) {
+    /* A slightly darker shade of the color */
+    background: color-mix(in srgb, var(--btn-color) 85%, black);
+}
+
+/*
+ * autoContrast: black or white text, whichever is easier to read on the color.
+ * Same rule as Badge.module.css: the color's WCAG brightness ("relative luminance") is compared
+ * with 0.179; each channel becomes 1 (white) or 0 (black).
+ * @supports: browsers without this CSS feature skip it all and keep the white text above.
+ */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .filled[data-auto-contrast] {
+        /* White on dark colors, black on light ones */
+        --btn-auto-text: color(
+            from var(--btn-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+        /* The opposite (black on dark colors, white on light ones), for the hover effect */
+        --btn-auto-opposite: color(
+            from var(--btn-color) srgb-linear
+            clamp(0, (0.2126 * r + 0.7152 * g + 0.0722 * b - 0.179) * 10000, 1)
+            clamp(0, (0.2126 * r + 0.7152 * g + 0.0722 * b - 0.179) * 10000, 1)
+            clamp(0, (0.2126 * r + 0.7152 * g + 0.0722 * b - 0.179) * 10000, 1)
+        );
+        color: var(--btn-auto-text);
+    }
+
+    /* Hover moves the background away from the text color, so the text stays readable while hovered */
+    .filled[data-auto-contrast]:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--btn-color) 85%, var(--btn-auto-opposite));
+    }
+}
+
+/* outline: border only, no background */
+.outline {
+    background: transparent;
+    color: var(--btn-text-color);
+    border-color: var(--btn-text-color);
+}
+
+/* text: no border, no background, just the text */
+.text {
+    background: transparent;
+    color: var(--btn-text-color);
+}
+
+/* Without a background, a light tint on hover shows the button is clickable */
+.outline:hover:not(:disabled),
+.text:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--btn-color) 10%, transparent);
+}
+
+/* ---------- Icons ---------- */
+
+/* The box is exactly one line of text tall, so an icon never changes the button's height */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+}
+
+/* Icons grow with the button's size. Override with the --btn-icon-size variable. */
+.icon svg {
+    width: var(--btn-icon-size, 1.125em);
+    height: var(--btn-icon-size, 1.125em);
+}
+
+/* Same padding on every side makes an icon-only button square */
+.iconOnly {
+    padding: 0.625em;
+}
+
+/* ---------- Loading ---------- */
+
+/* Loading uses `disabled` to block clicks, but shouldn't look faded like a disabled button */
+.loading:disabled {
+    opacity: 1;
+    cursor: wait;
+}
+
+/* Invisible, but still takes up space (so the width stays the same) and is still read by screen readers */
+.loading .content {
+    opacity: 0;
+}
+
+/* The Loader sits on top of the hidden content, in the exact center */
+.loader {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+}
+
+/* ---------- Full width ---------- */
+
+.fullWidth {
+    display: flex;
+    width: 100%;
+}
+
+/* ---------- Size presets ---------- */
+
+.xs { --btn-size: 0.75rem; }
+.sm { --btn-size: 0.875rem; }
+.md { --btn-size: 1rem; }
+.lg { --btn-size: 1.125rem; }
+.xl { --btn-size: 1.25rem; }
+
+/*
+ * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
+ * light background (at least 4.5:1) for every color, even light ones like orange. Colors that are
+ * already dark enough don't change. Dark mode keeps its own rule above, which is more specific.
+ * Browsers without this CSS feature keep the rule above.
+ */
+@supports (color: oklch(from red min(l, 0.5) c h)) {
+    .button {
+        --btn-text-color: oklch(from var(--btn-color) min(l, 0.5) c h);
+    }
+}
+
+/*
+ * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
+ * background for every color, even dark ones like slate gray. Colors that are already light enough
+ * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
+ */
+@supports (color: oklch(from red max(l, 0.72) c h)) {
+    [data-theme="dark"] .button {
+        --btn-text-color: oklch(from var(--btn-color) max(l, 0.72) c h);
+    }
+}

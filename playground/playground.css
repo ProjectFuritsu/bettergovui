@@ -1,0 +1,852 @@
+/* Styles for the playground workbench only; not part of the library */
+
+/* ---------- Workbench colors (light, then dark) ---------- */
+
+:root {
+    --pg-bg: #ffffff;
+    --pg-panel: #f8f9fb;
+    --pg-border: #e3e7ed;
+    --pg-border-soft: #f0f2f5;
+    --pg-text: #1c2430;
+    --pg-text-soft: #3a4452;
+    --pg-muted: #5b6573;
+    --pg-faint: #8a94a3;
+    --pg-hover: #eef1f5;
+    --pg-active-bg: #e3edff;
+    --pg-active-text: #0057c2;
+    --pg-control-bg: #f1f3f5;
+    --pg-input-bg: #ffffff;
+    --pg-input-border: #d5dbe3;
+    --pg-canvas: #fafbfc;
+    --pg-dot: #dfe3e8;
+    --pg-device-ring: #d5dbe3;
+    --pg-bezel: #1c2430;
+    --pg-code-bg: #1c2430;
+    --pg-code-text: #e3e7ed;
+}
+
+[data-theme="dark"] {
+    --pg-bg: #1a1b1e;
+    --pg-panel: #141517;
+    --pg-border: #2c2e33;
+    --pg-border-soft: #25262b;
+    --pg-text: #e9ecef;
+    --pg-text-soft: #c1c2c5;
+    --pg-muted: #a6a7ab;
+    --pg-faint: #7c7f86;
+    --pg-hover: #25262b;
+    --pg-active-bg: #1c3a5e;
+    --pg-active-text: #74c0fc;
+    --pg-control-bg: #25262b;
+    --pg-input-bg: #25262b;
+    --pg-input-border: #373a40;
+    --pg-canvas: #101113;
+    --pg-dot: #2c2e33;
+    --pg-device-ring: #373a40;
+    --pg-bezel: #373a40;
+    --pg-code-bg: #0b0c0e;
+    --pg-code-text: #e3e7ed;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: var(--pg-bg);
+    color: var(--pg-text);
+}
+
+/* ---------- Layout: sidebar | canvas | properties ---------- */
+
+.workbench {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 300px;
+    height: 100vh;
+}
+
+/* Properties hidden: the preview gets the room */
+.workbench--props-hidden {
+    grid-template-columns: 240px minmax(0, 1fr);
+}
+
+.props[hidden] {
+    display: none;
+}
+
+/* ---------- Left: component list ---------- */
+
+/* The brand and search stay put; only the component list scrolls */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 16px 12px;
+    border-right: 1px solid var(--pg-border);
+    background: var(--pg-panel);
+    overflow: hidden;
+}
+
+/* Brand name and the dark mode toggle */
+.sidebar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-left: 8px;
+}
+
+.brand {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.sidebar-search {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.sidebar-search-icon {
+    position: absolute;
+    left: 10px;
+    width: 16px;
+    height: 16px;
+    color: var(--pg-faint);
+    pointer-events: none;
+}
+
+.sidebar-search-input {
+    width: 100%;
+    min-width: 0;
+    padding: 7px 30px 7px 32px;
+    border: 1px solid var(--pg-input-border);
+    border-radius: 6px;
+    background: var(--pg-input-bg);
+    color: var(--pg-text);
+    font: inherit;
+    font-size: 14px;
+}
+
+.sidebar-search-input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -1px;
+}
+
+/* The "/" hint on the right */
+.sidebar-search-key {
+    position: absolute;
+    right: 8px;
+    padding: 0 6px;
+    border: 1px solid var(--pg-border);
+    border-radius: 4px;
+    color: var(--pg-faint);
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 18px;
+    pointer-events: none;
+}
+
+.sidebar-empty {
+    margin: 4px 8px;
+    font-size: 13px;
+    color: var(--pg-muted);
+}
+
+.sidebar-heading {
+    margin: 0 8px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pg-faint);
+}
+
+.nav {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 0;
+    margin: 0 -12px -16px;
+    padding: 2px 12px 16px;
+    overflow-y: auto;
+}
+
+.nav-item {
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    color: var(--pg-text-soft);
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    background: var(--pg-hover);
+}
+
+.nav-item.is-active {
+    background: var(--pg-active-bg);
+    color: var(--pg-active-text);
+    font-weight: 600;
+}
+
+/* ---------- Center: toolbar, preview and code ---------- */
+
+.canvas {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+}
+
+.canvas-toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--pg-border);
+}
+
+.canvas-toolbar h1 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.canvas-toolbar p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--pg-muted);
+}
+
+.toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.toolbar-actions > button {
+    white-space: nowrap;
+}
+
+/* Responsive / Desktop / Tablet / Phone / Rotate */
+.device-switch {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 10px;
+    background: var(--pg-control-bg);
+}
+
+.device-switch-divider {
+    width: 1px;
+    height: 20px;
+    margin: 0 4px;
+    background: var(--pg-input-border);
+}
+
+/* ---------- Device preview ---------- */
+
+.canvas-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    padding: 24px;
+    overflow: hidden;
+    background-color: var(--pg-canvas);
+    background-image: radial-gradient(var(--pg-dot) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+/* The room the device gets; DevicePreview measures it to fit the device inside */
+.device-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* The device's screen, already shrunk to its shown size */
+.device {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px var(--pg-device-ring), 0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+.device[data-device="phone"] {
+    border-radius: 18px;
+    box-shadow: 0 0 0 6px var(--pg-bezel), 0 12px 32px rgb(0 0 0 / 0.18);
+}
+
+.device[data-device="tablet"] {
+    border-radius: 14px;
+    box-shadow: 0 0 0 8px var(--pg-bezel), 0 12px 32px rgb(0 0 0 / 0.18);
+}
+
+/* The iframe is the real device size; transform shrinks it without changing its viewport */
+.device iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    transform-origin: 0 0;
+}
+
+/* Responsive fills the whole area, sized by CSS alone (1px less on each side, so its thin border shows) */
+.device[data-device="responsive"] {
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+}
+
+.device[data-device="responsive"] iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.device-label {
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--pg-muted);
+}
+
+/* ---------- Inside the preview iframe (uses the library's own tokens) ---------- */
+
+/* The component sits in the middle of the screen, both ways */
+.frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px 16px;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.frame-stage {
+    width: 100%;
+}
+
+/* Small components stay centered but have room to go full width */
+.frame--centered .frame-stage {
+    display: flex;
+    justify-content: center;
+    max-width: 480px;
+}
+
+/* Wide components like Tabs get a comfortable reading width */
+.frame--fill .frame-stage {
+    max-width: 720px;
+}
+
+/* Page-level components like Container get the whole width */
+.frame--full .frame-stage {
+    max-width: none;
+}
+
+/* Whole-page components like Scaffold: edge to edge, from the very top */
+.frame--page {
+    display: block;
+    padding: 0;
+}
+
+.frame--page .frame-stage {
+    max-width: none;
+}
+
+.hint {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.text-input {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+}
+
+/* ---------- Code ---------- */
+
+/* The panel under the preview: a header with Hide/Show, and the code, which scrolls */
+.code-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    /* Even a height saved in a bigger window never squeezes the toolbar and preview away */
+    max-height: max(80px, calc(100% - 340px));
+    background: var(--pg-code-bg);
+    color: var(--pg-code-text);
+}
+
+.code-panel.is-hidden {
+    height: auto;
+}
+
+.code-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 12px 6px 24px;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.code-panel.is-hidden .code-panel-header {
+    border-bottom: none;
+}
+
+.code-panel-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.6);
+}
+
+.code-panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Copy code: the main action, so it stands out a little more than Hide code */
+.code-copy {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 6px;
+    background: rgb(255 255 255 / 0.06);
+    color: var(--pg-code-text);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.code-copy:hover {
+    background: rgb(255 255 255 / 0.12);
+}
+
+.code-copy:focus-visible {
+    outline: 2px solid #74c0fc;
+    outline-offset: 1px;
+}
+
+.code-copy svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Only for screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.code-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--pg-code-text);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.code-toggle:hover {
+    background: rgb(255 255 255 / 0.08);
+}
+
+.code-toggle:focus-visible,
+.code-resize-handle:focus-visible {
+    outline: 2px solid #74c0fc;
+    outline-offset: -2px;
+}
+
+.code-toggle svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* An 8px strip along the top edge; drag it to resize. A small grip shows on hover and focus. */
+.code-resize-handle {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    height: 8px;
+    cursor: ns-resize;
+}
+
+.code-resize-handle::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    border-radius: 2px;
+    background: #74c0fc;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.code-resize-handle:hover::after,
+.code-resize-handle:focus-visible::after {
+    opacity: 1;
+}
+
+/* While dragging: the resize cursor everywhere, no text selection, and the iframe doesn't take the pointer */
+.is-resizing,
+.is-resizing * {
+    cursor: ns-resize !important;
+    user-select: none;
+}
+
+.is-resizing iframe {
+    pointer-events: none;
+}
+
+.canvas-code {
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    padding: 12px 24px 16px;
+    overflow: auto;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ---------- Right: properties ---------- */
+
+.props {
+    padding: 16px;
+    border-left: 1px solid var(--pg-border);
+    overflow-y: auto;
+}
+
+.props-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.props-header h2 {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pg-faint);
+}
+
+.link-button {
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 13px;
+    color: var(--pg-active-text);
+    cursor: pointer;
+}
+
+.prop {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--pg-border-soft);
+    font-size: 13px;
+}
+
+.prop-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--pg-text-soft);
+}
+
+.prop-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.prop-input select,
+.prop-input input[type="text"],
+.prop-input input[type="number"] {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 8px;
+    border: 1px solid var(--pg-input-border);
+    border-radius: 6px;
+    background: var(--pg-input-bg);
+    color: var(--pg-text);
+    font: inherit;
+}
+
+/* The color picker and the swatch next to color settings */
+.prop-input input[type="color"] {
+    flex-shrink: 0;
+    width: 36px;
+    height: 30px;
+    padding: 2px;
+    border: 1px solid var(--pg-input-border);
+    border-radius: 6px;
+    background: var(--pg-input-bg);
+    cursor: pointer;
+}
+
+.color-swatch {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.2);
+}
+
+/* "default" / "auto": no color of its own, shown as stripes */
+.color-swatch[data-empty] {
+    background: repeating-linear-gradient(45deg, var(--pg-input-border) 0 2px, transparent 2px 5px);
+}
+
+.prop-input input[type="range"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.prop-value {
+    min-width: 3ch;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--pg-muted);
+}
+
+/* ---------- Narrow screens: stack everything ---------- */
+
+@media (max-width: 900px) {
+    .workbench {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .sidebar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 16px;
+        border-right: none;
+        border-bottom: 1px solid var(--pg-border);
+    }
+
+    .sidebar-top {
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar {
+        flex-direction: row;
+    }
+
+    .sidebar-search {
+        width: 160px;
+        margin: 0;
+    }
+
+    .nav {
+        flex: 1;
+        margin: 0;
+        padding: 2px;
+    }
+
+    .sidebar-heading {
+        display: none;
+    }
+
+    .nav {
+        flex-direction: row;
+    }
+
+    .nav-item {
+        width: auto;
+    }
+
+    .canvas-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .canvas-toolbar,
+    .canvas-code {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .code-panel-header {
+        padding-left: 16px;
+    }
+
+    /* A fixed height, so the device has a known amount of room to fit into */
+    .canvas-preview {
+        flex: none;
+        height: 75vh;
+        padding: 20px 16px;
+    }
+
+    .props {
+        border-left: none;
+        border-top: 1px solid var(--pg-border);
+    }
+}
+
+/* Sidebar groups (Typography, Layout, …) */
+.nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nav-group + .nav-group {
+    margin-top: 16px;
+}
+
+/* Narrow screens: one sideways-scrolling row, without the group headings */
+@media (max-width: 900px) {
+    .nav {
+        overflow-x: auto;
+    }
+
+    .nav-group {
+        display: contents;
+    }
+
+    .nav-item {
+        white-space: nowrap;
+    }
+}
+
+/* ---------- Layout guides (Grid, Stack, Group, Container pages) ---------- */
+
+.guides-root {
+    position: relative;
+    width: 100%;
+}
+
+/* On centered pages (e.g. Card), keep the component centered like it is without guides */
+.frame--centered .guides-root {
+    display: flex;
+    justify-content: center;
+}
+
+.guides {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none; /* the components underneath stay clickable */
+    /*
+     * A label wider than a thin strip at the page's edge would stick out and add a scrollbar, which
+     * makes the layout narrower, which changes the guides... Clipping sideways prevents that.
+     * (clip, unlike hidden, keeps the size label above the element visible.)
+     */
+    overflow-x: clip;
+}
+
+.guide {
+    position: absolute;
+    box-sizing: border-box;
+}
+
+/* Grid columns: a light band with a line on each side */
+.guide--column {
+    background: rgb(240 62 143 / 0.08);
+    border-right: 1px solid rgb(240 62 143 / 0.5);
+    border-left: 1px solid rgb(240 62 143 / 0.5);
+}
+
+/* Gaps between items or columns: magenta stripes */
+.guide--gap {
+    background: repeating-linear-gradient(45deg, rgb(240 62 143 / 0.45) 0 1.5px, transparent 1.5px 5px);
+}
+
+/* Padding: green stripes */
+.guide--padding {
+    background: repeating-linear-gradient(-45deg, rgb(47 158 68 / 0.45) 0 1.5px, transparent 1.5px 5px);
+}
+
+/* The element's own edges */
+.guide--outline {
+    outline: 1px dashed rgb(240 62 143 / 0.8);
+}
+
+.guide-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: #d6336c;
+    color: white;
+    font: 600 10px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+}
+
+.guide--padding .guide-label {
+    background: #2b8a3e;
+}
+
+/* Column widths sit at the top of each column */
+.guide--column .guide-label {
+    top: 2px;
+    transform: translate(-50%, 0);
+}
+
+/* The element's size sits just above its top-left corner */
+.guide--outline .guide-label {
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    border-radius: 3px 3px 0 0;
+}

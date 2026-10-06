@@ -1,0 +1,94 @@
+.pagination {
+    /* The size and color props override these (see Pagination.tsx) */
+    --pagination-size: 1rem;
+    --pagination-color: var(--primary);
+    font-size: var(--pagination-size);
+}
+
+.pagination[data-size="xs"] { --pagination-size: 0.75rem; }
+.pagination[data-size="sm"] { --pagination-size: 0.875rem; }
+.pagination[data-size="md"] { --pagination-size: 1rem; }
+.pagination[data-size="lg"] { --pagination-size: 1.125rem; }
+.pagination[data-size="xl"] { --pagination-size: 1.25rem; }
+
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375em;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Every button is at least a square, so 1-digit and 2-digit pages look alike */
+.control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25em;
+    height: 2.25em;
+    padding: 0 0.5em;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.875em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.control:hover:not(:disabled) {
+    background: var(--surface-muted);
+}
+
+.control:focus-visible {
+    outline: 2px solid var(--pagination-color);
+    outline-offset: 2px;
+}
+
+.control:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* The current page */
+.control[aria-current="page"] {
+    border-color: var(--pagination-color);
+    background: var(--pagination-color);
+    color: white;
+    cursor: default;
+}
+
+/* autoContrast: black or white text on the current page. Same rule as Badge.module.css. */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .pagination[data-auto-contrast] .control[aria-current="page"] {
+        color: color(
+            from var(--pagination-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
+}
+
+.dots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5em;
+    color: var(--text-muted);
+}
+
+.icon {
+    width: 1.125em;
+    height: 1.125em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}

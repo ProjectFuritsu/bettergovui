@@ -1,0 +1,21 @@
+.grid {
+    /*
+     * Each column is at least --grid-min wide, and at least 1/columns of the width (so there are never
+     * more than --grid-columns). auto-fill then fits as many as possible, so the grid uses fewer
+     * columns by itself on smaller screens. min(100%, …) keeps a single column from overflowing on tiny screens.
+     */
+    --grid-column-width: max(
+        var(--grid-min),
+        (100% - (var(--grid-columns) - 1) * var(--grid-gap)) / var(--grid-columns)
+    );
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--grid-column-width)), 1fr));
+    gap: var(--grid-gap);
+}
+
+/* as="ul" / "ol": no bullets or indent. :where() keeps this from beating your own classes. */
+:where(ul.grid, ol.grid) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}

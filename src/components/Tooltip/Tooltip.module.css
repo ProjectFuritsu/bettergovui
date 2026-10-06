@@ -1,0 +1,78 @@
+/* Takes no space, so wrapping an element in a Tooltip never changes the layout */
+.wrapper {
+    display: contents;
+}
+
+.tooltip {
+    position: fixed;
+    z-index: 1000;
+    width: max-content;
+    padding: 0.375rem 0.625rem;
+    border-radius: calc(var(--radius) * 0.75);
+    /* The page's text and background colors swapped: dark in light mode, light in dark mode */
+    background: var(--text);
+    color: var(--surface);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+    animation: fade-in 0.12s ease-out;
+}
+
+/* With the color prop: that background, with black or white text (same rule as Badge's autoContrast) */
+.tooltip[data-colored] {
+    background: var(--tooltip-color);
+    color: white;
+}
+
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .tooltip[data-colored] {
+        color: color(
+            from var(--tooltip-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
+}
+
+/* A small square turned 45°, half of it sticking out of the tooltip's edge */
+.arrow {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+    transform: rotate(45deg);
+}
+
+.tooltip[data-placement="top"] .arrow {
+    bottom: -4px;
+    left: calc(var(--tooltip-arrow, 50%) - 4px);
+}
+
+.tooltip[data-placement="bottom"] .arrow {
+    top: -4px;
+    left: calc(var(--tooltip-arrow, 50%) - 4px);
+}
+
+.tooltip[data-placement="left"] .arrow {
+    right: -4px;
+    top: calc(var(--tooltip-arrow, 50%) - 4px);
+}
+
+.tooltip[data-placement="right"] .arrow {
+    left: -4px;
+    top: calc(var(--tooltip-arrow, 50%) - 4px);
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tooltip {
+        animation: none;
+    }
+}

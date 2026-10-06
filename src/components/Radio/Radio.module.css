@@ -1,0 +1,184 @@
+/* ---------- RadioGroup ---------- */
+
+.group {
+    /* The size, color and gap props override these (see Radio.tsx) */
+    --radio-size: 1rem;
+    --radio-color: var(--primary);
+    --radio-gap: var(--spacing-md);
+    --radio-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: var(--radio-size);
+    color: var(--text);
+}
+
+[data-theme="dark"] .group {
+    --radio-error-text: color-mix(in srgb, var(--danger) 75%, white);
+}
+
+.group[data-size="xs"] { --radio-size: 0.75rem; }
+.group[data-size="sm"] { --radio-size: 0.875rem; }
+.group[data-size="md"] { --radio-size: 1rem; }
+.group[data-size="lg"] { --radio-size: 1.125rem; }
+.group[data-size="xl"] { --radio-size: 1.25rem; }
+
+.legend {
+    margin-bottom: 0.375em;
+    padding: 0;
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.required {
+    color: var(--radio-error-text);
+}
+
+.groupDescription,
+.groupError {
+    margin: 0 0 0.75em;
+    font-size: 0.8125em;
+    line-height: 1.4;
+}
+
+.groupDescription {
+    margin-top: -0.125em;
+    color: var(--text-muted);
+}
+
+.groupError {
+    margin: 0.75em 0 0;
+    color: var(--radio-error-text);
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--radio-gap);
+}
+
+.options[data-orientation="horizontal"] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: calc(var(--radio-gap) * 2);
+}
+
+/* ---------- Radio ---------- */
+
+.root {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.75em;
+    font-size: var(--radio-size, 1rem);
+    line-height: 1.25;
+    color: var(--text);
+}
+
+.root[data-size="xs"] { --radio-size: 0.75rem; }
+.root[data-size="sm"] { --radio-size: 0.875rem; }
+.root[data-size="md"] { --radio-size: 1rem; }
+.root[data-size="lg"] { --radio-size: 1.125rem; }
+.root[data-size="xl"] { --radio-size: 1.25rem; }
+
+.root[data-disabled] {
+    opacity: 0.5;
+}
+
+.control {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+}
+
+/* The real radio button, restyled: keyboard, forms and screen readers keep working as normal */
+.input {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: var(--surface);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.input:checked {
+    border-color: var(--radio-color, var(--primary));
+    background: var(--radio-color, var(--primary));
+}
+
+.input:focus-visible {
+    outline: 2px solid var(--radio-color, var(--primary));
+    outline-offset: 2px;
+}
+
+.input[aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
+.input:disabled,
+.root[data-disabled] .label {
+    cursor: not-allowed;
+}
+
+/* The white dot in the middle, shown when chosen */
+.dot {
+    position: absolute;
+    inset: 0;
+    width: 0.5em;
+    height: 0.5em;
+    margin: auto;
+    border-radius: 50%;
+    background: white;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.input:checked + .dot {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .input,
+    .dot {
+        transition: none;
+    }
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+.label {
+    cursor: pointer;
+}
+
+.description {
+    font-size: 0.8125em;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+/*
+ * On a light color like "warning" (orange), the dot picks black or white, whichever is easier
+ * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    [data-auto-contrast] .dot {
+        background: color(
+            from var(--radio-color, var(--primary)) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
+}

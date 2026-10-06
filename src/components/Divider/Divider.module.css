@@ -1,0 +1,50 @@
+.divider {
+    flex-shrink: 0;
+    margin: 0;
+    border: none;
+    border-top: 1px solid var(--divider-color, var(--border));
+}
+
+/* Vertical: a line as tall as the row it sits in (e.g. inside a Group) */
+.divider[data-orientation="vertical"] {
+    align-self: stretch;
+    width: 0;
+    height: auto;
+    min-height: 1em;
+    border-top: none;
+    border-left: 1px solid var(--divider-color, var(--border));
+}
+
+.divider[data-variant="dashed"] { border-style: dashed; }
+.divider[data-variant="dotted"] { border-style: dotted; }
+
+/* ---------- With a label: two lines with the text between them ---------- */
+
+.labeled {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.labeled::before,
+.labeled::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--divider-color, var(--border));
+}
+
+.labeled[data-variant="dashed"]::before,
+.labeled[data-variant="dashed"]::after { border-top-style: dashed; }
+
+.labeled[data-variant="dotted"]::before,
+.labeled[data-variant="dotted"]::after { border-top-style: dotted; }
+
+/* Label at the left or right: a short line on that side */
+.labeled[data-position="left"]::before { flex: 0 0 1.5rem; }
+.labeled[data-position="right"]::after { flex: 0 0 1.5rem; }
+
+.label {
+    flex-shrink: 0;
+}

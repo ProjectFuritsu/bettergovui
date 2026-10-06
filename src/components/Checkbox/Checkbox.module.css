@@ -1,0 +1,133 @@
+.root {
+    /* The size and color props override these (see Checkbox.tsx) */
+    --checkbox-size: 1rem;
+    --checkbox-color: var(--primary);
+    --checkbox-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.75em;
+    font-size: var(--checkbox-size);
+    line-height: 1.25;
+    color: var(--text);
+}
+
+[data-theme="dark"] .root {
+    --checkbox-error-text: color-mix(in srgb, var(--danger) 75%, white);
+}
+
+.root[data-size="xs"] { --checkbox-size: 0.75rem; }
+.root[data-size="sm"] { --checkbox-size: 0.875rem; }
+.root[data-size="md"] { --checkbox-size: 1rem; }
+.root[data-size="lg"] { --checkbox-size: 1.125rem; }
+.root[data-size="xl"] { --checkbox-size: 1.25rem; }
+
+.root[data-disabled] {
+    opacity: 0.5;
+}
+
+/* ---------- The box ---------- */
+
+.control {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+}
+
+/* The real checkbox, restyled: keyboard, forms and screen readers keep working as normal */
+.input {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: calc(var(--radius) / 2);
+    background: var(--surface);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.input:checked,
+.input:indeterminate {
+    border-color: var(--checkbox-color);
+    background: var(--checkbox-color);
+}
+
+.input:focus-visible {
+    outline: 2px solid var(--checkbox-color);
+    outline-offset: 2px;
+}
+
+.input[aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
+.input:disabled,
+.root[data-disabled] .label {
+    cursor: not-allowed;
+}
+
+/* The check and the dash are drawn on top of the box and only shown when needed */
+.check,
+.dash {
+    position: absolute;
+    inset: 0;
+    width: 0.875em;
+    height: 0.875em;
+    margin: auto;
+    fill: none;
+    stroke: white;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.input:checked:not(:indeterminate) ~ .check,
+.input:indeterminate ~ .dash {
+    opacity: 1;
+}
+
+/* ---------- Label, description, error ---------- */
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+.label {
+    cursor: pointer;
+}
+
+.description,
+.error {
+    font-size: 0.8125em;
+    line-height: 1.4;
+}
+
+.description {
+    color: var(--text-muted);
+}
+
+.error {
+    color: var(--checkbox-error-text);
+}
+
+/*
+ * On a light color like "warning" (orange), the check and the dash picks black or white, whichever is easier
+ * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .root[data-auto-contrast] .check,
+    .root[data-auto-contrast] .dash {
+        stroke: color(
+            from var(--checkbox-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
+}

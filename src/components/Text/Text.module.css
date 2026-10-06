@@ -1,0 +1,68 @@
+.text {
+    /* The size and color props override these (see Text.tsx) */
+    --text-size: 1rem;
+    margin: 0;
+    font-size: var(--text-size);
+    line-height: 1.5;
+}
+
+.text[data-size="xs"] { --text-size: 0.75rem; }
+.text[data-size="sm"] { --text-size: 0.875rem; }
+.text[data-size="md"] { --text-size: 1rem; }
+.text[data-size="lg"] { --text-size: 1.125rem; }
+.text[data-size="xl"] { --text-size: 1.25rem; }
+
+.text[data-weight="normal"] { font-weight: 400; }
+.text[data-weight="medium"] { font-weight: 500; }
+.text[data-weight="semibold"] { font-weight: 600; }
+.text[data-weight="bold"] { font-weight: 700; }
+
+.text[data-muted] {
+    color: var(--text-muted);
+}
+
+/* Colored text: a deeper shade so it stays readable (lighter in dark mode) */
+.text[data-colored] {
+    color: color-mix(in srgb, var(--text-color) 80%, black);
+}
+
+[data-theme="dark"] .text[data-colored] {
+    color: color-mix(in srgb, var(--text-color) 75%, white);
+}
+
+.text[data-truncate] {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.text[data-clamp] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--text-lines);
+    line-clamp: var(--text-lines);
+    overflow: hidden;
+}
+
+/*
+ * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
+ * light background (at least 4.5:1) for every color, even light ones like orange. Colors that are
+ * already dark enough don't change. Dark mode keeps its own rule above, which is more specific.
+ * Browsers without this CSS feature keep the rule above.
+ */
+@supports (color: oklch(from red min(l, 0.5) c h)) {
+    .text[data-colored] {
+        color: oklch(from var(--text-color) min(l, 0.5) c h);
+    }
+}
+
+/*
+ * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
+ * background for every color, even dark ones like slate gray. Colors that are already light enough
+ * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
+ */
+@supports (color: oklch(from red max(l, 0.72) c h)) {
+    [data-theme="dark"] .text[data-colored] {
+        color: oklch(from var(--text-color) max(l, 0.72) c h);
+    }
+}

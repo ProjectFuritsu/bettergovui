@@ -1,0 +1,17 @@
+/* Looks like a key: a thicker bottom edge gives it some depth */
+.kbd {
+    display: inline-block;
+    min-width: 1.75em;
+    padding: 0.125em 0.4em;
+    border: 1px solid var(--border-strong);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8125em;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    white-space: nowrap;
+}

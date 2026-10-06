@@ -1,0 +1,125 @@
+.alert {
+    /* The color prop overrides this (see Alert.tsx) */
+    --alert-color: var(--info);
+    /* Title and icon color: a darker shade so it stays readable (lighter in dark mode) */
+    --alert-text: color-mix(in srgb, var(--alert-color) 60%, black);
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+[data-theme="dark"] .alert {
+    --alert-text: color-mix(in srgb, var(--alert-color) 75%, white);
+}
+
+/* light: a soft tint of the color (works on light and dark backgrounds) */
+.alert[data-variant="light"] {
+    background: color-mix(in srgb, var(--alert-color) 12%, var(--surface));
+}
+
+/* outline: border only */
+.alert[data-variant="outline"] {
+    border-color: var(--alert-text);
+}
+
+/* filled: solid background, everything white */
+.alert[data-variant="filled"] {
+    background: var(--alert-color);
+    color: white;
+    --alert-text: white;
+}
+
+/*
+ * autoContrast: black or white text (and icon), whichever is easier to read on the color.
+ * Same rule as Badge.module.css. Browsers without this CSS feature skip it and keep white.
+ */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .alert[data-variant="filled"][data-auto-contrast] {
+        --alert-text: color(
+            from var(--alert-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+        color: var(--alert-text);
+    }
+}
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 1.5em; /* one line tall, so it lines up with the title */
+    color: var(--alert-text);
+}
+
+.icon svg,
+.close svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Drawing style of the built-in icons only, so custom icons (any icon set) keep their own */
+.line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.body {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    margin: 0;
+    font-weight: 700;
+    color: var(--alert-text);
+}
+
+.title + .message {
+    margin-top: 0.25rem;
+}
+
+.close {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin: -0.125rem -0.25rem 0 0;
+    padding: 0.25rem;
+    border: none;
+    border-radius: calc(var(--radius) / 2);
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.close:hover {
+    opacity: 1;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.close:focus-visible {
+    outline: 2px solid var(--alert-text);
+    outline-offset: 1px;
+    opacity: 1;
+}
+
+/*
+ * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
+ * background for every color, even dark ones like slate gray. Colors that are already light enough
+ * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
+ */
+@supports (color: oklch(from red max(l, 0.72) c h)) {
+    [data-theme="dark"] .alert:not([data-variant="filled"]) {
+        --alert-text: oklch(from var(--alert-color) max(l, 0.72) c h);
+    }
+}

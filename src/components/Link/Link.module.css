@@ -1,0 +1,80 @@
+.link {
+    /* The color prop overrides this (see Link.tsx) */
+    --link-color: var(--primary);
+    /* A deeper shade so it's readable as text (lighter in dark mode) */
+    color: color-mix(in srgb, var(--link-color) 80%, black);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    border-radius: 2px;
+}
+
+[data-theme="dark"] .link {
+    color: color-mix(in srgb, var(--link-color) 75%, white);
+}
+
+.link[data-underline="always"] {
+    text-decoration-line: underline;
+}
+
+.link[data-underline="hover"],
+.link[data-underline="never"] {
+    text-decoration-line: none;
+}
+
+.link[data-underline="always"]:hover,
+.link[data-underline="hover"]:hover,
+.link[data-underline="hover"]:focus-visible {
+    text-decoration-line: underline;
+    text-decoration-thickness: 2px;
+}
+
+.link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.externalIcon {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-left: 0.15em;
+    vertical-align: -0.05em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Only for screen readers */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/*
+ * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
+ * light background (at least 4.5:1) for every color, even light ones like orange. Colors that are
+ * already dark enough don't change. Dark mode keeps its own rule above, which is more specific.
+ * Browsers without this CSS feature keep the rule above.
+ */
+@supports (color: oklch(from red min(l, 0.5) c h)) {
+    .link {
+        color: oklch(from var(--link-color) min(l, 0.5) c h);
+    }
+}
+
+/*
+ * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
+ * background for every color, even dark ones like slate gray. Colors that are already light enough
+ * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
+ */
+@supports (color: oklch(from red max(l, 0.72) c h)) {
+    [data-theme="dark"] .link {
+        color: oklch(from var(--link-color) max(l, 0.72) c h);
+    }
+}

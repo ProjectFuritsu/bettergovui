@@ -1,0 +1,33 @@
+.group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--group-gap);
+    min-width: 0;
+}
+
+.group[data-nowrap] { flex-wrap: nowrap; }
+
+.group[data-align="center"] { align-items: center; }
+.group[data-align="start"] { align-items: flex-start; }
+.group[data-align="end"] { align-items: flex-end; }
+.group[data-align="stretch"] { align-items: stretch; }
+.group[data-align="baseline"] { align-items: baseline; }
+
+.group[data-justify="start"] { justify-content: flex-start; }
+.group[data-justify="center"] { justify-content: center; }
+.group[data-justify="end"] { justify-content: flex-end; }
+.group[data-justify="space-between"] { justify-content: space-between; }
+
+/* grow: every item takes an equal share of the row */
+.group[data-grow] > * {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* as="ul" / "ol": no bullets or indent. :where() keeps this from beating your own classes. */
+:where(ul.group, ol.group) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}

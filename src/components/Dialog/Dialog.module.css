@@ -1,0 +1,194 @@
+/* ---------- Shared by Modal and Drawer ---------- */
+
+.dialog {
+    /* The <dialog> is just a frame; the panel inside draws the box */
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    overflow: visible;
+}
+
+.dialog::backdrop {
+    background: rgb(0 0 0 / 0.5);
+    animation: fade-in 0.15s ease-out;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    box-shadow: 0 16px 48px rgb(0 0 0 / 0.25);
+    overflow: hidden;
+}
+
+[data-theme="dark"] .panel {
+    border: 1px solid var(--border);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 0;
+}
+
+.heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.description {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.close {
+    display: inline-flex;
+    flex-shrink: 0;
+    margin: -0.25rem -0.375rem 0 0;
+    padding: 0.375rem;
+    border: none;
+    border-radius: calc(var(--radius) / 2);
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.close:hover {
+    background: var(--surface-muted);
+    color: var(--text);
+}
+
+.close:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.close svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+/* The content scrolls by itself when it's long; the header and footer stay put */
+.body {
+    flex: 1;
+    min-height: 0;
+    padding: 1rem 1.25rem;
+    overflow-y: auto;
+    line-height: 1.5;
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0 1.25rem 1.25rem;
+}
+
+/* No body: give the footer some room under the header */
+.header + .footer {
+    padding-top: 1.25rem;
+}
+
+/* ---------- Modal: centered box ---------- */
+
+.modal {
+    width: min(var(--dialog-size), calc(100vw - 2rem));
+    margin: auto;
+}
+
+.modal .panel {
+    max-height: calc(100dvh - 2rem);
+    border-radius: calc(var(--radius) * 1.5);
+    animation: pop-in 0.15s ease-out;
+}
+
+/* ---------- Drawer: a panel along one edge ---------- */
+
+.drawer {
+    position: fixed;
+    margin: 0;
+}
+
+.drawer .panel {
+    width: 100%;
+    height: 100%;
+}
+
+.drawer[data-position="right"],
+.drawer[data-position="left"] {
+    top: 0;
+    bottom: 0;
+    width: min(var(--dialog-size), 100vw);
+    height: 100dvh;
+}
+
+.drawer[data-position="right"] { right: 0; left: auto; }
+.drawer[data-position="left"] { left: 0; right: auto; }
+
+.drawer[data-position="top"],
+.drawer[data-position="bottom"] {
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: min(var(--dialog-size), 100dvh);
+}
+
+.drawer[data-position="top"] { top: 0; bottom: auto; }
+.drawer[data-position="bottom"] { bottom: 0; top: auto; }
+
+.drawer[data-position="right"] .panel { animation: slide-from-right 0.2s ease-out; }
+.drawer[data-position="left"] .panel { animation: slide-from-left 0.2s ease-out; }
+.drawer[data-position="top"] .panel { animation: slide-from-top 0.2s ease-out; }
+.drawer[data-position="bottom"] .panel { animation: slide-from-bottom 0.2s ease-out; }
+
+/* ---------- Animations ---------- */
+
+@keyframes fade-in {
+    from { opacity: 0; }
+}
+
+@keyframes pop-in {
+    from { opacity: 0; transform: scale(0.96); }
+}
+
+@keyframes slide-from-right {
+    from { transform: translateX(100%); }
+}
+
+@keyframes slide-from-left {
+    from { transform: translateX(-100%); }
+}
+
+@keyframes slide-from-top {
+    from { transform: translateY(-100%); }
+}
+
+@keyframes slide-from-bottom {
+    from { transform: translateY(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dialog::backdrop,
+    .panel,
+    .drawer .panel {
+        animation: none !important;
+    }
+}

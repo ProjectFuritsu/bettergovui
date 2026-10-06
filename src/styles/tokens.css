@@ -1,0 +1,48 @@
+/* Design tokens: global on purpose, so apps can override them */
+:root {
+    /* #0d6efd: white text on it is 4.5:1, the minimum for readable text */
+    --primary: #0d6efd;
+    /* White text on each of these is at least 4.5:1 (secondary 8.2, tertiary 4.8, accent 5.5) */
+    --secondary: #495057; /* slate gray */
+    --tertiary: #0b7d90; /* teal */
+    --accent: #7048e8; /* violet */
+    /* Same blue as --primary: white text on it is 4.5:1 */
+    --info: #0d6efd;
+    /* A deeper green, so white text on it is 5:1 */
+    --success: #278039;
+    --warning: #ff9800;
+    --danger: #e03131;
+    --radius: 8px;
+
+    /* Neutrals shared by all components */
+    --surface: #ffffff;
+    --surface-muted: #f1f3f5;
+    --border: #d5dbe3;
+    /* Outlines of form controls (inputs, checkboxes, switches): at least 3:1 against the background */
+    --border-strong: #8c939d;
+    --text: #1c2430;
+    --text-muted: #5b6573;
+
+    /* Spacing scale: what gap="xs" … gap="xl" mean in every component */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+}
+
+/*
+ * Dark theme: add data-theme="dark" to <html> to make the whole page dark,
+ * or to any element to make just that part dark. Every component follows automatically.
+ * Tip: give your page `background: var(--surface); color: var(--text);` so it matches.
+ */
+[data-theme="dark"] {
+    --surface: #1a1b1e;
+    --surface-muted: #2c2e33;
+    --border: #373a40;
+    --border-strong: #6c6f76;
+    --text: #e9ecef;
+    --text-muted: #a6a7ab;
+    /* Native parts (scrollbars, inputs, dropdowns) go dark too */
+    color-scheme: dark;
+}

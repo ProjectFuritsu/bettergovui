@@ -1,0 +1,83 @@
+.avatar {
+    /* The size, radius and color props override these (see Avatar.tsx) */
+    --avatar-size: 2.5rem;
+    --avatar-radius: 50%;
+    --avatar-color: var(--text-muted);
+    /* Initials color on the light background: a darker shade (lighter in dark mode) */
+    --avatar-text: color-mix(in srgb, var(--avatar-color) 60%, black);
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    overflow: hidden;
+    border-radius: var(--avatar-radius);
+    /* Initials scale with the avatar */
+    font-size: calc(var(--avatar-size) * 0.4);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+    user-select: none;
+}
+
+[data-theme="dark"] .avatar {
+    --avatar-text: color-mix(in srgb, var(--avatar-color) 75%, white);
+}
+
+.avatar[data-size="xs"] { --avatar-size: 1.5rem; }
+.avatar[data-size="sm"] { --avatar-size: 2rem; }
+.avatar[data-size="md"] { --avatar-size: 2.5rem; }
+.avatar[data-size="lg"] { --avatar-size: 3.5rem; }
+.avatar[data-size="xl"] { --avatar-size: 5rem; }
+
+.avatar[data-variant="light"] {
+    background: color-mix(in srgb, var(--avatar-color) 18%, var(--surface));
+    color: var(--avatar-text);
+}
+
+.avatar[data-variant="filled"] {
+    background: var(--avatar-color);
+    color: white;
+}
+
+/* Filled avatars always pick black or white initials, whichever reads better (same rule as Badge) */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .avatar[data-variant="filled"] {
+        color: color(
+            from var(--avatar-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* The person icon shown with no photo and no name */
+.placeholder {
+    width: 60%;
+    height: 60%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/*
+ * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
+ * background for every color, even dark ones like slate gray. Colors that are already light enough
+ * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
+ */
+@supports (color: oklch(from red max(l, 0.72) c h)) {
+    [data-theme="dark"] .avatar {
+        --avatar-text: oklch(from var(--avatar-color) max(l, 0.72) c h);
+    }
+}

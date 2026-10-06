@@ -1,0 +1,8 @@
+# Installed packages and build output (recreated by npm install / npm run build)
+node_modules/
+dist/
+*.tgz
+
+# Editor and personal settings
+.idea/
+.claude/settings.local.json

@@ -1,0 +1,90 @@
+.root {
+    /* The size prop overrides this (see Textarea.tsx) */
+    --textarea-size: 1rem;
+    --textarea-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375em;
+    width: 100%;
+    font-size: var(--textarea-size);
+}
+
+[data-theme="dark"] .root {
+    --textarea-error-text: color-mix(in srgb, var(--danger) 75%, white);
+}
+
+.root[data-size="xs"] { --textarea-size: 0.75rem; }
+.root[data-size="sm"] { --textarea-size: 0.875rem; }
+.root[data-size="md"] { --textarea-size: 1rem; }
+.root[data-size="lg"] { --textarea-size: 1.125rem; }
+.root[data-size="xl"] { --textarea-size: 1.25rem; }
+
+/* Label, description and error match Input */
+.label {
+    font-size: 0.875em;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.required {
+    color: var(--textarea-error-text);
+}
+
+.description,
+.error {
+    margin: 0;
+    font-size: 0.8125em;
+    line-height: 1.4;
+}
+
+.description {
+    color: var(--text-muted);
+}
+
+.error {
+    color: var(--textarea-error-text);
+}
+
+.textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.625em 0.75em;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    line-height: 1.5;
+    resize: vertical; /* the user can drag it taller */
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+/* With autosize the height follows the text, so there's nothing to drag */
+.textarea[data-autosize] {
+    resize: none;
+}
+
+.textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.textarea[aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
+.textarea[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+}
+
+.textarea:disabled {
+    background: var(--surface-muted);
+    opacity: 0.6;
+    cursor: not-allowed;
+}

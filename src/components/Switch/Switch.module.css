@@ -1,0 +1,133 @@
+.root {
+    /* The size and color props override these (see Switch.tsx) */
+    --switch-size: 1rem;
+    --switch-color: var(--primary);
+    --switch-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.75em;
+    font-size: var(--switch-size);
+    line-height: 1.25;
+    color: var(--text);
+}
+
+[data-theme="dark"] .root {
+    --switch-error-text: color-mix(in srgb, var(--danger) 75%, white);
+}
+
+.root[data-size="xs"] { --switch-size: 0.75rem; }
+.root[data-size="sm"] { --switch-size: 0.875rem; }
+.root[data-size="md"] { --switch-size: 1rem; }
+.root[data-size="lg"] { --switch-size: 1.125rem; }
+.root[data-size="xl"] { --switch-size: 1.25rem; }
+
+.root[data-disabled] {
+    opacity: 0.5;
+}
+
+/* ---------- Track and thumb ---------- */
+
+.control {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 2.25em;
+    height: 1.25em;
+}
+
+/* The real checkbox, restyled as the track */
+.input {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 999px;
+    background: var(--border-strong);
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.input:checked {
+    background: var(--switch-color);
+}
+
+.input:focus-visible {
+    outline: 2px solid var(--switch-color);
+    outline-offset: 2px;
+}
+
+.input[aria-invalid="true"] {
+    outline: 2px solid var(--danger);
+    outline-offset: 2px;
+}
+
+.input:disabled,
+.root[data-disabled] .label {
+    cursor: not-allowed;
+}
+
+/* The white circle; it slides right when the switch is on */
+.thumb {
+    position: absolute;
+    top: 0.1875em;
+    left: 0.1875em;
+    width: 0.875em;
+    height: 0.875em;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    pointer-events: none;
+    transition: transform 0.15s;
+}
+
+.input:checked + .thumb {
+    transform: translateX(1em);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .input,
+    .thumb {
+        transition: none;
+    }
+}
+
+/* ---------- Label, description, error ---------- */
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+.label {
+    cursor: pointer;
+}
+
+.description,
+.error {
+    font-size: 0.8125em;
+    line-height: 1.4;
+}
+
+.description {
+    color: var(--text-muted);
+}
+
+.error {
+    color: var(--switch-error-text);
+}
+
+/*
+ * On a light color like "warning" (orange), the knob when on picks black or white, whichever is easier
+ * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .root[data-auto-contrast] .input:checked + .thumb {
+        background: color(
+            from var(--switch-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
+}

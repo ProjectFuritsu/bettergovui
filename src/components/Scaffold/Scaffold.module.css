@@ -1,0 +1,350 @@
+/*
+ * A grid with named areas. A part that's left out takes no room: its row or column is "auto", so it
+ * shrinks to nothing.
+ *
+ *   wide (64em / 1024px and up)   tablet                 phone (under 48em / 768px)
+ *   header header header          header header          header
+ *   navbar main   aside           navbar main            main
+ *   footer footer footer          navbar aside           aside
+ *                                 footer footer          footer   (+ the navbar slides in on top)
+ */
+.scaffold {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "header header header"
+        "navbar main aside"
+        "footer footer footer";
+    min-height: 100vh;
+    min-height: 100dvh; /* the visible height on phones, without the browser's address bar */
+    background: var(--surface);
+    color: var(--text);
+}
+
+/* ---------- Skip link: hidden until it gets keyboard focus, then shown at the top left ---------- */
+
+.skipLink {
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    z-index: 400;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.skipLink:not(:focus) {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skipLink:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+}
+
+/* ---------- Header ---------- */
+
+.header {
+    grid-area: header;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    min-height: 3.5rem;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.header[data-sticky] {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* ---------- Navbar ---------- */
+
+.navbar {
+    grid-area: navbar;
+    box-sizing: border-box;
+    width: var(--scaffold-navbar-width, 16rem);
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+}
+
+/* The navbar's content stays in view while the page scrolls (below the header, if that's sticky), and scrolls by itself when it's long */
+.navbarInner {
+    position: sticky;
+    top: var(--scaffold-sticky-top, 0px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    max-height: calc(100vh - var(--scaffold-sticky-top, 0px));
+    max-height: calc(100dvh - var(--scaffold-sticky-top, 0px));
+    padding: var(--spacing-md);
+    overflow-y: auto;
+}
+
+/* The close button row: only on phones */
+.navbarTop {
+    display: none;
+    justify-content: flex-end;
+    margin-bottom: var(--spacing-xs);
+}
+
+/*
+ * Links in the navbar look like menu items. :where() gives these rules no weight, so your own
+ * classes on the links always win.
+ */
+:where(.navbarInner ul, .navbarInner ol) {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+:where(.navbarInner a) {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: calc(var(--radius) - 2px);
+    color: var(--text);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+}
+
+:where(.navbarInner a:hover) {
+    background: var(--surface-muted);
+}
+
+/* The current page: a tinted background and a bar on the left (the text stays the normal color, so it's easy to read) */
+:where(.navbarInner a[aria-current="page"]) {
+    background: color-mix(in srgb, var(--primary) 12%, var(--surface));
+    box-shadow: inset 3px 0 0 var(--primary);
+    font-weight: 600;
+}
+
+:where(.navbarInner a:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+:where(.navbarInner a svg) {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.backdrop {
+    display: none;
+}
+
+/* ---------- Main ---------- */
+
+.main {
+    grid-area: main;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: var(--scaffold-main-padding, var(--spacing-lg));
+}
+
+/* Focus only lands here from the skip link; the whole page outlined would just be noise */
+.main:focus {
+    outline: none;
+}
+
+/* ---------- Aside ---------- */
+
+.aside {
+    grid-area: aside;
+    box-sizing: border-box;
+    width: var(--scaffold-aside-width, 18rem);
+    border-left: 1px solid var(--border);
+}
+
+.asideInner {
+    position: sticky;
+    top: var(--scaffold-sticky-top, 0px);
+    box-sizing: border-box;
+    max-height: calc(100vh - var(--scaffold-sticky-top, 0px));
+    max-height: calc(100dvh - var(--scaffold-sticky-top, 0px));
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+    grid-area: footer;
+    box-sizing: border-box;
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--border);
+    background: var(--surface-muted);
+}
+
+/* ---------- Icon buttons: the burger and the navbar's close button ---------- */
+
+.iconButton {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem; /* 44px: easy to tap */
+    height: 2.75rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius);
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.iconButton:hover {
+    background: var(--surface-muted);
+}
+
+.iconButton:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.iconButton svg {
+    width: 1.375rem;
+    height: 1.375rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+/* Lines it up with the header's edge */
+.burger {
+    margin-left: calc(var(--spacing-sm) * -1);
+}
+
+/* ---------- Tablets: the aside moves under the main content ---------- */
+
+@media (width < 64em) {
+    .scaffold {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: auto 1fr auto auto;
+        grid-template-areas:
+            "header header"
+            "navbar main"
+            "navbar aside"
+            "footer footer";
+    }
+
+    .aside {
+        width: auto;
+        border-top: 1px solid var(--border);
+        border-left: none;
+    }
+
+    .asideInner {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+/* ---------- Phones: the navbar becomes a menu that slides in from the left ---------- */
+
+@media (width < 48em) {
+    .scaffold {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "header"
+            "main"
+            "aside"
+            "footer";
+    }
+
+    .header {
+        padding-right: var(--spacing-md);
+        padding-left: var(--spacing-md);
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 300;
+        width: min(var(--scaffold-navbar-width, 16rem), calc(100vw - 3rem));
+        box-shadow: 0 0 32px rgb(0 0 0 / 0.25);
+        /* Off screen and hidden from keyboards and screen readers while closed */
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.2s ease, visibility 0s linear 0.2s;
+    }
+
+    .navbar[data-open] {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.2s ease;
+    }
+
+    .navbarInner {
+        position: static;
+        height: 100%;
+        max-height: none;
+    }
+
+    .navbarTop {
+        display: flex;
+    }
+
+    .backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 299;
+        display: block;
+        background: rgb(0 0 0 / 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+    }
+
+    .backdrop[data-open] {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.2s ease;
+    }
+
+    .main {
+        padding: var(--scaffold-main-padding, var(--spacing-md));
+    }
+}
+
+/* The burger is only needed where the navbar is hidden */
+@media (width >= 48em) {
+    .burger {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar,
+    .navbar[data-open],
+    .backdrop,
+    .backdrop[data-open] {
+        transition: none;
+    }
+}

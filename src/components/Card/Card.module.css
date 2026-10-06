@@ -1,0 +1,121 @@
+.card {
+    /* The padding and radius props override these (see Card.tsx) */
+    --card-padding: var(--spacing-lg);
+    --card-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: var(--card-padding);
+    border: 1px solid transparent;
+    border-radius: var(--card-radius);
+    background: var(--surface);
+    color: var(--text);
+    overflow: hidden; /* images in a CardSection follow the rounded corners */
+}
+
+.card[data-variant="outline"] {
+    border-color: var(--border);
+}
+
+.card[data-variant="elevated"] {
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 16px rgb(0 0 0 / 0.08);
+}
+
+[data-theme="dark"] .card[data-variant="elevated"] {
+    /* Shadows barely show on dark backgrounds, so add a faint edge */
+    border-color: var(--border);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.4);
+}
+
+.card[data-variant="filled"] {
+    background: var(--surface-muted);
+}
+
+/*
+ * hoverable: lifts a little, with a deeper shadow and a stronger border. The same happens when a link
+ * or button inside has keyboard focus (:focus-within), so keyboard users see it too.
+ */
+.card[data-hoverable] {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.card[data-hoverable]:hover,
+.card[data-hoverable]:focus-within {
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.06), 0 12px 28px rgb(0 0 0 / 0.12);
+}
+
+[data-theme="dark"] .card[data-hoverable]:hover,
+[data-theme="dark"] .card[data-hoverable]:focus-within {
+    box-shadow: 0 12px 28px rgb(0 0 0 / 0.5);
+}
+
+/* For people who turn down animations in their OS settings: no movement, just the shadow and border */
+@media (prefers-reduced-motion: reduce) {
+    .card[data-hoverable] {
+        transition: none;
+    }
+
+    .card[data-hoverable]:hover,
+    .card[data-hoverable]:focus-within {
+        transform: none;
+    }
+}
+
+/* Space between the things inside the card */
+.card > * + * {
+    margin-top: var(--spacing-md);
+}
+
+.title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.description {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* The description sits close to its title */
+.card > .title + .description {
+    margin-top: var(--spacing-xs);
+}
+
+/* Edge to edge: cancel the card's padding on the sides (and at the top/bottom when it's first/last) */
+.section {
+    margin-right: calc(var(--card-padding) * -1);
+    margin-left: calc(var(--card-padding) * -1);
+}
+
+.card > .section:first-child {
+    margin-top: calc(var(--card-padding) * -1);
+}
+
+.card > .section:last-child {
+    margin-bottom: calc(var(--card-padding) * -1);
+}
+
+.section > img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Pushes the footer to the bottom when cards in a row have different heights */
+.card > .footer {
+    margin-top: auto;
+    padding-top: var(--spacing-md);
+}

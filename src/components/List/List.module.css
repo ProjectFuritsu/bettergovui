@@ -1,0 +1,52 @@
+.list {
+    /* The spacing and size props override these (see List.tsx) */
+    --list-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--list-spacing);
+    margin: 0;
+    padding-left: 1.5em;
+    font-size: var(--list-size);
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.list[data-size="xs"] { --list-size: 0.75rem; }
+.list[data-size="sm"] { --list-size: 0.875rem; }
+.list[data-size="md"] { --list-size: 1rem; }
+.list[data-size="lg"] { --list-size: 1.125rem; }
+.list[data-size="xl"] { --list-size: 1.25rem; }
+
+.item::marker {
+    color: var(--list-color, var(--text-muted));
+}
+
+/* With icons: no bullets, the icon takes their place */
+.list[data-with-icons] {
+    padding-left: 0;
+    list-style: none;
+}
+
+.item[data-with-icon] {
+    display: flex;
+    gap: 0.5em;
+}
+
+.icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.25em;
+    height: 1.5em; /* one line tall, so it lines up with the first line of text */
+    color: var(--list-color, var(--primary));
+}
+
+.icon svg {
+    width: 1.125em;
+    height: 1.125em;
+}
+
+.content {
+    min-width: 0;
+}

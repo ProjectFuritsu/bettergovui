@@ -1,0 +1,236 @@
+/* ---------- Root ---------- */
+
+.tabs {
+    /* Defaults. The color, radius and size props override these (see Tabs.tsx) */
+    --tabs-color: var(--primary);
+    --tabs-radius: var(--radius);
+    --tabs-size: 1rem;
+    /* "initial" = not set, so the fallback defaults are used (16px here, each variant's own in .list).
+       It also stops an outer Tabs' spacing from leaking into Tabs placed inside it. */
+    --tabs-gap: initial;
+    --tabs-panel-gap: initial;
+    display: flex;
+    flex-direction: column;
+    gap: var(--tabs-panel-gap, 16px); /* space between the tab list and the panel */
+}
+
+.tabs[data-orientation="vertical"] {
+    flex-direction: row;
+}
+
+.tabs[data-size="xs"] { --tabs-size: 0.75rem; }
+.tabs[data-size="sm"] { --tabs-size: 0.875rem; }
+.tabs[data-size="md"] { --tabs-size: 1rem; }
+.tabs[data-size="lg"] { --tabs-size: 1.125rem; }
+.tabs[data-size="xl"] { --tabs-size: 1.25rem; }
+
+/* ---------- List and tab (shared by all variants) ---------- */
+
+.list {
+    display: flex;
+    flex-wrap: wrap; /* like Mantine: tabs move to a new row instead of overflowing */
+    gap: var(--tabs-gap, 4px);
+}
+
+.list[data-orientation="vertical"] {
+    flex-direction: column;
+}
+
+.tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em; /* room for an icon next to the label */
+    padding: 0.5em 1em;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: var(--tabs-size);
+    font-weight: 600;
+    line-height: 1.25; /* same as the icon box, so icons never change a tab's height */
+    color: var(--text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.tab:hover {
+    color: var(--text);
+}
+
+.tab[data-orientation="vertical"] {
+    justify-content: flex-start;
+}
+
+.tab[data-grow] {
+    flex: 1;
+}
+
+.tab:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tab:focus-visible,
+.panel:focus-visible {
+    outline: 2px solid var(--tabs-color);
+    outline-offset: 2px;
+}
+
+.panel {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ---------- Variant: underline (Mantine "default") ---------- */
+
+.list[data-variant="underline"] {
+    border-bottom: 1px solid var(--border);
+}
+
+.tab[data-variant="underline"] {
+    margin-bottom: -1px; /* sit on top of the list's border */
+    border-bottom: 2px solid transparent;
+    border-radius: var(--tabs-radius) var(--tabs-radius) 0 0;
+}
+
+.tab[data-variant="underline"][aria-selected="false"]:hover:not(:disabled) {
+    background: var(--surface-muted);
+}
+
+.tab[data-variant="underline"][aria-selected="true"] {
+    color: var(--text);
+    border-bottom-color: var(--tabs-color);
+}
+
+.list[data-variant="underline"][data-orientation="vertical"] {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+}
+
+.tab[data-variant="underline"][data-orientation="vertical"] {
+    margin: 0 -1px 0 0;
+    border-bottom: none;
+    border-right: 2px solid transparent;
+    border-radius: var(--tabs-radius) 0 0 var(--tabs-radius);
+}
+
+.tab[data-variant="underline"][data-orientation="vertical"][aria-selected="true"] {
+    border-right-color: var(--tabs-color);
+}
+
+/* ---------- Variant: outline (Mantine "outline") ---------- */
+
+.list[data-variant="outline"] {
+    border-bottom: 1px solid var(--border);
+}
+
+.tab[data-variant="outline"] {
+    margin-bottom: -1px;
+    border: 1px solid transparent;
+    border-radius: var(--tabs-radius) var(--tabs-radius) 0 0;
+}
+
+.tab[data-variant="outline"][aria-selected="true"] {
+    color: var(--text);
+    background: var(--surface);
+    border-color: var(--border);
+    border-bottom-color: var(--surface); /* hides the list border under the active tab */
+}
+
+.list[data-variant="outline"][data-orientation="vertical"] {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+}
+
+.tab[data-variant="outline"][data-orientation="vertical"] {
+    margin: 0 -1px 0 0;
+    border-radius: var(--tabs-radius) 0 0 var(--tabs-radius);
+}
+
+.tab[data-variant="outline"][data-orientation="vertical"][aria-selected="true"] {
+    border-bottom-color: var(--border);
+    border-right-color: var(--surface);
+}
+
+/* ---------- Variant: pills (Mantine "pills") ---------- */
+
+.tab[data-variant="pills"] {
+    border-radius: var(--tabs-radius);
+}
+
+.tab[data-variant="pills"][aria-selected="false"]:hover:not(:disabled) {
+    background: var(--surface-muted);
+}
+
+.tab[data-variant="pills"][aria-selected="true"] {
+    background: var(--tabs-color);
+    color: white;
+}
+
+/* ---------- Variant: segmented (shadcn/ui) ---------- */
+
+.list[data-variant="segmented"] {
+    gap: var(--tabs-gap, 2px);
+    padding: 3px;
+    background: var(--surface-muted);
+    border-radius: var(--tabs-radius);
+}
+
+/* Shrink to fit the tabs unless `grow` is on */
+.list[data-variant="segmented"]:not([data-grow]) {
+    align-self: flex-start;
+}
+
+.tab[data-variant="segmented"] {
+    padding: 0.375em 0.875em;
+    border-radius: calc(var(--tabs-radius) - 2px);
+}
+
+.tab[data-variant="segmented"][aria-selected="true"] {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+/* ---------- Icons ---------- */
+
+/* The box is exactly one line of text tall, so an icon never changes the tab's height */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+}
+
+/* Icons grow with the tabs' size. Override with the --tabs-icon-size variable. */
+.icon svg {
+    width: var(--tabs-icon-size, 1.125em);
+    height: var(--tabs-icon-size, 1.125em);
+}
+
+/* Same padding on every side makes an icon-only tab square. Placed last so it wins over the variants. */
+.tab.iconOnly {
+    padding: 0.5em;
+}
+
+.tab.iconOnly[data-variant="segmented"] {
+    padding: 0.375em;
+}
+
+/*
+ * On a light color like "warning" (orange), the active pill's text picks black or white, whichever is easier
+ * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .tabs[data-auto-contrast] .tab[data-variant="pills"][aria-selected="true"] {
+        color: color(
+            from var(--tabs-color) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
+}

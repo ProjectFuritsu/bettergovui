@@ -1,0 +1,48 @@
+.heading {
+    margin: 0;
+    color: var(--text);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance; /* avoids a single short word on the last line */
+}
+
+/* Colored headings: a deeper shade so they stay readable (lighter in dark mode), like Text */
+.heading[data-colored] {
+    color: color-mix(in srgb, var(--heading-color) 80%, black);
+}
+
+[data-theme="dark"] .heading[data-colored] {
+    color: color-mix(in srgb, var(--heading-color) 75%, white);
+}
+
+/* The big sizes scale between a phone size and a desktop size with the screen width */
+.heading[data-size="1"] { font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem); line-height: 1.2; }
+.heading[data-size="2"] { font-size: clamp(1.5rem, 1.25rem + 1.1vw, 1.875rem); }
+.heading[data-size="3"] { font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem); }
+.heading[data-size="4"] { font-size: 1.25rem; line-height: 1.35; }
+.heading[data-size="5"] { font-size: 1.125rem; line-height: 1.4; }
+.heading[data-size="6"] { font-size: 1rem; line-height: 1.4; }
+
+/*
+ * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
+ * light background (at least 4.5:1) for every color, even light ones like orange. Colors that are
+ * already dark enough don't change. Dark mode keeps its own rule above, which is more specific.
+ * Browsers without this CSS feature keep the rule above.
+ */
+@supports (color: oklch(from red min(l, 0.5) c h)) {
+    .heading[data-colored] {
+        color: oklch(from var(--heading-color) min(l, 0.5) c h);
+    }
+}
+
+/*
+ * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
+ * background for every color, even dark ones like slate gray. Colors that are already light enough
+ * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
+ */
+@supports (color: oklch(from red max(l, 0.72) c h)) {
+    [data-theme="dark"] .heading[data-colored] {
+        color: oklch(from var(--heading-color) max(l, 0.72) c h);
+    }
+}

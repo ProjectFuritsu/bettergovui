@@ -1,0 +1,116 @@
+.root {
+    /* The size prop overrides this (see Input.tsx) */
+    --input-size: 1rem;
+    /* Error text: a darker red so small text stays readable (lighter in dark mode, below) */
+    --input-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375em;
+    width: 100%;
+    font-size: var(--input-size);
+}
+
+[data-theme="dark"] .root {
+    --input-error-text: color-mix(in srgb, var(--danger) 75%, white);
+}
+
+.root[data-size="xs"] { --input-size: 0.75rem; }
+.root[data-size="sm"] { --input-size: 0.875rem; }
+.root[data-size="md"] { --input-size: 1rem; }
+.root[data-size="lg"] { --input-size: 1.125rem; }
+.root[data-size="xl"] { --input-size: 1.25rem; }
+
+.label {
+    font-size: 0.875em;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.required {
+    color: var(--input-error-text);
+}
+
+.description,
+.error {
+    margin: 0;
+    font-size: 0.8125em;
+    line-height: 1.4;
+}
+
+.description {
+    color: var(--text-muted);
+}
+
+.error {
+    color: var(--input-error-text);
+}
+
+/* The bordered box. The <input> inside has no border, so icons can sit next to it. */
+.field {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0 0.75em;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text-muted); /* icon color */
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.field[data-invalid] {
+    border-color: var(--danger);
+}
+
+.field[data-invalid]:focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+}
+
+.field[data-disabled] {
+    background: var(--surface-muted);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.input {
+    flex: 1;
+    min-width: 0;
+    /* Same height as a Button of the same size: 2 × 0.625em padding + 1.25em line + border */
+    padding: 0.625em 0;
+    border: none;
+    outline: none; /* the field shows the focus ring instead */
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    line-height: 1.25;
+}
+
+.input::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+.input:disabled {
+    cursor: not-allowed;
+}
+
+/* ---------- Icons ---------- */
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+}
+
+.icon svg {
+    width: 1.125em;
+    height: 1.125em;
+}

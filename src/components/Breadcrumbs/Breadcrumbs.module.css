@@ -1,0 +1,110 @@
+.breadcrumbs {
+    /* The size prop overrides this (see Breadcrumbs.tsx) */
+    --breadcrumbs-size: 0.875rem;
+    /* The color prop overrides this (see Breadcrumbs.tsx) */
+    --breadcrumbs-color: var(--primary);
+    /* Link color: a darker shade so it's readable (lighter in dark mode) */
+    --breadcrumbs-link: color-mix(in srgb, var(--breadcrumbs-color) 80%, black);
+    font-size: var(--breadcrumbs-size);
+    line-height: 1.5;
+}
+
+[data-theme="dark"] .breadcrumbs {
+    --breadcrumbs-link: color-mix(in srgb, var(--breadcrumbs-color) 75%, white);
+}
+
+.breadcrumbs[data-size="xs"] { --breadcrumbs-size: 0.75rem; }
+.breadcrumbs[data-size="sm"] { --breadcrumbs-size: 0.8125rem; }
+.breadcrumbs[data-size="md"] { --breadcrumbs-size: 0.875rem; }
+.breadcrumbs[data-size="lg"] { --breadcrumbs-size: 1rem; }
+.breadcrumbs[data-size="xl"] { --breadcrumbs-size: 1.125rem; }
+
+.list {
+    display: flex;
+    flex-wrap: wrap; /* long trails wrap onto the next line on small screens */
+    align-items: center;
+    gap: 0.375em;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.item {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+}
+
+/* Links in the trail */
+.item a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375em;
+    border-radius: 4px;
+    color: var(--breadcrumbs-link);
+    text-decoration: none;
+}
+
+.item a:hover {
+    text-decoration: underline;
+}
+
+.item a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* The current page: plain text, not a link color */
+.item [aria-current="page"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375em;
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* Icons inside items (e.g. a home icon) match the text size */
+.item svg {
+    width: 1.125em;
+    height: 1.125em;
+    flex-shrink: 0;
+}
+
+.separator {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-muted);
+}
+
+.chevron {
+    width: 1em;
+    height: 1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/*
+ * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
+ * light background (at least 4.5:1) for every color, even light ones like orange. Colors that are
+ * already dark enough don't change. Dark mode keeps its own rule above, which is more specific.
+ * Browsers without this CSS feature keep the rule above.
+ */
+@supports (color: oklch(from red min(l, 0.5) c h)) {
+    .breadcrumbs {
+        --breadcrumbs-link: oklch(from var(--breadcrumbs-color) min(l, 0.5) c h);
+    }
+}
+
+/*
+ * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
+ * background for every color, even dark ones like slate gray. Colors that are already light enough
+ * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
+ */
+@supports (color: oklch(from red max(l, 0.72) c h)) {
+    [data-theme="dark"] .breadcrumbs {
+        --breadcrumbs-link: oklch(from var(--breadcrumbs-color) max(l, 0.72) c h);
+    }
+}

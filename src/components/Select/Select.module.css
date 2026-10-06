@@ -1,0 +1,148 @@
+.root {
+    /* The size prop overrides this (see Select.tsx) */
+    --select-size: 1rem;
+    --select-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375em;
+    width: 100%;
+    font-size: var(--select-size);
+}
+
+[data-theme="dark"] .root {
+    --select-error-text: color-mix(in srgb, var(--danger) 75%, white);
+}
+
+.root[data-size="xs"] { --select-size: 0.75rem; }
+.root[data-size="sm"] { --select-size: 0.875rem; }
+.root[data-size="md"] { --select-size: 1rem; }
+.root[data-size="lg"] { --select-size: 1.125rem; }
+.root[data-size="xl"] { --select-size: 1.25rem; }
+
+/* Label, description and error match Input */
+.label {
+    font-size: 0.875em;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.required {
+    color: var(--select-error-text);
+}
+
+.description,
+.error {
+    margin: 0;
+    font-size: 0.8125em;
+    line-height: 1.4;
+}
+
+.description {
+    color: var(--text-muted);
+}
+
+.error {
+    color: var(--select-error-text);
+}
+
+/* The bordered box. The <select> fills all of it, so clicking anywhere (even the arrow) opens it. */
+.field {
+    position: relative;
+    display: flex;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.field[data-invalid] {
+    border-color: var(--danger);
+}
+
+.field[data-invalid]:focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+}
+
+.field[data-disabled] {
+    background: var(--surface-muted);
+    opacity: 0.6;
+}
+
+.select {
+    appearance: none; /* hides the browser's own arrow; ours is drawn on top */
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    /* Same height as Input and Button: 2 × 0.625em padding + 1.25em line + border */
+    padding: 0.625em 2.5em 0.625em 0.75em;
+    border: none;
+    outline: none; /* the field shows the focus ring instead */
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    line-height: 1.25;
+    cursor: pointer;
+}
+
+.field[data-left-icon] .select {
+    padding-left: 2.5em;
+}
+
+/* The placeholder is grey, like an Input's placeholder */
+.select:has(option[value=""]:checked) {
+    color: var(--text-muted);
+}
+
+/*
+ * The open list is drawn by the browser. Set both colors: with only the text color, some browsers
+ * (e.g. Chrome on Windows) keep a white background and dark mode's light text becomes unreadable.
+ */
+.select option,
+.select optgroup {
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+.select option:disabled {
+    color: var(--text-muted);
+}
+
+.select:disabled {
+    cursor: not-allowed;
+}
+
+/* ---------- Icons: drawn on top, clicks pass through to the select ---------- */
+
+.icon {
+    position: absolute;
+    top: 50%;
+    width: 1.125em;
+    height: 1.125em;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.leftIcon {
+    left: 0.75em;
+    display: inline-flex;
+}
+
+.chevron {
+    right: 0.75em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
