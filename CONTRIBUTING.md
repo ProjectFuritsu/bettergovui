@@ -83,6 +83,25 @@ docs/                   the guides linked from the README
 3. Describe what changed and how you tested it. Screenshots in light and dark mode, and on a phone, help a lot.
 4. Fill in the checklist in the pull request form.
 
+## Testing in another app
+
+To try your changes in a real project before they're published:
+
+```bash
+npm run build
+npm pack           # creates bettergovregiondavaoui-<version>.tgz
+```
+
+Then, in the other project: `npm install ../path/to/bettergovregiondavaoui-<version>.tgz`.
+
+## Publishing a release (maintainers)
+
+1. Add the changes to [CHANGELOG.md](CHANGELOG.md) under a new version.
+2. Raise the version. While the kit is 0.x: `npm version patch` for fixes, `npm version minor` for new features
+   or anything that could break existing code. This also makes a commit and a Git tag.
+3. `npm publish`. It checks the types and builds a fresh `dist/` first, then uploads.
+4. `git push --follow-tags`, so GitHub gets the commit and the tag.
+
 ## Security problems
 
 Please don't post security problems in public issues. See [SECURITY.md](SECURITY.md).

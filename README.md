@@ -5,6 +5,7 @@
 **Accessible React components and page blocks for Philippine government websites.**<br>
 Made for BetterGov Region Davao: in English, Filipino and Bisaya, light on slow phones, ready for citizen services.
 
+[![npm](https://img.shields.io/npm/v/bettergovregiondavaoui?color=cb3837&logo=npm)](https://www.npmjs.com/package/bettergovregiondavaoui)
 [![License: CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-blue)](LICENSE)
 ![React 18+](https://img.shields.io/badge/React-18%2B-61dafb?logo=react&logoColor=white)
 ![TypeScript types included](https://img.shields.io/badge/TypeScript-types%20included-3178c6?logo=typescript&logoColor=white)
@@ -40,14 +41,12 @@ Most UI kits are general-purpose. This one is made for one job: **public service
 
 ## Quick start
 
-> [!NOTE]
-> The kit isn't on npm yet. Until then, install it straight from GitHub; it builds itself while installing.
-
 ```bash
-npm install github:ProjectFuritsu/bettergovui
+npm install bettergovregiondavaoui
 ```
 
-It needs React 18 or newer.
+It needs React 18 or newer, and works with Vite, Next.js and other React setups. It's still early (version 0.x),
+so read the [changelog](CHANGELOG.md) when you update.
 
 **1. Add the styles once,** in your app's entry file (for example `main.tsx` or your root layout):
 

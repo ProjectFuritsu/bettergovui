@@ -9,5 +9,7 @@ export default defineConfig({
     // tsup applies this to every .css file; tokens.css only uses :root, which is never renamed.
     loader: { ".css": "local-css" },
     clean: true,
+    // The components use hooks, so frameworks with server components (like Next.js) must load them on the client
+    banner: { js: '"use client";' },
     external: ["react", "react-dom"],
 });
