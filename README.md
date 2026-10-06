@@ -2,7 +2,7 @@
 
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
-- **39 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
+- **40 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
 - **Works on every screen size:** components adjust to phones on their own
@@ -60,7 +60,7 @@ export function SignUp() {
 | Typography | `Text`, `Heading`, `Link`, `List` / `ListItem`, `Code`, `Kbd` |
 | Layout | `Scaffold` (`ScaffoldHeader`, `ScaffoldNavbar`, `ScaffoldMain`, `ScaffoldAside`, `ScaffoldFooter`, `ScaffoldBurger`), `Container`, `Stack`, `Group`, `Grid`, `Divider` |
 | Buttons | `Button` |
-| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload` |
+| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload`, `Fieldset` |
 | Feedback | `Alert`, `Badge`, `Loader`, `Progress`, `Skeleton`, `Toast` (`Toaster` + `toast()`) |
 | Navigation | `Navbar` + `NavLink`, `Tabs` (`TabList`, `Tab`, `TabPanel`), `Breadcrumbs`, `Pagination`, `Stepper` (`Step`, `StepperCompleted`) |
 | Data display | `Table`, `Accordion` (`AccordionItem`), `Card` (`CardTitle`, `CardDescription`, `CardSection`, `CardFooter`), `Avatar`, `Tooltip` |

@@ -1,0 +1,81 @@
+.fieldset {
+    /* The gap prop overrides this (see Fieldset.tsx) */
+    --fieldset-gap: var(--spacing-md);
+    /* Error text: a darker red so small text stays readable (lighter in dark mode), like Input */
+    --fieldset-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    min-width: 0; /* fieldsets don't shrink below their content by default, which breaks narrow layouts */
+    margin: 0;
+    padding: var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--text);
+}
+
+[data-theme="dark"] .fieldset {
+    --fieldset-error-text: color-mix(in srgb, var(--danger) 75%, white);
+}
+
+.fieldset[data-variant="outline"] {
+    border: 1px solid var(--border);
+}
+
+.fieldset[data-variant="outline"][data-invalid] {
+    border-color: var(--danger);
+}
+
+.fieldset[data-variant="filled"] {
+    background: var(--surface-muted);
+}
+
+.fieldset[data-variant="plain"] {
+    padding: 0;
+}
+
+/* Floating the legend puts it inside the box like a normal title, instead of on top of the border */
+.legend {
+    float: left;
+    width: 100%;
+    margin: 0 0 var(--spacing-md);
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.legend + * {
+    clear: left;
+}
+
+/* With a description, it sits right under the title */
+.legend:has(+ .description) {
+    margin-bottom: var(--spacing-xs);
+}
+
+.description,
+.error {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+.description {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-muted);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fieldset-gap);
+}
+
+.error {
+    margin-top: var(--spacing-md);
+    color: var(--fieldset-error-text);
+}
+
+/* The browser greys out the fields inside a disabled fieldset; dim the title to match */
+.fieldset:disabled .legend,
+.fieldset:disabled .description {
+    opacity: 0.6;
+}

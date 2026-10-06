@@ -11,6 +11,7 @@ import {containerEntry} from "./container";
 import {dateInputEntry} from "./dateinput";
 import {dividerEntry} from "./divider";
 import {drawerEntry} from "./drawer";
+import {fieldsetEntry} from "./fieldset";
 import {fileUploadEntry} from "./fileupload";
 import {gridEntry} from "./grid";
 import {groupEntry} from "./group";
@@ -54,6 +55,7 @@ export const entries = [
     dateInputEntry,
     dividerEntry,
     drawerEntry,
+    fieldsetEntry,
     fileUploadEntry,
     gridEntry,
     groupEntry,

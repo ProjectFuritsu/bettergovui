@@ -26,6 +26,8 @@ export { Divider } from "./components/Divider/Divider";
 export type { DividerProps } from "./components/Divider/Divider";
 export { Drawer } from "./components/Drawer/Drawer";
 export type { DrawerProps, DrawerPosition } from "./components/Drawer/Drawer";
+export { Fieldset } from "./components/Fieldset/Fieldset";
+export type { FieldsetProps } from "./components/Fieldset/Fieldset";
 export { FileUpload, formatFileSize } from "./components/FileUpload/FileUpload";
 export type { FileUploadProps } from "./components/FileUpload/FileUpload";
 export { Grid } from "./components/Grid/Grid";
