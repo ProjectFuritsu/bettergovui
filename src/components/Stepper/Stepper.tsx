@@ -8,6 +8,7 @@ import {
 } from "react";
 import {isLightThemeColor, resolveColor, type Color} from "../../utils/color";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {isSizePreset, toCssLength, type Size} from "../../utils/size";
 import styles from "./Stepper.module.css";
 
@@ -63,12 +64,13 @@ export function Stepper({
     orientation = "horizontal",
     color,
     size = "md",
-    completedLabel = "completed",
+    completedLabel,
     className,
     style,
     children,
     ...rest
 }: StepperProps) {
+    const t = useMessages();
     const all = Children.toArray(children).filter(isValidElement);
     const steps = all.filter(child => child.type === Step) as ReactElement<StepProps>[];
     const completed = all.find(child => child.type === StepperCompleted);
@@ -104,7 +106,7 @@ export function Stepper({
                                     {label && (
                                         <span className={styles.label}>
                                             {label}
-                                            {state === "completed" && <span className={styles.srOnly}> ({completedLabel})</span>}
+                                            {state === "completed" && <span className={styles.srOnly}> ({completedLabel ?? t.stepCompleted})</span>}
                                         </span>
                                     )}
                                     {description && <span className={styles.description}>{description}</span>}

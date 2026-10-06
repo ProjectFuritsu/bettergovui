@@ -1,5 +1,6 @@
 import {forwardRef, useEffect, useRef, useState} from "react";
 import {useKeepCaret} from "../../utils/caret";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {Input, type InputProps} from "../Input/Input";
 
 export interface PesoInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "prefix" | "name" | "min" | "max"> {
@@ -63,6 +64,7 @@ export const PesoInput = forwardRef<HTMLInputElement, PesoInputProps>(function P
     },
     ref,
 ) {
+    const t = useMessages();
     const [text, setText] = useState(() => (defaultValue === undefined ? "" : formatPeso(defaultValue, decimals)));
     const [touched, setTouched] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -78,9 +80,9 @@ export const PesoInput = forwardRef<HTMLInputElement, PesoInputProps>(function P
     const belowMin = amount !== null && min !== undefined && amount < min;
     const aboveMax = amount !== null && max !== undefined && amount > max;
     const problem = belowMin
-        ? (messages?.belowMin ?? (limit => `Enter at least ₱${limit}.`))(formatPeso(min!, decimals))
+        ? (messages?.belowMin ?? t.peso.belowMin)(formatPeso(min!, decimals))
         : aboveMax
-          ? (messages?.aboveMax ?? (limit => `Enter no more than ₱${limit}.`))(formatPeso(max!, decimals))
+          ? (messages?.aboveMax ?? t.peso.aboveMax)(formatPeso(max!, decimals))
           : "";
 
     // Stops the form from being sent with an amount outside min–max (the browser shows the message)

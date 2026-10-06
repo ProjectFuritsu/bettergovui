@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState, useSyncExternalStore} from "react";
 import {createPortal} from "react-dom";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {Alert} from "../Alert/Alert";
 import {toastStore, type ToastData} from "./store";
 import styles from "./Toast.module.css";
@@ -20,7 +21,8 @@ export interface ToasterProps {
  * Shows the messages created with `toast()`. Put it once in your app, e.g. next to your layout.
  * Toasts pause their timer while the mouse is over them or keyboard focus is inside them.
  */
-export function Toaster({position = "bottom-right", label = "Notifications", closeLabel = "Close"}: ToasterProps) {
+export function Toaster({position = "bottom-right", label, closeLabel}: ToasterProps) {
+    const t = useMessages();
     const toasts = useSyncExternalStore(toastStore.subscribe, toastStore.getSnapshot, toastStore.getServerSnapshot);
     const [paused, setPaused] = useState(false);
     // Rendered into <body> only in the browser (there's no <body> during server rendering)
@@ -34,7 +36,7 @@ export function Toaster({position = "bottom-right", label = "Notifications", clo
 
     return createPortal(
         <section
-            aria-label={label}
+            aria-label={label ?? t.notifications}
             className={styles.toaster}
             data-position={position}
             onMouseEnter={() => setPaused(true)}
@@ -46,7 +48,7 @@ export function Toaster({position = "bottom-right", label = "Notifications", clo
             {/* Always on the page, so screen readers announce toasts as they're added */}
             <ol className={styles.list} aria-live="polite">
                 {ordered.map(item => (
-                    <ToastItem key={item.id} toast={item} paused={paused} closeLabel={closeLabel} />
+                    <ToastItem key={item.id} toast={item} paused={paused} closeLabel={closeLabel ?? t.close} />
                 ))}
             </ol>
         </section>,

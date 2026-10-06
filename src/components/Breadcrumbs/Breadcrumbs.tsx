@@ -9,6 +9,7 @@ import {
 } from "react";
 import {resolveColor, type Color} from "../../utils/color";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {isSizePreset, toCssLength, type Size} from "../../utils/size";
 import styles from "./Breadcrumbs.module.css";
 
@@ -34,9 +35,10 @@ export function Breadcrumbs({
     color,
     className,
     style,
-    "aria-label": ariaLabel = "Breadcrumb",
+    "aria-label": ariaLabel,
     ...rest
 }: BreadcrumbsProps) {
+    const t = useMessages();
     const items = Children.toArray(children);
     const preset = isSizePreset(size);
     const settings = {
@@ -46,7 +48,7 @@ export function Breadcrumbs({
 
     return (
         <nav
-            aria-label={ariaLabel}
+            aria-label={ariaLabel ?? t.breadcrumb}
             className={cx(styles.breadcrumbs, className)}
             data-size={preset ? size : undefined}
             style={{...settings, ...style}}

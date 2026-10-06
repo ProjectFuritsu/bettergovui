@@ -1,6 +1,7 @@
 import {useId, type HTMLAttributes, type ReactNode} from "react";
 import {Container} from "../../components/Container/Container";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {renderAction, type BlockAction} from "../action";
 import shared from "../blocks.module.css";
 import styles from "./ContactBlock.module.css";
@@ -46,7 +47,6 @@ export interface ContactBlockProps extends Omit<HTMLAttributes<HTMLElement>, "ti
     labels?: Partial<Record<keyof typeof ICONS, string>>;
 }
 
-const DEFAULT_LABELS = {address: "Address", phone: "Phone", email: "Email", hours: "Office hours"};
 
 function Detail({icon, label, children}: {icon: keyof typeof ICONS; label: string; children: ReactNode}) {
     return (
@@ -65,7 +65,7 @@ function Detail({icon, label, children}: {icon: keyof typeof ICONS; label: strin
 /** How to reach an office: address, phone, email and hours, with an optional map beside them. */
 export function ContactBlock({
     eyebrow,
-    title = "Contact us",
+    title,
     description,
     address,
     phone,
@@ -73,14 +73,15 @@ export function ContactBlock({
     hours = [],
     action,
     map,
-    mapTitle = "Map of the office location",
+    mapTitle,
     labels,
     className,
     ...rest
 }: ContactBlockProps) {
+    const t = useMessages();
     const titleId = useId();
     const hasMap = map !== undefined && map !== null && map !== "";
-    const label = {...DEFAULT_LABELS, ...labels};
+    const label = {address: t.blocks.contactAddress, phone: t.blocks.contactPhone, email: t.blocks.contactEmail, hours: t.blocks.contactHours, ...labels};
 
     return (
         <section aria-labelledby={titleId} className={cx(shared.section, className)} {...rest}>
@@ -88,7 +89,7 @@ export function ContactBlock({
                 <div className={styles.info}>
                     <div className={styles.intro}>
                         {eyebrow && <p className={shared.eyebrow}>{eyebrow}</p>}
-                        <h2 id={titleId} className={shared.title}>{title}</h2>
+                        <h2 id={titleId} className={shared.title}>{title ?? t.blocks.contactTitle}</h2>
                         {description && <p className={shared.description}>{description}</p>}
                     </div>
                     {/* <address> is the HTML element for contact details */}
@@ -121,7 +122,7 @@ export function ContactBlock({
                 </div>
                 {hasMap && (
                     <div className={styles.map}>
-                        {typeof map === "string" ? <iframe src={map} title={mapTitle} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /> : map}
+                        {typeof map === "string" ? <iframe src={map} title={mapTitle ?? t.blocks.mapTitle} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /> : map}
                     </div>
                 )}
             </Container>

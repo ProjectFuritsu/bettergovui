@@ -101,6 +101,30 @@ body {
     padding-left: 8px;
 }
 
+/* The language picker and the dark mode toggle */
+.sidebar-tools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.language-select {
+    padding: 3px 4px;
+    border: 1px solid var(--pg-border);
+    border-radius: 6px;
+    background: var(--pg-panel);
+    color: var(--pg-muted);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.language-select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
 .brand {
     font-size: 16px;
     font-weight: 700;

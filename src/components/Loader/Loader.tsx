@@ -1,6 +1,7 @@
 import type {CSSProperties, HTMLAttributes} from "react";
 import {resolveColor, type Color} from "../../utils/color";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {isSizePreset, toCssLength, type Size} from "../../utils/size";
 import styles from "./Loader.module.css";
 
@@ -21,6 +22,7 @@ export interface LoaderProps extends Omit<HTMLAttributes<HTMLSpanElement>, "colo
 }
 
 export function Loader({type = "spinner", size = "md", color, className, style, ...rest}: LoaderProps) {
+    const t = useMessages();
     const preset = isSizePreset(size);
 
     // Settings become CSS variables that Loader.module.css reads. Undefined ones are left out.
@@ -32,7 +34,7 @@ export function Loader({type = "spinner", size = "md", color, className, style, 
     return (
         <span
             role="status"
-            aria-label="Loading"
+            aria-label={t.loading}
             className={cx(styles.loader, className)}
             data-type={type}
             data-size={preset ? size : undefined}

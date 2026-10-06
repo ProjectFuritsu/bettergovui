@@ -1,6 +1,7 @@
 import type {CSSProperties, HTMLAttributes, ReactNode} from "react";
 import {isLightThemeColor, resolveColor, type Color} from "../../utils/color";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import styles from "./Alert.module.css";
 
 export type AlertVariant = "light" | "filled" | "outline";
@@ -37,13 +38,14 @@ export function Alert({
     color = "info",
     icon,
     onClose,
-    closeLabel = "Close",
+    closeLabel,
     autoContrast = false,
     className,
     style,
     children,
     ...rest
 }: AlertProps) {
+    const t = useMessages();
     const shownIcon = icon === undefined ? <DefaultIcon color={color} /> : icon;
     const settings = {"--alert-color": resolveColor(color)} as CSSProperties;
 
@@ -62,7 +64,7 @@ export function Alert({
                 {children && <div className={styles.message}>{children}</div>}
             </div>
             {onClose && (
-                <button type="button" className={styles.close} aria-label={closeLabel} onClick={onClose}>
+                <button type="button" className={styles.close} aria-label={closeLabel ?? t.close} onClick={onClose}>
                     <svg className={styles.line} viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
                 </button>
             )}

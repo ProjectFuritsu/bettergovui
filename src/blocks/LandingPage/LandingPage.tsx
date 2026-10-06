@@ -1,5 +1,6 @@
 import {isValidElement, useId, useRef, type ComponentType, type HTMLAttributes, type ReactElement, type ReactNode} from "react";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {ContactBlock, type ContactBlockProps} from "../ContactBlock/ContactBlock";
 import {CtaBlock, type CtaBlockProps} from "../CtaBlock/CtaBlock";
 import {FaqBlock, type FaqBlockProps} from "../FaqBlock/FaqBlock";
@@ -56,16 +57,18 @@ export function LandingPage({
     cta,
     footer,
     children,
-    skipLinkLabel = "Skip to main content",
+    skipLinkLabel,
     className,
     ...rest
 }: LandingPageProps) {
+    const t = useMessages();
+    const skipText = skipLinkLabel ?? t.skipToContent;
     const mainId = useId();
     const mainRef = useRef<HTMLElement>(null);
 
     return (
         <div className={cx(styles.page, className)} {...rest}>
-            {skipLinkLabel !== false && (
+            {skipText !== false && (
                 <a
                     href={`#${mainId}`}
                     className={styles.skipLink}
@@ -75,7 +78,7 @@ export function LandingPage({
                         event.preventDefault();
                         mainRef.current.focus();
                     }}>
-                    {skipLinkLabel}
+                    {skipText}
                 </a>
             )}
             {renderSection(header, HeaderBlock)}

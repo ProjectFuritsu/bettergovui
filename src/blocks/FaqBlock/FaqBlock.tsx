@@ -2,6 +2,7 @@ import {useId, type HTMLAttributes, type ReactNode} from "react";
 import {Accordion, AccordionItem} from "../../components/Accordion/Accordion";
 import {Container} from "../../components/Container/Container";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {renderAction, type BlockAction} from "../action";
 import shared from "../blocks.module.css";
 import styles from "./FaqBlock.module.css";
@@ -27,7 +28,7 @@ export interface FaqBlockProps extends Omit<HTMLAttributes<HTMLElement>, "title"
 /** Questions and answers that open one at a time, with the title beside them on wide screens. */
 export function FaqBlock({
     eyebrow,
-    title = "Frequently asked questions",
+    title,
     description,
     items,
     action,
@@ -35,13 +36,14 @@ export function FaqBlock({
     className,
     ...rest
 }: FaqBlockProps) {
+    const t = useMessages();
     const titleId = useId();
     return (
         <section aria-labelledby={titleId} className={cx(shared.section, className)} {...rest}>
             <Container className={styles.inner}>
                 <div className={styles.intro}>
                     {eyebrow && <p className={shared.eyebrow}>{eyebrow}</p>}
-                    <h2 id={titleId} className={shared.title}>{title}</h2>
+                    <h2 id={titleId} className={shared.title}>{title ?? t.blocks.faqTitle}</h2>
                     {description && <p className={shared.description}>{description}</p>}
                     {action && <div className={shared.actions}>{renderAction(action, {variant: "outline"})}</div>}
                 </div>

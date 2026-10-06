@@ -14,6 +14,7 @@ import {
     type RefObject,
 } from "react";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {InsideNavContext} from "../Navbar/Navbar";
 import {lockScroll} from "../../utils/scrollLock";
 import {toCssLength, toSpacing, type Size} from "../../utils/size";
@@ -62,13 +63,15 @@ export interface ScaffoldProps extends HTMLAttributes<HTMLDivElement> {
  * in from the left, opened by a ScaffoldBurger in the header.
  */
 export function Scaffold({
-    skipLinkLabel = "Skip to main content",
+    skipLinkLabel,
     navbarOpen,
     onNavbarOpenChange,
     className,
     children,
     ...rest
 }: ScaffoldProps) {
+    const t = useMessages();
+    const skipText = skipLinkLabel ?? t.skipToContent;
     const id = useId();
     const rootRef = useRef<HTMLDivElement>(null);
     const mainRef = useRef<HTMLElement>(null);
@@ -109,9 +112,9 @@ export function Scaffold({
     return (
         <ScaffoldContext.Provider value={context}>
             <div ref={rootRef} className={cx(styles.scaffold, className)} {...rest}>
-                {skipLinkLabel !== false && (
+                {skipText !== false && (
                     <a className={styles.skipLink} href={`#${context.mainId}`} onClick={skipToMain}>
-                        {skipLinkLabel}
+                        {skipText}
                     </a>
                 )}
                 {children}
@@ -164,8 +167,8 @@ export interface ScaffoldNavbarProps extends HTMLAttributes<HTMLElement> {
  */
 export function ScaffoldNavbar({
     width,
-    closeLabel = "Close menu",
-    "aria-label": ariaLabel = "Main",
+    closeLabel,
+    "aria-label": ariaLabel,
     className,
     style,
     children,
@@ -173,6 +176,7 @@ export function ScaffoldNavbar({
     onBlur,
     ...rest
 }: ScaffoldNavbarProps) {
+    const t = useMessages();
     const {navbarId, navbarOpen, setNavbarOpen, burgerRef} = useScaffold("ScaffoldNavbar");
     const navRef = useRef<HTMLElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -223,7 +227,7 @@ export function ScaffoldNavbar({
             <nav
                 ref={navRef}
                 id={navbarId}
-                aria-label={ariaLabel}
+                aria-label={ariaLabel ?? t.mainNavigation}
                 className={cx(styles.navbar, className)}
                 data-open={navbarOpen || undefined}
                 style={{...settings, ...style}}
@@ -245,7 +249,7 @@ export function ScaffoldNavbar({
                             ref={closeRef}
                             type="button"
                             className={styles.iconButton}
-                            aria-label={closeLabel}
+                            aria-label={closeLabel ?? t.closeMenu}
                             onClick={() => close(true)}>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
                         </button>
@@ -313,14 +317,15 @@ export interface ScaffoldBurgerProps extends ButtonHTMLAttributes<HTMLButtonElem
  * The ☰ button that opens the navbar on phones. Put it in the ScaffoldHeader; it hides itself on
  * wider screens, where the navbar is always shown.
  */
-export function ScaffoldBurger({label = "Menu", className, onClick, ...rest}: ScaffoldBurgerProps) {
+export function ScaffoldBurger({label, className, onClick, ...rest}: ScaffoldBurgerProps) {
+    const t = useMessages();
     const {navbarId, navbarOpen, setNavbarOpen, burgerRef} = useScaffold("ScaffoldBurger");
     return (
         <button
             ref={burgerRef}
             type="button"
             className={cx(styles.iconButton, styles.burger, className)}
-            aria-label={label}
+            aria-label={label ?? t.menu}
             aria-expanded={navbarOpen}
             aria-controls={navbarId}
             onClick={event => {

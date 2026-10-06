@@ -1,6 +1,7 @@
 import {useState, type CSSProperties, type HTMLAttributes, type ReactNode} from "react";
 import {isLightThemeColor, resolveColor, type Color} from "../../utils/color";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {isSizePreset, toCssLength, type Size} from "../../utils/size";
 import {paginationRange} from "./paginationRange";
 import styles from "./Pagination.module.css";
@@ -14,13 +15,6 @@ export interface PaginationLabels {
     page: (page: number) => string;
 }
 
-const DEFAULT_LABELS: PaginationLabels = {
-    previous: "Previous page",
-    next: "Next page",
-    first: "First page",
-    last: "Last page",
-    page: page => `Page ${page}`,
-};
 
 export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, "onChange"> {
     /** How many pages there are. */
@@ -65,13 +59,14 @@ export function Pagination({
     labels,
     className,
     style,
-    "aria-label": ariaLabel = "Pagination",
+    "aria-label": ariaLabel,
     ...rest
 }: PaginationProps) {
+    const t = useMessages();
     const [internalPage, setInternalPage] = useState(defaultPage);
     const pageCount = Math.max(1, Math.floor(total));
     const current = Math.min(Math.max(page ?? internalPage, 1), pageCount);
-    const text = {...DEFAULT_LABELS, ...labels};
+    const text = {...t.pagination, ...labels};
     const preset = isSizePreset(size);
 
     function goTo(next: number) {
@@ -103,7 +98,7 @@ export function Pagination({
 
     return (
         <nav
-            aria-label={ariaLabel}
+            aria-label={ariaLabel ?? t.pagination.label}
             className={cx(styles.pagination, className)}
             data-size={preset ? size : undefined}
             data-auto-contrast={autoContrast || isLightThemeColor(color) || undefined}

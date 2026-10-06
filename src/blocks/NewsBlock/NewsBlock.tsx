@@ -4,6 +4,7 @@ import {Card, CardDescription, CardSection, CardTitle} from "../../components/Ca
 import {Container} from "../../components/Container/Container";
 import {Grid} from "../../components/Grid/Grid";
 import {cx} from "../../utils/cx";
+import {dateLocale, useLanguage, useMessages} from "../../i18n/LanguageProvider";
 import {renderAction, type BlockAction} from "../action";
 import shared from "../blocks.module.css";
 import styles from "./NewsBlock.module.css";
@@ -35,7 +36,7 @@ export interface NewsBlockProps extends Omit<HTMLAttributes<HTMLElement>, "title
     action?: BlockAction;
     /** The most columns on wide screens. Default 3. */
     columns?: number;
-    /** The language for dates, e.g. "en-PH" (default) or "fil-PH". */
+    /** The language for dates, e.g. "fil-PH". Default: the LanguageProvider's language ("en-PH" without one). */
     locale?: string;
 }
 
@@ -54,15 +55,17 @@ function isoDay(date: Date) {
 /** The latest posts as cards: picture, category, date, title and a short excerpt. Each card is a link. */
 export function NewsBlock({
     eyebrow,
-    title = "Latest news",
+    title,
     description,
     items,
     action,
     columns = 3,
-    locale = "en-PH",
+    locale,
     className,
     ...rest
 }: NewsBlockProps) {
+    const t = useMessages();
+    const language = useLanguage();
     const titleId = useId();
     return (
         <section aria-labelledby={titleId} className={cx(shared.section, className)} {...rest}>
@@ -70,7 +73,7 @@ export function NewsBlock({
                 <div className={styles.top}>
                     <div className={styles.intro}>
                         {eyebrow && <p className={shared.eyebrow}>{eyebrow}</p>}
-                        <h2 id={titleId} className={shared.title}>{title}</h2>
+                        <h2 id={titleId} className={shared.title}>{title ?? t.blocks.newsTitle}</h2>
                         {description && <p className={shared.description}>{description}</p>}
                     </div>
                     {action && renderAction(action, {variant: "outline"})}
@@ -91,7 +94,7 @@ export function NewsBlock({
                                             {item.category && <Badge size="sm">{item.category}</Badge>}
                                             {date && (
                                                 <time dateTime={isoDay(date)} className={styles.date}>
-                                                    {date.toLocaleDateString(locale, {dateStyle: "medium"})}
+                                                    {date.toLocaleDateString(locale ?? dateLocale(language), {dateStyle: "medium"})}
                                                 </time>
                                             )}
                                         </div>

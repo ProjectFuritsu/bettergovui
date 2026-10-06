@@ -1,6 +1,6 @@
 import {useEffect, useLayoutEffect, useRef, useState} from "react";
 import type {Controls, ValuesOf} from "./types";
-import {DEVICES, type DeviceName, type FrameMessage, type Theme} from "./devices";
+import {DEVICES, type DeviceName, type FrameMessage, type Language, type Theme} from "./devices";
 
 interface DevicePreviewProps {
     device: DeviceName;
@@ -8,6 +8,7 @@ interface DevicePreviewProps {
     entryName: string;
     values: ValuesOf<Controls>;
     theme: Theme;
+    language: Language;
 }
 
 // Shows the component in an iframe. "Responsive" fills the preview area at 100%;
@@ -15,7 +16,7 @@ interface DevicePreviewProps {
 // Space kept around a device for its bezel (up to 8px, see .device in playground.css) and a bit of air
 const BEZEL_ROOM = 12;
 
-export function DevicePreview({device, landscape, entryName, values, theme}: DevicePreviewProps) {
+export function DevicePreview({device, landscape, entryName, values, theme, language}: DevicePreviewProps) {
     const areaRef = useRef<HTMLDivElement>(null);
     const frameRef = useRef<HTMLIFrameElement>(null);
     const [area, setArea] = useState({width: 0, height: 0});
@@ -73,12 +74,12 @@ export function DevicePreview({device, landscape, entryName, values, theme}: Dev
         return () => window.removeEventListener("message", onMessage);
     }, []);
 
-    // Send the component, its values and the theme to the frame whenever they change
+    // Send the component, its values, the theme and the language to the frame whenever they change
     useEffect(() => {
         if (frameLoads === 0) return;
-        const message: FrameMessage = {type: "render", entryName, values, theme};
+        const message: FrameMessage = {type: "render", entryName, values, theme, language};
         frameRef.current?.contentWindow?.postMessage(message, location.origin);
-    }, [frameLoads, entryName, values, theme]);
+    }, [frameLoads, entryName, values, theme, language]);
 
     const orientation = spec.rotatable ? (rotated ? " landscape" : " portrait") : "";
 

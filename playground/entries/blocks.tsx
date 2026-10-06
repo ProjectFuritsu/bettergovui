@@ -218,7 +218,8 @@ ${openTag("FeaturesBlock", props, "", true)}`;
 
 const faqControls = {
     eyebrow: {type: "text", default: "Help"},
-    title: {type: "text", default: "Frequently asked questions"},
+    // Empty: the block's own title, in the preview's language
+    title: {type: "text", default: ""},
     description: {type: "text", default: "Can't find your answer? Our help desk replies within one working day."},
     action: {type: "text", default: "Contact the help desk"},
     multiple: {type: "boolean", default: false},
@@ -395,7 +396,8 @@ const NEWS = [
 ];
 
 const newsControls = {
-    title: {type: "text", default: "Latest news"},
+    // Empty: the block's own title, in the preview's language
+    title: {type: "text", default: ""},
     action: {type: "text", default: "All news"},
     images: {type: "boolean", default: true},
     columns: {type: "number", min: 1, max: 3, default: 3},

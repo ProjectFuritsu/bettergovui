@@ -3,6 +3,7 @@ import Button from "../Button/Button";
 import {Fieldset, type FieldsetProps} from "../Fieldset/Fieldset";
 import {Select} from "../Select/Select";
 import type {Size} from "../../utils/size";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {psgcApi, type AddressDataSource, type AddressPlace} from "./psgc";
 import styles from "./AddressPicker.module.css";
 
@@ -30,18 +31,6 @@ export interface AddressPickerLabels {
     retry: string;
 }
 
-const DEFAULT_LABELS: AddressPickerLabels = {
-    region: "Region",
-    province: "Province",
-    city: "City / Municipality",
-    barangay: "Barangay",
-    choose: "Choose…",
-    loading: "Loading…",
-    waiting: "Choose the one above first",
-    none: "None in this region",
-    failed: "Couldn't load the list. Check your internet connection.",
-    retry: "Try again",
-};
 
 export interface AddressPickerProps extends Omit<FieldsetProps, "legend" | "onChange" | "defaultValue" | "name"> {
     /** The group's title. Default "Address". */
@@ -100,7 +89,7 @@ const defaultSource = psgcApi();
  * Each list loads when the field above is chosen. Gives you PSGC codes and names.
  */
 export function AddressPicker({
-    legend = "Address",
+    legend,
     value,
     defaultValue,
     onChange,
@@ -113,7 +102,8 @@ export function AddressPicker({
     variant = "plain",
     ...rest
 }: AddressPickerProps) {
-    const label = {...DEFAULT_LABELS, ...labels};
+    const t = useMessages();
+    const label = {...t.address, ...labels};
     const [internal, setInternal] = useState<AddressValue>(defaultValue ?? {});
     const [retry, setRetry] = useState(0);
     const address = value ?? internal;
@@ -161,7 +151,7 @@ export function AddressPicker({
     const loading = [regions, provinces, cities, barangays].some(list => list.status === "loading");
 
     return (
-        <Fieldset legend={legend} variant={variant} aria-busy={loading || undefined} {...rest}>
+        <Fieldset legend={legend ?? t.address.legend} variant={variant} aria-busy={loading || undefined} {...rest}>
             <div className={styles.grid}>
                 {limitToRegion
                     ? name && <input type="hidden" name={`${name}.region`} value={limitToRegion} />

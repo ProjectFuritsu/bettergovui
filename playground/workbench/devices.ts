@@ -13,8 +13,9 @@ export const DEVICES = {
 export type DeviceName = keyof typeof DEVICES;
 
 export type Theme = "light" | "dark";
+export type {Language} from "../../src";
 
 // Messages between the workbench and the preview iframe
 export type FrameMessage =
     | {type: "frame-ready"}
-    | {type: "render"; entryName: string; values: ValuesOf<Controls>; theme: Theme};
+    | {type: "render"; entryName: string; values: ValuesOf<Controls>; theme: Theme; language: import("../../src").Language};

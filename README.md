@@ -15,7 +15,9 @@ Most UI kits are general-purpose. This one is made for one job: **public service
 
 - **Made for citizen services.** The blocks and examples speak the language of government sites: services and permits,
   advisories, office hours, fees in pesos. Dates are handled in local time (no "day before" bug from UTC) and shown in
-  Philippine formats.
+  Philippine formats. There are fields for Philippine addresses, mobile numbers and peso amounts.
+- **In English, Filipino and Bisaya.** Every built-in text (buttons, messages, labels read by screen readers) comes in
+  all three. One `LanguageProvider` switches them all.
 - **Accessible by default.** Text contrast is checked in light and dark mode, pages use real HTML landmarks
   (`<header>`, `<nav>`, `<main>`, `<footer>`), lists, `<address>` and `<time>`, page layouts include a skip link, everything works
   with a keyboard, and animations stop for people who turn them off. Government sites serve everyone, including
@@ -190,6 +192,29 @@ import { AddressPicker } from "bettergovregiondavaoui";
   directly, so your site works without a server of its own. For a production government site, host your own copy
   with the same paths and use `source={psgcApi("https://your-site.gov.ph/psgc")}`, so you don't depend on a third party.
   Or pass your own `source` (any object with `regions`, `provinces`, `cities` and `barangays` functions).
+
+## Languages
+
+The components' own texts (close buttons, "Loading", address labels, error messages, and the names screen readers
+say for menus and lists) come in **English**, **Filipino** and **Bisaya (Cebuano)**. Put `LanguageProvider` around
+your app to choose one:
+
+```tsx
+import { LanguageProvider } from "bettergovregiondavaoui";
+
+<LanguageProvider language="ceb">   {/* "en" (the default), "fil" or "ceb" */}
+    <App />
+</LanguageProvider>
+```
+
+- Also set the page's language, `<html lang="ceb">`, so screen readers pronounce it correctly.
+- **Your own text always wins:** `<Alert closeLabel="Sirado" />` uses "Sirado" whatever the language.
+- **Change a few texts for the whole app** with `messages`, e.g. `messages={{ close: "Sirado", address: { city: "Lungsod" } }}`.
+- **Dates** in blocks follow the language (`fil-PH`). Browsers that don't have Bisaya date names yet use English ones.
+- **Have the translations checked.** The Filipino and Bisaya texts were written with care, but a native speaker should
+  review them before a site goes live. They're all in one file, `src/i18n/messages.ts`.
+
+The toolkit has a language switch (EN / FIL / CEB) next to the dark mode toggle.
 
 ## Toasts
 

@@ -1,5 +1,6 @@
 import {Children, createContext, useContext, type AnchorHTMLAttributes, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode} from "react";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {toSpacing, type Size} from "../../utils/size";
 import styles from "./Navbar.module.css";
 
@@ -21,18 +22,19 @@ export interface NavbarProps extends HTMLAttributes<HTMLElement> {
 export function Navbar({
     orientation,
     gap,
-    "aria-label": ariaLabel = "Main",
+    "aria-label": ariaLabel,
     className,
     style,
     children,
     ...rest
 }: NavbarProps) {
+    const t = useMessages();
     const insideNav = useContext(InsideNavContext);
     const Root = insideNav ? "div" : "nav";
     const settings = {"--navbar-gap": gap === undefined ? undefined : toSpacing(gap)} as CSSProperties;
     return (
         <Root
-            aria-label={insideNav ? undefined : ariaLabel}
+            aria-label={insideNav ? undefined : (ariaLabel ?? t.mainNavigation)}
             className={cx(styles.navbar, className)}
             data-orientation={orientation ?? (insideNav ? "vertical" : "horizontal")}
             style={{...settings, ...style}}

@@ -11,18 +11,20 @@ function Result({onValueChange, formValue}: {onValueChange: string; formValue: s
 // ---------- Mobile number ----------
 
 const mobileControls = {
-    label: {type: "text", default: "Mobile number"},
+    // Empty: the component's own label, in the preview's language
+    label: {type: "text", default: ""},
     description: {type: "text", default: "We'll text you when your permit is ready."},
     size: {type: "size", default: "md"},
     required: {type: "boolean", default: false},
     disabled: {type: "boolean", default: false},
 } satisfies Controls;
 
-function MobileDemo({description, ...props}: ValuesOf<typeof mobileControls>) {
+function MobileDemo({label, description, ...props}: ValuesOf<typeof mobileControls>) {
     const [result, setResult] = useState({number: "", e164: null as string | null, valid: false});
     return (
         <Stack gap="md" style={{width: "100%"}}>
             <MobileNumberInput
+                label={label || undefined}
                 description={description || undefined}
                 name="mobile"
                 onValueChange={(number, details) => setResult({number, ...details})}
@@ -45,8 +47,7 @@ export const mobileNumberInputEntry = defineEntry({
     render: values => <MobileDemo {...values} />,
     code: values => {
         const props = compact([
-            // The label is left out while it is the component's own default
-            ...jsxProps(mobileControls, values, values.label === "Mobile number" ? ["label"] : []),
+            ...jsxProps(mobileControls, values),
             `name="mobile"`,
             "onValueChange={(number, { e164 }) => setMobile(e164)}",
         ]);

@@ -1,6 +1,7 @@
 import type {HTMLAttributes, ReactNode} from "react";
 import {Container} from "../../components/Container/Container";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import styles from "./FooterBlock.module.css";
 
 export interface FooterBlockLink {
@@ -29,6 +30,7 @@ export interface FooterBlockProps extends HTMLAttributes<HTMLElement> {
 
 /** The bottom of a site: logo, columns of links, and the copyright line. A `<footer>`. */
 export function FooterBlock({logo, description, columns = [], copyright, bottomLinks = [], className, ...rest}: FooterBlockProps) {
+    const t = useMessages();
     return (
         <footer className={cx(styles.footer, className)} {...rest}>
             <Container>
@@ -40,7 +42,7 @@ export function FooterBlock({logo, description, columns = [], copyright, bottomL
                         </div>
                     )}
                     {columns.length > 0 && (
-                        <nav aria-label="Footer" className={styles.columns}>
+                        <nav aria-label={t.footerNavigation} className={styles.columns}>
                             {columns.map((column, index) => (
                                 <div key={index}>
                                     <h2 className={styles.columnTitle}>{column.title}</h2>

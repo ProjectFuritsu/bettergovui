@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState, type HTMLAttributes} from "react";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import styles from "./Code.module.css";
 
 export interface CodeProps extends HTMLAttributes<HTMLElement> {
@@ -34,12 +35,15 @@ async function copyText(text: string) {
 export function Code({
     block = false,
     copyable = false,
-    copyLabel = "Copy",
-    copiedLabel = "Copied",
+    copyLabel: copyLabelProp,
+    copiedLabel: copiedLabelProp,
     className,
     children,
     ...rest
 }: CodeProps) {
+    const t = useMessages();
+    const copyLabel = copyLabelProp ?? t.copy;
+    const copiedLabel = copiedLabelProp ?? t.copied;
     const codeRef = useRef<HTMLElement>(null);
     const [copied, setCopied] = useState(false);
     const timer = useRef<number | undefined>(undefined);

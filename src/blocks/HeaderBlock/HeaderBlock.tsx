@@ -2,6 +2,7 @@ import {useId, useState, type HTMLAttributes, type ReactNode} from "react";
 import {Container} from "../../components/Container/Container";
 import {Navbar, NavLink} from "../../components/Navbar/Navbar";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {renderAction, type BlockAction} from "../action";
 import styles from "./HeaderBlock.module.css";
 
@@ -34,11 +35,12 @@ export function HeaderBlock({
     links = [],
     action,
     sticky = false,
-    menuLabel = "Menu",
+    menuLabel,
     className,
     onKeyDown,
     ...rest
 }: HeaderBlockProps) {
+    const t = useMessages();
     const menuId = useId();
     const [open, setOpen] = useState(false);
     const navLinks = links.map(link => (
@@ -65,7 +67,7 @@ export function HeaderBlock({
                         <button
                             type="button"
                             className={styles.menuButton}
-                            aria-label={menuLabel}
+                            aria-label={menuLabel ?? t.menu}
                             aria-expanded={open}
                             aria-controls={menuId}
                             onClick={() => setOpen(current => !current)}>

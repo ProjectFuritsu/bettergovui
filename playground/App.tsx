@@ -6,7 +6,7 @@ import {cx} from "../src/utils/cx";
 import {entries} from "./entries";
 import {CodePanel} from "./workbench/CodePanel";
 import {DevicePreview} from "./workbench/DevicePreview";
-import {DEVICES, type DeviceName, type Theme} from "./workbench/devices";
+import {DEVICES, type DeviceName, type Language, type Theme} from "./workbench/devices";
 import {PropControl} from "./workbench/PropControl";
 import {CATEGORIES, defaultValues} from "./workbench/types";
 
@@ -17,6 +17,23 @@ function initialEntryName() {
 }
 
 const THEME_KEY = "playground-theme";
+const LANGUAGE_KEY = "playground-language";
+const LANGUAGES: {value: Language; label: string; name: string}[] = [
+    {value: "en", label: "EN", name: "English"},
+    {value: "fil", label: "FIL", name: "Filipino"},
+    {value: "ceb", label: "CEB", name: "Bisaya (Cebuano)"},
+];
+
+// The preview's language from last time, or English
+function initialLanguage(): Language {
+    try {
+        const saved = localStorage.getItem(LANGUAGE_KEY);
+        if (LANGUAGES.some(language => language.value === saved)) return saved as Language;
+    } catch {
+        // Storage can be blocked; English it is
+    }
+    return "en";
+}
 const PROPS_HIDDEN_KEY = "playground-props-hidden";
 
 // Whether the properties pane was hidden last time
@@ -58,6 +75,15 @@ export default function App() {
     }, [propsHidden]);
     const canRotate = DEVICES[device].rotatable;
     const [theme, setTheme] = useState<Theme>(initialTheme);
+    const [language, setLanguage] = useState<Language>(initialLanguage);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem(LANGUAGE_KEY, language);
+        } catch {
+            // Not saved; it still works for this visit
+        }
+    }, [language]);
 
     // data-theme="dark" on <html> switches both the workbench colors and the library's tokens.
     // A layout effect applies it before the browser paints, so there's no flash of the wrong theme.
@@ -113,15 +139,28 @@ export default function App() {
             <aside className="sidebar">
                 <div className="sidebar-top">
                     <div className="brand">UI Kit</div>
-                    <Button
-                        size="sm"
-                        variant="text"
-                        color="var(--pg-muted)"
-                        leftIcon={theme === "dark" ? <Sun /> : <Moon />}
-                        aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                        title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                        onClick={() => setTheme(current => (current === "dark" ? "light" : "dark"))}
-                    />
+                    <div className="sidebar-tools">
+                        {/* The language of the components' built-in texts in the preview */}
+                        <select
+                            className="language-select"
+                            aria-label="Preview language"
+                            title={`Preview language: ${LANGUAGES.find(item => item.value === language)?.name}`}
+                            value={language}
+                            onChange={event => setLanguage(event.target.value as Language)}>
+                            {LANGUAGES.map(item => (
+                                <option key={item.value} value={item.value}>{item.label}</option>
+                            ))}
+                        </select>
+                        <Button
+                            size="sm"
+                            variant="text"
+                            color="var(--pg-muted)"
+                            leftIcon={theme === "dark" ? <Sun /> : <Moon />}
+                            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                            onClick={() => setTheme(current => (current === "dark" ? "light" : "dark"))}
+                        />
+                    </div>
                 </div>
                 <div className="sidebar-search">
                     <Search className="sidebar-search-icon" aria-hidden="true" />
@@ -226,6 +265,7 @@ export default function App() {
                     entryName={entry.name}
                     values={values}
                     theme={theme}
+                    language={language}
                 />
 
                 <CodePanel code={code} />

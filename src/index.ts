@@ -112,6 +112,9 @@ export type { ToasterProps, ToasterPosition } from "./components/Toast/Toaster";
 export { Tooltip } from "./components/Tooltip/Tooltip";
 export type { TooltipProps, TooltipPlacement } from "./components/Tooltip/Tooltip";
 export type { Color, ThemeColor } from "./utils/color";
+export { LanguageProvider, useMessages, useLanguage, dateLocale, MESSAGES } from "./i18n/LanguageProvider";
+export type { Language, LanguageProviderProps, MessageOverrides } from "./i18n/LanguageProvider";
+export type { Messages } from "./i18n/messages";
 export type { Size, SizePreset } from "./utils/size";
 export type { LayoutElement } from "./utils/element";
 

@@ -1,5 +1,6 @@
 import {useEffect, useId, useRef, type CSSProperties, type HTMLAttributes, type ReactNode} from "react";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {lockScroll} from "../../utils/scrollLock";
 import styles from "./Dialog.module.css";
 
@@ -49,7 +50,7 @@ export function DialogBase({
     withCloseButton = true,
     closeOnBackdropClick = true,
     closeOnEscape = true,
-    closeLabel = "Close",
+    closeLabel,
     kind,
     size,
     position,
@@ -58,6 +59,7 @@ export function DialogBase({
     children,
     ...rest
 }: DialogBaseProps) {
+    const t = useMessages();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const pressedOnBackdrop = useRef(false);
     const titleId = useId();
@@ -111,7 +113,7 @@ export function DialogBase({
                             {description && <p id={descriptionId} className={styles.description}>{description}</p>}
                         </div>
                         {withCloseButton && (
-                            <button type="button" className={styles.close} aria-label={closeLabel} onClick={onClose}>
+                            <button type="button" className={styles.close} aria-label={closeLabel ?? t.close} onClick={onClose}>
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
                             </button>
                         )}

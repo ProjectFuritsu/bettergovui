@@ -9,6 +9,7 @@ import {
     type ReactNode,
 } from "react";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import styles from "./FileUpload.module.css";
 
 export interface FileUploadProps
@@ -69,7 +70,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
         files: filesProp,
         onFilesChange,
         dropText,
-        removeLabel = "Remove",
+        removeLabel,
         accept,
         multiple = false,
         required,
@@ -82,6 +83,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
     },
     ref,
 ) {
+    const t = useMessages();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const labelId = label ? `${inputId}-label` : undefined;
@@ -122,15 +124,15 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
         const turnedAway: string[] = [];
 
         for (const file of Array.from(added)) {
-            if (accept && !isAccepted(file, accept)) turnedAway.push(`${file.name} isn't an allowed type of file.`);
-            else if (maxSize !== undefined && file.size > maxSize) turnedAway.push(`${file.name} is larger than ${formatFileSize(maxSize)}.`);
+            if (accept && !isAccepted(file, accept)) turnedAway.push(t.fileUpload.wrongType(file.name));
+            else if (maxSize !== undefined && file.size > maxSize) turnedAway.push(t.fileUpload.tooLarge(file.name, formatFileSize(maxSize)));
             else if (!files.some(existing => isSameFile(existing, file))) accepted.push(file);
         }
 
         // One file: a new choice replaces the old one. Several: they're added to the list.
         let next = multiple ? [...files, ...accepted] : accepted.length > 0 ? accepted.slice(0, 1) : files;
         if (maxFiles !== undefined && next.length > maxFiles) {
-            turnedAway.push(`You can add up to ${maxFiles} ${maxFiles === 1 ? "file" : "files"}.`);
+            turnedAway.push(t.fileUpload.tooMany(maxFiles));
             next = next.slice(0, maxFiles);
         }
 
@@ -187,8 +189,9 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
                 <span>
                     {dropText ?? (
                         <>
-                            <span className={styles.browse}>{multiple ? "Choose files" : "Choose a file"}</span>
-                            {multiple ? " or drag them here" : " or drag it here"}
+                            <span className={styles.browse}>{multiple ? t.fileUpload.chooseFiles : t.fileUpload.chooseFile}</span>
+                            {" "}
+                            {multiple ? t.fileUpload.dragThemHere : t.fileUpload.dragItHere}
                         </>
                     )}
                 </span>
@@ -221,7 +224,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
             {errorMessage && <p id={errorId} className={styles.error}>{errorMessage}</p>}
 
             {files.length > 0 && (
-                <ul className={styles.files} aria-label="Chosen files">
+                <ul className={styles.files} aria-label={t.fileUpload.chosenFiles}>
                     {files.map(file => (
                         <li key={`${file.name}-${file.size}-${file.lastModified}`} className={styles.file}>
                             <svg className={styles.fileIcon} viewBox="0 0 24 24" aria-hidden="true">
@@ -232,7 +235,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
                             <button
                                 type="button"
                                 className={styles.remove}
-                                aria-label={`${removeLabel} ${file.name}`}
+                                aria-label={`${removeLabel ?? t.fileUpload.remove} ${file.name}`}
                                 disabled={disabled}
                                 onClick={() => removeFile(file)}>
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>

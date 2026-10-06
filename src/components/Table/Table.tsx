@@ -1,5 +1,6 @@
 import {useMemo, useState, type CSSProperties, type Key, type ReactNode, type TableHTMLAttributes} from "react";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {toCssLength} from "../../utils/size";
 import styles from "./Table.module.css";
 
@@ -74,12 +75,13 @@ export function Table<Row extends object>({
     striped = false,
     highlightOnHover = true,
     stackOnMobile = true,
-    emptyText = "Nothing to show yet.",
+    emptyText,
     defaultSort,
     className,
     style,
     ...rest
 }: TableProps<Row>) {
+    const t = useMessages();
     const [sort, setSort] = useState<TableSort | undefined>(defaultSort);
     const field = (row: Row, key: string) => (row as Record<string, unknown>)[key];
 
@@ -147,7 +149,7 @@ export function Table<Row extends object>({
                     <tbody role={role("rowgroup")}>
                         {rows.length === 0 ? (
                             <tr role={role("row")} className={styles.empty}>
-                                <td role={role("cell")} colSpan={columns.length}>{emptyText}</td>
+                                <td role={role("cell")} colSpan={columns.length}>{emptyText ?? t.tableEmpty}</td>
                             </tr>
                         ) : (
                             rows.map((row, index) => (

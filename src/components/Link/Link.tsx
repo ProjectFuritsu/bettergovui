@@ -1,6 +1,7 @@
 import type {AnchorHTMLAttributes, CSSProperties} from "react";
 import {resolveColor, type Color} from "../../utils/color";
 import {cx} from "../../utils/cx";
+import {useMessages} from "../../i18n/LanguageProvider";
 import styles from "./Link.module.css";
 
 export interface LinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color"> {
@@ -24,12 +25,13 @@ export function Link({
     underline = "always",
     external = false,
     color,
-    newTabLabel = "(opens in a new tab)",
+    newTabLabel,
     className,
     style,
     children,
     ...rest
 }: LinkProps) {
+    const t = useMessages();
     const settings = {"--link-color": color === undefined ? undefined : resolveColor(color)} as CSSProperties;
 
     return (
@@ -45,7 +47,7 @@ export function Link({
                     <svg className={styles.externalIcon} viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M7 17 17 7M8 7h9v9" />
                     </svg>
-                    <span className={styles.srOnly}> {newTabLabel}</span>
+                    <span className={styles.srOnly}> {newTabLabel ?? t.opensInNewTab}</span>
                 </>
             )}
         </a>

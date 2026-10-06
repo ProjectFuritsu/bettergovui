@@ -1,5 +1,6 @@
 import {forwardRef, useEffect, useRef, useState} from "react";
 import {useKeepCaret} from "../../utils/caret";
+import {useMessages} from "../../i18n/LanguageProvider";
 import {Input, type InputProps} from "../Input/Input";
 
 export interface MobileNumberDetails {
@@ -50,9 +51,9 @@ export const MobileNumberInput = forwardRef<HTMLInputElement, MobileNumberInputP
         defaultValue,
         onValueChange,
         name,
-        invalidMessage = "Enter a mobile number like 917 123 4567.",
+        invalidMessage: invalidMessageProp,
         error,
-        label = "Mobile number",
+        label,
         placeholder = "917 123 4567",
         onChange,
         onBlur,
@@ -60,6 +61,8 @@ export const MobileNumberInput = forwardRef<HTMLInputElement, MobileNumberInputP
     },
     ref,
 ) {
+    const t = useMessages();
+    const invalidMessage = invalidMessageProp ?? t.mobile.invalid;
     const [internal, setInternal] = useState(() => toMobileDigits(defaultValue ?? ""));
     const [touched, setTouched] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -85,7 +88,7 @@ export const MobileNumberInput = forwardRef<HTMLInputElement, MobileNumberInputP
                 type="tel"
                 inputMode="tel"
                 autoComplete="tel-national"
-                label={label}
+                label={label ?? t.mobile.label}
                 placeholder={placeholder}
                 prefix="+63"
                 value={formatMobile(digits)}
