@@ -1,3 +1,4 @@
+import {accordionEntry} from "./accordion";
 import {alertEntry} from "./alert";
 import {avatarEntry} from "./avatar";
 import {badgeEntry} from "./badge";
@@ -7,8 +8,10 @@ import {cardEntry} from "./card";
 import {checkboxEntry} from "./checkbox";
 import {codeEntry} from "./code";
 import {containerEntry} from "./container";
+import {dateInputEntry} from "./dateinput";
 import {dividerEntry} from "./divider";
 import {drawerEntry} from "./drawer";
+import {fileUploadEntry} from "./fileupload";
 import {gridEntry} from "./grid";
 import {groupEntry} from "./group";
 import {headingEntry} from "./heading";
@@ -20,12 +23,15 @@ import {loaderEntry} from "./loader";
 import {modalEntry} from "./modal";
 import {navbarEntry} from "./navbar";
 import {paginationEntry} from "./pagination";
+import {progressEntry} from "./progress";
 import {radioEntry} from "./radio";
 import {scaffoldEntry} from "./scaffold";
 import {selectEntry} from "./select";
+import {skeletonEntry} from "./skeleton";
 import {stackEntry} from "./stack";
 import {stepperEntry} from "./stepper";
 import {switchEntry} from "./switch";
+import {tableEntry} from "./table";
 import {tabsEntry} from "./tabs";
 import {textEntry} from "./text";
 import {textareaEntry} from "./textarea";
@@ -35,6 +41,7 @@ import {tooltipEntry} from "./tooltip";
 // Every component in the toolkit. The sidebar groups them by `category`; within a group
 // they're shown in the order listed here (alphabetical). Add new ones here.
 export const entries = [
+    accordionEntry,
     alertEntry,
     avatarEntry,
     badgeEntry,
@@ -44,8 +51,10 @@ export const entries = [
     checkboxEntry,
     codeEntry,
     containerEntry,
+    dateInputEntry,
     dividerEntry,
     drawerEntry,
+    fileUploadEntry,
     gridEntry,
     groupEntry,
     headingEntry,
@@ -57,12 +66,15 @@ export const entries = [
     modalEntry,
     navbarEntry,
     paginationEntry,
+    progressEntry,
     radioEntry,
     scaffoldEntry,
     selectEntry,
+    skeletonEntry,
     stackEntry,
     stepperEntry,
     switchEntry,
+    tableEntry,
     tabsEntry,
     textEntry,
     textareaEntry,

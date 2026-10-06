@@ -1,0 +1,101 @@
+.accordion {
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+}
+
+.accordion[data-variant="contained"] {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden; /* the hover background follows the rounded corners */
+}
+
+.accordion[data-variant="contained"] > .item + .item {
+    border-top: 1px solid var(--border);
+}
+
+.accordion[data-variant="separated"] {
+    gap: var(--spacing-sm);
+}
+
+.accordion[data-variant="separated"] > .item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-weight: 600;
+    line-height: 1.4;
+    list-style: none; /* hides the browser's own triangle */
+    cursor: pointer;
+}
+
+.summary::-webkit-details-marker {
+    display: none; /* the triangle in Safari */
+}
+
+.summary:hover {
+    background: var(--surface-muted);
+}
+
+.summary:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+.chevron {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: var(--text-muted);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.2s ease;
+}
+
+.item[open] > .summary .chevron {
+    transform: rotate(180deg);
+}
+
+.content {
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+/* Slides open and closed in browsers that can animate to "auto" height; elsewhere it just opens */
+@supports (interpolate-size: allow-keywords) {
+    .item {
+        interpolate-size: allow-keywords;
+    }
+
+    .item::details-content {
+        block-size: 0;
+        overflow-y: clip;
+        transition: block-size 0.2s ease, content-visibility 0.2s allow-discrete;
+    }
+
+    .item[open]::details-content {
+        block-size: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chevron {
+        transition: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .item::details-content {
+        transition: none;
+    }
+}

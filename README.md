@@ -2,7 +2,7 @@
 
 Accessible React UI components with light and dark themes, made for government web services in the Davao Region.
 
-- **33 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
+- **39 components:** a page scaffold, text, layout, forms, feedback, navigation, data display and overlays
 - **Accessible by default:** keyboard support, screen reader labels, readable contrast in both themes
 - **Themeable** with CSS variables, including a built-in dark mode
 - **Works on every screen size:** components adjust to phones on their own
@@ -60,10 +60,10 @@ export function SignUp() {
 | Typography | `Text`, `Heading`, `Link`, `List` / `ListItem`, `Code`, `Kbd` |
 | Layout | `Scaffold` (`ScaffoldHeader`, `ScaffoldNavbar`, `ScaffoldMain`, `ScaffoldAside`, `ScaffoldFooter`, `ScaffoldBurger`), `Container`, `Stack`, `Group`, `Grid`, `Divider` |
 | Buttons | `Button` |
-| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch` |
-| Feedback | `Alert`, `Badge`, `Loader`, `Toast` (`Toaster` + `toast()`) |
+| Forms | `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` / `RadioGroup`, `Switch`, `DateInput`, `FileUpload` |
+| Feedback | `Alert`, `Badge`, `Loader`, `Progress`, `Skeleton`, `Toast` (`Toaster` + `toast()`) |
 | Navigation | `Navbar` + `NavLink`, `Tabs` (`TabList`, `Tab`, `TabPanel`), `Breadcrumbs`, `Pagination`, `Stepper` (`Step`, `StepperCompleted`) |
-| Data display | `Card` (`CardTitle`, `CardDescription`, `CardSection`, `CardFooter`), `Avatar`, `Tooltip` |
+| Data display | `Table`, `Accordion` (`AccordionItem`), `Card` (`CardTitle`, `CardDescription`, `CardSection`, `CardFooter`), `Avatar`, `Tooltip` |
 | Overlays | `Modal`, `Drawer` |
 
 Every prop is documented in your editor: hover over a component or a prop to see what it does.
@@ -118,6 +118,10 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 | `Input`, `Textarea`, `Select` | `value` + `onChange` | `onChange={e => setName(e.target.value)}` |
 | `Checkbox`, `Switch` | `checked` + `onChange` | `onChange={e => setOn(e.target.checked)}` |
 | `RadioGroup`, `Tabs` | `value` + `onValueChange` | `onValueChange={setChoice}` |
+| `DateInput` | `value` + `onValueChange` (a `Date`) | `onValueChange={date => setDate(date)}` |
+| `FileUpload` | `files` + `onFilesChange` (a `File[]`) | `onFilesChange={setFiles}` |
+
+`FileUpload` with a `name` also sends its files with the form, like a normal file field.
 
 Show errors with the `error` prop, for example `<Input error="Enter a valid email address" />`.
 The form components also accept a `ref`, so form libraries like react-hook-form work with them.

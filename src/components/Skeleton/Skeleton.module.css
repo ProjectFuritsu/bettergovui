@@ -1,0 +1,49 @@
+.skeleton {
+    flex: none;
+    width: var(--skeleton-width, 100%);
+    height: var(--skeleton-height, 1rem);
+    border-radius: var(--skeleton-radius, calc(var(--radius) / 2));
+    background-color: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.skeleton[data-circle] {
+    width: var(--skeleton-height, 2.5rem);
+    height: var(--skeleton-height, 2.5rem);
+    border-radius: 50%;
+}
+
+/* A lighter band that sweeps from left to right */
+.skeleton[data-animate] {
+    background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--surface) 55%, transparent), transparent);
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    from { background-position: -100% 0; }
+    to { background-position: 200% 0; }
+}
+
+/* lines: a paragraph of placeholder lines; the width applies to the whole block */
+.lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: var(--skeleton-width, 100%);
+}
+
+.lines > .skeleton {
+    width: 100%;
+}
+
+.lines > .skeleton:last-child {
+    width: 60%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton[data-animate] {
+        animation: none;
+        background-image: none;
+    }
+}

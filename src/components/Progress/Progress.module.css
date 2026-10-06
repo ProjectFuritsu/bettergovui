@@ -1,0 +1,73 @@
+.root {
+    /* The size and color props override these (see Progress.tsx) */
+    --progress-height: 0.5rem;
+    --progress-color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.root[data-size="xs"] { --progress-height: 0.25rem; }
+.root[data-size="sm"] { --progress-height: 0.375rem; }
+.root[data-size="md"] { --progress-height: 0.5rem; }
+.root[data-size="lg"] { --progress-height: 0.75rem; }
+.root[data-size="xl"] { --progress-height: 1rem; }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+}
+
+.label {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.value {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums; /* digits don't jiggle as the number changes */
+}
+
+.track {
+    position: relative;
+    height: var(--progress-height);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 12%, transparent);
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--progress-color);
+    transition: width 0.3s ease;
+}
+
+/* Unknown amount: a short bar slides across, again and again */
+.track[data-indeterminate] .bar {
+    position: absolute;
+    width: 40%;
+    animation: slide 1.4s ease-in-out infinite;
+}
+
+@keyframes slide {
+    from { left: -40%; }
+    to { left: 100%; }
+}
+
+/* No sliding for people who turn down animations: a faint full bar instead */
+@media (prefers-reduced-motion: reduce) {
+    .bar {
+        transition: none;
+    }
+
+    .track[data-indeterminate] .bar {
+        left: 0;
+        width: 100%;
+        opacity: 0.4;
+        animation: none;
+    }
+}
