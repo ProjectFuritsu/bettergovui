@@ -25,7 +25,7 @@ export { Container } from "./components/Container/Container";
 export type { ContainerProps } from "./components/Container/Container";
 export type { DialogProps } from "./components/Dialog/DialogBase";
 export { DateInput } from "./components/DateInput/DateInput";
-export type { DateInputProps } from "./components/DateInput/DateInput";
+export type { DateInputLabels, DateInputProps } from "./components/DateInput/DateInput";
 export { Divider } from "./components/Divider/Divider";
 export type { DividerProps } from "./components/Divider/Divider";
 export { Drawer } from "./components/Drawer/Drawer";

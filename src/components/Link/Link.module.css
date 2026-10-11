@@ -2,14 +2,25 @@
     /* The color prop overrides this (see Link.tsx) */
     --link-color: var(--primary);
     /* A deeper shade so it's readable as text (lighter in dark mode) */
-    color: color-mix(in srgb, var(--link-color) 80%, black);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
+    --link-text: color-mix(in srgb, var(--link-color) 80%, black);
+    color: var(--link-text);
+    font-weight: 500;
+    /* A full underline in the text's own color, set a little below the letters */
+    text-decoration-color: currentColor;
+    text-underline-offset: 4px;
     border-radius: 2px;
+    transition-property: color, text-decoration-color;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] .link {
-    color: color-mix(in srgb, var(--link-color) 75%, white);
+    --link-text: color-mix(in srgb, var(--link-color) 75%, white);
+}
+
+/* Hover: the text and its underline fade a little */
+.link:hover {
+    color: color-mix(in oklab, var(--link-text) 80%, transparent);
 }
 
 .link[data-underline="always"] {
@@ -21,16 +32,15 @@
     text-decoration-line: none;
 }
 
-.link[data-underline="always"]:hover,
 .link[data-underline="hover"]:hover,
 .link[data-underline="hover"]:focus-visible {
     text-decoration-line: underline;
-    text-decoration-thickness: 2px;
 }
 
+/* Keyboard focus: a soft 3px ring. It stays gray for every color. */
 .link:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 .externalIcon {
@@ -64,7 +74,7 @@
  */
 @supports (color: oklch(from red min(l, 0.5) c h)) {
     .link {
-        color: oklch(from var(--link-color) min(l, 0.5) c h);
+        --link-text: oklch(from var(--link-color) min(l, 0.5) c h);
     }
 }
 
@@ -75,6 +85,6 @@
  */
 @supports (color: oklch(from red max(l, 0.72) c h)) {
     [data-theme="dark"] .link {
-        color: oklch(from var(--link-color) max(l, 0.72) c h);
+        --link-text: oklch(from var(--link-color) max(l, 0.72) c h);
     }
 }

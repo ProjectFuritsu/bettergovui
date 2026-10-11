@@ -2,24 +2,29 @@
     /* The color, size and radius props override these (see Badge.tsx) */
     --badge-color: var(--primary);
     --badge-size: 0.75rem;
-    --badge-radius: 999px;
-    /* Text color: a darker shade of the color so small text stays readable (lighter in dark mode) */
-    --badge-text: color-mix(in srgb, var(--badge-color) 60%, black);
+    --badge-radius: 9999px;
+    /*
+     * light and outline variants. Without a color prop they are plain black-and-white: normal
+     * text, a soft gray fill or line. (With a color prop these follow the color instead: see
+     * "With a color prop" below.)
+     */
+    --badge-text: var(--text);
+    --badge-soft: var(--surface-muted);
+    --badge-line: var(--border);
     display: inline-flex;
     align-items: center;
-    gap: 0.375em;
-    padding: 0.25em 0.75em;
+    justify-content: center;
+    /* In em, so everything grows with the size: 4px gap, 2px and 8px padding at 12px text */
+    gap: 0.3333em;
+    padding: 0.1667em 0.6667em;
+    /* Every variant has a 1px border (invisible unless outlined) so all variants are the same height */
     border: 1px solid transparent;
     border-radius: var(--badge-radius);
     font-size: var(--badge-size);
-    font-weight: 600;
-    line-height: 1.25;
+    font-weight: 500;
+    line-height: 1.3333;
     white-space: nowrap;
     vertical-align: middle;
-}
-
-[data-theme="dark"] .badge {
-    --badge-text: color-mix(in srgb, var(--badge-color) 75%, white);
 }
 
 .badge[data-size="xs"] { --badge-size: 0.625rem; }
@@ -28,27 +33,32 @@
 .badge[data-size="lg"] { --badge-size: 0.875rem; }
 .badge[data-size="xl"] { --badge-size: 1rem; }
 
-/* light: a soft tint of the color (works on light and dark backgrounds) */
+/* light: a soft fill (works on light and dark backgrounds) */
 .badge[data-variant="light"] {
-    background: color-mix(in srgb, var(--badge-color) 15%, var(--surface));
+    background: var(--badge-soft);
     color: var(--badge-text);
 }
 
-/* filled: solid background, white text */
+/* filled: solid background */
 .badge[data-variant="filled"] {
     background: var(--badge-color);
-    color: white;
+    /* For old browsers. Newer ones pick black or white below. */
+    color: var(--primary-contrast);
 }
 
 /*
- * autoContrast: black or white text, whichever is easier to read on the color.
+ * Black or white text, whichever is easier to read on the color: always on, for any color prop.
+ * (The default color is near-black in the light theme and light gray in the dark theme, so the
+ * text has to flip with it.)
  * The browser works out the color's brightness (its WCAG "relative luminance": the sum of the
  * linear red, green and blue parts, weighted 0.2126 / 0.7152 / 0.0722). Below 0.179 white text
  * reads better, above it black does. Each channel becomes 1 (white) or 0 (black) via clamp().
- * @supports: browsers without this CSS feature skip it and keep the white text above.
+ * This is what the autoContrast prop used to turn on; the prop still works, it just has nothing
+ * left to change.
+ * @supports: browsers without this CSS feature skip it and keep the text color above.
  */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .badge[data-variant="filled"][data-auto-contrast] {
+    .badge[data-variant="filled"] {
         color: color(
             from var(--badge-color) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
@@ -60,9 +70,30 @@
 
 /* outline: border only */
 .badge[data-variant="outline"] {
-    border-color: var(--badge-text);
+    border-color: var(--badge-line);
     color: var(--badge-text);
 }
+
+/* ---------- With a color prop (light and outline variants) ---------- */
+
+/*
+ * The color prop arrives as an inline --badge-color (see Badge.tsx), which is how these rules can
+ * tell a colored badge from a default one. Text, fill and line then follow the color.
+ * The text uses a darker shade of the color so small text stays readable (lighter in dark mode).
+ */
+.badge[style*="--badge-color"] {
+    --badge-text: color-mix(in srgb, var(--badge-color) 60%, black);
+    --badge-soft: color-mix(in oklab, var(--badge-color) 10%, transparent);
+    --badge-line: color-mix(in oklab, var(--badge-text) 25%, transparent);
+}
+
+[data-theme="dark"] .badge[style*="--badge-color"] {
+    --badge-text: color-mix(in srgb, var(--badge-color) 75%, white);
+    --badge-soft: color-mix(in oklab, var(--badge-color) 16%, transparent);
+    --badge-line: color-mix(in oklab, var(--badge-text) 30%, transparent);
+}
+
+/* ---------- Icons ---------- */
 
 .icon {
     display: inline-flex;
@@ -70,9 +101,10 @@
     flex-shrink: 0;
 }
 
+/* As big as the text (12px in a default badge) */
 .icon svg {
-    width: 1.15em;
-    height: 1.15em;
+    width: 1em;
+    height: 1em;
 }
 
 /*
@@ -81,7 +113,7 @@
  * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
  */
 @supports (color: oklch(from red max(l, 0.72) c h)) {
-    [data-theme="dark"] .badge {
+    [data-theme="dark"] .badge[style*="--badge-color"] {
         --badge-text: oklch(from var(--badge-color) max(l, 0.72) c h);
     }
 }

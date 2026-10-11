@@ -1,32 +1,35 @@
 .card {
     /* The padding and radius props override these (see Card.tsx) */
-    --card-padding: var(--spacing-lg);
-    --card-radius: var(--radius);
+    --card-padding: var(--spacing-xl);
+    /* Cards are rounder than buttons and inputs: 6px more than the --radius token */
+    --card-radius: calc(var(--radius) + 6px);
     display: flex;
     flex-direction: column;
     min-width: 0;
     padding: var(--card-padding);
     border: 1px solid transparent;
     border-radius: var(--card-radius);
-    background: var(--surface);
+    background: var(--surface-raised);
     color: var(--text);
     overflow: hidden; /* images in a CardSection follow the rounded corners */
 }
 
+/* A thin border, no shadow */
 .card[data-variant="outline"] {
     border-color: var(--border);
 }
 
+/* No border: a deeper shadow does the work */
 .card[data-variant="elevated"] {
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 16px rgb(0 0 0 / 0.08);
+    box-shadow: var(--shadow-md);
 }
 
 [data-theme="dark"] .card[data-variant="elevated"] {
     /* Shadows barely show on dark backgrounds, so add a faint edge */
     border-color: var(--border);
-    box-shadow: 0 4px 16px rgb(0 0 0 / 0.4);
 }
 
+/* Flat: a soft gray background, no border or shadow */
 .card[data-variant="filled"] {
     background: var(--surface-muted);
 }
@@ -36,19 +39,24 @@
  * or button inside has keyboard focus (:focus-within), so keyboard users see it too.
  */
 .card[data-hoverable] {
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    transition:
+        transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card[data-hoverable]:hover,
 .card[data-hoverable]:focus-within {
     transform: translateY(-2px);
-    border-color: var(--border-strong);
-    box-shadow: 0 2px 4px rgb(0 0 0 / 0.06), 0 12px 28px rgb(0 0 0 / 0.12);
+    box-shadow: var(--shadow-lg);
 }
 
-[data-theme="dark"] .card[data-hoverable]:hover,
-[data-theme="dark"] .card[data-hoverable]:focus-within {
-    box-shadow: 0 12px 28px rgb(0 0 0 / 0.5);
+/* Only cards that show a border get a stronger one (the others would grow an edge out of nowhere) */
+.card[data-hoverable][data-variant="outline"]:hover,
+.card[data-hoverable][data-variant="outline"]:focus-within,
+[data-theme="dark"] .card[data-hoverable][data-variant="elevated"]:hover,
+[data-theme="dark"] .card[data-hoverable][data-variant="elevated"]:focus-within {
+    border-color: var(--border-strong);
 }
 
 /* For people who turn down animations in their OS settings: no movement, just the shadow and border */
@@ -63,28 +71,32 @@
     }
 }
 
-/* Space between the things inside the card */
-.card > * + * {
-    margin-top: var(--spacing-md);
-}
-
 .title {
     margin: 0;
-    font-size: 1.125rem;
-    font-weight: 700;
-    line-height: 1.35;
+    font-size: 1rem;
+    font-weight: 600;
+    /* Room between the lines when a long title wraps */
+    line-height: 1.3;
 }
 
 .description {
     margin: 0;
     font-size: 0.875rem;
-    line-height: 1.5;
+    line-height: 1.43;
     color: var(--text-muted);
 }
 
-/* The description sits close to its title */
+/*
+ * Space between the things inside the card. This comes after .title and .description on purpose:
+ * their `margin: 0` would otherwise win and put them right against whatever is above (e.g. a Badge).
+ */
+.card > * + * {
+    margin-top: var(--spacing-md);
+}
+
+/* The description sits right under its title: the two read as one block */
 .card > .title + .description {
-    margin-top: var(--spacing-xs);
+    margin-top: 0.125rem;
 }
 
 /* Edge to edge: cancel the card's padding on the sides (and at the top/bottom when it's first/last) */
@@ -99,6 +111,15 @@
 
 .card > .section:last-child {
     margin-bottom: calc(var(--card-padding) * -1);
+}
+
+/*
+ * Next to an edge-to-edge section (e.g. an image on top), the content keeps the card's padding:
+ * the same space above it as on its left, right and bottom.
+ */
+.card > .section + :not(.section),
+.card > :not(.section) + .section {
+    margin-top: var(--card-padding);
 }
 
 .section > img {
@@ -117,5 +138,11 @@
 /* Pushes the footer to the bottom when cards in a row have different heights */
 .card > .footer {
     margin-top: auto;
-    padding-top: var(--spacing-md);
+    /* As much space above the buttons as a small (32px) button is tall */
+    padding-top: var(--card-footer-gap, 2rem);
+}
+
+/* A footer right after an edge-to-edge section already has the card's padding above it */
+.card > .section + .footer {
+    padding-top: 0;
 }

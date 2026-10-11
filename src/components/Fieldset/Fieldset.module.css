@@ -1,18 +1,13 @@
 .fieldset {
     /* The gap prop overrides this (see Fieldset.tsx) */
     --fieldset-gap: var(--spacing-md);
-    /* Error text: a darker red so small text stays readable (lighter in dark mode), like Input */
-    --fieldset-error-text: color-mix(in srgb, var(--danger) 80%, black);
     min-width: 0; /* fieldsets don't shrink below their content by default, which breaks narrow layouts */
     margin: 0;
     padding: var(--spacing-lg);
     border: none;
-    border-radius: var(--radius);
+    /* A bigger box than a field, so a little rounder */
+    border-radius: calc(var(--radius) + 2px);
     color: var(--text);
-}
-
-[data-theme="dark"] .fieldset {
-    --fieldset-error-text: color-mix(in srgb, var(--danger) 75%, white);
 }
 
 .fieldset[data-variant="outline"] {
@@ -38,7 +33,7 @@
     margin: 0 0 var(--spacing-md);
     padding: 0;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.35;
 }
 
@@ -54,7 +49,7 @@
 .description,
 .error {
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     line-height: 1.4;
 }
 
@@ -71,11 +66,11 @@
 
 .error {
     margin-top: var(--spacing-md);
-    color: var(--fieldset-error-text);
+    color: var(--danger);
 }
 
 /* The browser greys out the fields inside a disabled fieldset; dim the title to match */
 .fieldset:disabled .legend,
 .fieldset:disabled .description {
-    opacity: 0.6;
+    opacity: 0.5;
 }

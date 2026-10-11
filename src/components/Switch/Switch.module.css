@@ -1,25 +1,21 @@
 .root {
-    /* The size and color props override these (see Switch.tsx) */
-    --switch-size: 1rem;
+    /* The size and color props override these (see Switch.tsx). md is 14px text next to a 32 × 18.4px track. */
+    --switch-size: 0.875rem;
     --switch-color: var(--primary);
-    --switch-error-text: color-mix(in srgb, var(--danger) 80%, black);
     display: inline-flex;
     align-items: flex-start;
-    gap: 0.75em;
+    gap: 0.5714em;
     font-size: var(--switch-size);
-    line-height: 1.25;
+    /* One line of the label is as tall as the track, so the two line up */
+    line-height: 1.3143;
     color: var(--text);
 }
 
-[data-theme="dark"] .root {
-    --switch-error-text: color-mix(in srgb, var(--danger) 75%, white);
-}
-
 .root[data-size="xs"] { --switch-size: 0.75rem; }
-.root[data-size="sm"] { --switch-size: 0.875rem; }
-.root[data-size="md"] { --switch-size: 1rem; }
-.root[data-size="lg"] { --switch-size: 1.125rem; }
-.root[data-size="xl"] { --switch-size: 1.25rem; }
+.root[data-size="sm"] { --switch-size: 0.8125rem; }
+.root[data-size="md"] { --switch-size: 0.875rem; }
+.root[data-size="lg"] { --switch-size: 1rem; }
+.root[data-size="xl"] { --switch-size: 1.125rem; }
 
 .root[data-disabled] {
     opacity: 0.5;
@@ -31,34 +27,52 @@
     position: relative;
     display: inline-flex;
     flex-shrink: 0;
-    width: 2.25em;
-    height: 1.25em;
+    width: 2.2857em;
+    height: 1.3143em;
 }
 
 /* The real checkbox, restyled as the track */
 .input {
     appearance: none;
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     margin: 0;
-    border-radius: 999px;
-    background: var(--border-strong);
+    /* Invisible until the switch is invalid; the thumb sits just inside it */
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    background: var(--input);
     cursor: pointer;
-    transition: background-color 0.15s;
+    transition: background-color, border-color, box-shadow;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.input:checked {
+[data-theme="dark"] .input {
+    background: color-mix(in oklab, var(--input) 80%, transparent);
+}
+
+.root .input:checked {
     background: var(--switch-color);
 }
 
-.input:focus-visible {
-    outline: 2px solid var(--switch-color);
-    outline-offset: 2px;
+/* The focus ring stays grey whatever the color prop is */
+.root .input:focus-visible {
+    border-color: var(--ring);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
-.input[aria-invalid="true"] {
-    outline: 2px solid var(--danger);
-    outline-offset: 2px;
+.root .input[aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
+.root .input[aria-invalid="true"]:focus-visible {
+    outline-color: color-mix(in oklab, var(--danger) 20%, transparent);
+}
+
+[data-theme="dark"] .root .input[aria-invalid="true"]:focus-visible {
+    outline-color: color-mix(in oklab, var(--danger) 40%, transparent);
 }
 
 .input:disabled,
@@ -66,22 +80,29 @@
     cursor: not-allowed;
 }
 
-/* The white circle; it slides right when the switch is on */
+/* The 16px circle, the color of the page; it slides right when the switch is on */
 .thumb {
     position: absolute;
-    top: 0.1875em;
-    left: 0.1875em;
-    width: 0.875em;
-    height: 0.875em;
+    top: calc((1.3143em - 1.1429em) / 2);
+    left: 1px;
+    width: 1.1429em;
+    height: 1.1429em;
     border-radius: 50%;
-    background: white;
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    background: var(--surface);
     pointer-events: none;
-    transition: transform 0.15s;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.input:checked + .thumb {
-    transform: translateX(1em);
+/* On the dark theme's dim track, a page-colored circle would vanish: use the text color */
+[data-theme="dark"] .thumb {
+    background: var(--text);
+}
+
+/* On: the thumb sits on the color, so it takes the theme's text-on-primary color (other colors: see below) */
+.root .input:checked + .thumb {
+    background: var(--primary-contrast);
+    /* The track's width minus the thumb and the 1px border on each side */
+    transform: translateX(calc(2.2857em - 1.1429em - 2px));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -100,12 +121,13 @@
 }
 
 .label {
+    font-weight: 500;
     cursor: pointer;
 }
 
 .description,
 .error {
-    font-size: 0.8125em;
+    font-size: 1em;
     line-height: 1.4;
 }
 
@@ -114,15 +136,32 @@
 }
 
 .error {
-    color: var(--switch-error-text);
+    color: var(--danger);
 }
 
 /*
- * On a light color like "warning" (orange), the knob when on picks black or white, whichever is easier
- * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ * Where the browser supports it, the label's line box is trimmed to the letters themselves
+ * (cap height to baseline), and the body is pushed down so the letters sit exactly at the
+ * track's vertical center. Same as Radio. Browsers without this CSS feature keep the layout above.
+ */
+@supports (text-box: trim-both cap alphabetic) {
+    .body {
+        gap: 0.5em;
+        padding-top: calc((1.3143em - 1cap) / 2);
+    }
+
+    .label {
+        text-box: trim-both cap alphabetic;
+    }
+}
+
+/*
+ * The thumb, when on, picks black or white, whichever is easier to read on the color: always,
+ * for any color prop (so the autoContrast attribute changes nothing here anymore).
+ * Browsers without this CSS feature keep the theme's text-on-primary color.
  */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .root[data-auto-contrast] .input:checked + .thumb {
+    .root .input:checked + .thumb {
         background: color(
             from var(--switch-color) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)

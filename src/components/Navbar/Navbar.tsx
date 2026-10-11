@@ -1,6 +1,7 @@
 import {Children, createContext, useContext, type AnchorHTMLAttributes, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode} from "react";
 import {cx} from "../../utils/cx";
 import {useMessages} from "../../i18n/LanguageProvider";
+import {resolveColor, type Color} from "../../utils/color";
 import {toSpacing, type Size} from "../../utils/size";
 import styles from "./Navbar.module.css";
 
@@ -12,6 +13,8 @@ export interface NavbarProps extends HTMLAttributes<HTMLElement> {
     orientation?: "horizontal" | "vertical";
     /** Space between the links. A preset ("xs" 4px – "xl" 24px), a number in pixels, or any CSS length. Default 2px. */
     gap?: Size;
+    /** The color of the current page's background: a theme color ("primary") or any CSS color. Default: a light gray. */
+    color?: Color;
 }
 
 /**
@@ -22,6 +25,7 @@ export interface NavbarProps extends HTMLAttributes<HTMLElement> {
 export function Navbar({
     orientation,
     gap,
+    color,
     "aria-label": ariaLabel,
     className,
     style,
@@ -31,7 +35,10 @@ export function Navbar({
     const t = useMessages();
     const insideNav = useContext(InsideNavContext);
     const Root = insideNav ? "div" : "nav";
-    const settings = {"--navbar-gap": gap === undefined ? undefined : toSpacing(gap)} as CSSProperties;
+    const settings = {
+        "--navbar-gap": gap === undefined ? undefined : toSpacing(gap),
+        "--navbar-color": color === undefined ? undefined : resolveColor(color),
+    } as CSSProperties;
     return (
         <Root
             aria-label={insideNav ? undefined : (ariaLabel ?? t.mainNavigation)}
@@ -54,6 +61,8 @@ export interface NavLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
     icon?: ReactNode;
     /** Something small after the label, e.g. a count: `badge={3}`. */
     badge?: ReactNode;
+    /** The color of this link's background when it's the current page. Default: the Navbar's color (a light gray). */
+    color?: Color;
     /**
      * Use a router's link instead of `<a>`, e.g. `as={Link}` from next/link or react-router.
      * React Router's NavLink marks the current page by itself, so you don't need `active` with it.
@@ -64,9 +73,10 @@ export interface NavLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 /** A link in a navigation menu. Works in a Navbar, a ScaffoldNavbar, or on its own. */
-export function NavLink({active, icon, badge, as: Element = "a", className, children, ...rest}: NavLinkProps) {
+export function NavLink({active, icon, badge, color, as: Element = "a", className, style, children, ...rest}: NavLinkProps) {
+    const settings = {"--navbar-color": color === undefined ? undefined : resolveColor(color)} as CSSProperties;
     return (
-        <Element className={cx(styles.link, className)} aria-current={active ? "page" : undefined} {...rest}>
+        <Element className={cx(styles.link, className)} aria-current={active ? "page" : undefined} style={{...settings, ...style}} {...rest}>
             {icon && <span className={styles.icon} aria-hidden="true">{icon}</span>}
             <span className={styles.label}>{children}</span>
             {badge !== undefined && badge !== null && <span className={styles.badge}>{badge}</span>}

@@ -23,9 +23,14 @@ export interface FaqBlockProps extends Omit<HTMLAttributes<HTMLElement>, "title"
     action?: BlockAction;
     /** Let several answers be open at once. */
     multiple?: boolean;
+    /**
+     * "left" (default): the title beside the questions on wide screens.
+     * "center": the title centered above the questions, in one column no wider than 48rem.
+     */
+    align?: "left" | "center";
 }
 
-/** Questions and answers that open one at a time, with the title beside them on wide screens. */
+/** Questions and answers that open one at a time, with the title beside them on wide screens (or centered above them). */
 export function FaqBlock({
     eyebrow,
     title,
@@ -33,13 +38,14 @@ export function FaqBlock({
     items,
     action,
     multiple = false,
+    align = "left",
     className,
     ...rest
 }: FaqBlockProps) {
     const t = useMessages();
     const titleId = useId();
     return (
-        <section aria-labelledby={titleId} className={cx(shared.section, className)} {...rest}>
+        <section aria-labelledby={titleId} className={cx(shared.section, className)} data-align={align} {...rest}>
             <Container className={styles.inner}>
                 <div className={styles.intro}>
                     {eyebrow && <p className={shared.eyebrow}>{eyebrow}</p>}

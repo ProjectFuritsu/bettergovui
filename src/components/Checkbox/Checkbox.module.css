@@ -1,25 +1,20 @@
 .root {
-    /* The size and color props override these (see Checkbox.tsx) */
-    --checkbox-size: 1rem;
+    /* The size and color props override these (see Checkbox.tsx). md is 14px text next to a 16px box. */
+    --checkbox-size: 0.875rem;
     --checkbox-color: var(--primary);
-    --checkbox-error-text: color-mix(in srgb, var(--danger) 80%, black);
     display: inline-flex;
     align-items: flex-start;
-    gap: 0.75em;
+    gap: 0.857em;
     font-size: var(--checkbox-size);
     line-height: 1.25;
     color: var(--text);
 }
 
-[data-theme="dark"] .root {
-    --checkbox-error-text: color-mix(in srgb, var(--danger) 75%, white);
-}
-
 .root[data-size="xs"] { --checkbox-size: 0.75rem; }
-.root[data-size="sm"] { --checkbox-size: 0.875rem; }
-.root[data-size="md"] { --checkbox-size: 1rem; }
-.root[data-size="lg"] { --checkbox-size: 1.125rem; }
-.root[data-size="xl"] { --checkbox-size: 1.25rem; }
+.root[data-size="sm"] { --checkbox-size: 0.8125rem; }
+.root[data-size="md"] { --checkbox-size: 0.875rem; }
+.root[data-size="lg"] { --checkbox-size: 1rem; }
+.root[data-size="xl"] { --checkbox-size: 1.125rem; }
 
 .root[data-disabled] {
     opacity: 0.5;
@@ -27,40 +22,60 @@
 
 /* ---------- The box ---------- */
 
+/* As tall as one line of the label, with the box centered in it, so the box lines up with the first line */
 .control {
     position: relative;
     display: inline-flex;
+    align-items: center;
     flex-shrink: 0;
-    width: 1.25em;
+    width: 1.143em;
     height: 1.25em;
 }
 
 /* The real checkbox, restyled: keyboard, forms and screen readers keep working as normal */
 .input {
     appearance: none;
+    box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    height: 1.143em;
     margin: 0;
-    border: 1px solid var(--border-strong);
-    border-radius: calc(var(--radius) / 2);
-    background: var(--surface);
+    border: 1px solid var(--input);
+    border-radius: 4px;
+    background: transparent;
     cursor: pointer;
-    transition: background-color 0.15s, border-color 0.15s;
+    transition: background-color, border-color, box-shadow;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.input:checked,
-.input:indeterminate {
+/* In the dark theme the empty box is a little lighter than the page, like Input */
+[data-theme="dark"] .input {
+    background: color-mix(in oklab, var(--input) 30%, transparent);
+}
+
+.root .input:checked,
+.root .input:indeterminate {
     border-color: var(--checkbox-color);
     background: var(--checkbox-color);
 }
 
-.input:focus-visible {
-    outline: 2px solid var(--checkbox-color);
-    outline-offset: 2px;
+/* The focus ring stays grey whatever the color prop is */
+.root .input:focus-visible {
+    border-color: var(--ring);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
-.input[aria-invalid="true"] {
+.root .input[aria-invalid="true"] {
     border-color: var(--danger);
+}
+
+.root .input[aria-invalid="true"]:focus-visible {
+    outline-color: color-mix(in oklab, var(--danger) 20%, transparent);
+}
+
+[data-theme="dark"] .root .input[aria-invalid="true"]:focus-visible {
+    outline-color: color-mix(in oklab, var(--danger) 40%, transparent);
 }
 
 .input:disabled,
@@ -73,12 +88,13 @@
 .dash {
     position: absolute;
     inset: 0;
-    width: 0.875em;
-    height: 0.875em;
+    width: 1em;
+    height: 1em;
     margin: auto;
     fill: none;
-    stroke: white;
-    stroke-width: 2.5;
+    /* Readable on the default color in both themes; other colors get black or white below */
+    stroke: var(--primary-contrast);
+    stroke-width: 1.75;
     stroke-linecap: round;
     stroke-linejoin: round;
     pointer-events: none;
@@ -90,6 +106,12 @@
     opacity: 1;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .input {
+        transition: none;
+    }
+}
+
 /* ---------- Label, description, error ---------- */
 
 .body {
@@ -99,12 +121,13 @@
 }
 
 .label {
+    font-weight: 500;
     cursor: pointer;
 }
 
 .description,
 .error {
-    font-size: 0.8125em;
+    font-size: 1em;
     line-height: 1.4;
 }
 
@@ -113,16 +136,34 @@
 }
 
 .error {
-    color: var(--checkbox-error-text);
+    color: var(--danger);
 }
 
 /*
- * On a light color like "warning" (orange), the check and the dash picks black or white, whichever is easier
- * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ * Where the browser supports it, the label's line box is trimmed to the letters themselves
+ * (cap height to baseline), and the body is pushed down so the letters sit exactly at the
+ * box's vertical center (the box is centered in a 1.25em tall line). Same as Radio.
+ * Browsers without this CSS feature keep the layout above.
+ */
+@supports (text-box: trim-both cap alphabetic) {
+    .body {
+        gap: 0.5em;
+        padding-top: calc((1.25em - 1cap) / 2);
+    }
+
+    .label {
+        text-box: trim-both cap alphabetic;
+    }
+}
+
+/*
+ * The check and the dash pick black or white, whichever is easier to read on the color: always,
+ * for any color prop (so the autoContrast attribute changes nothing here anymore).
+ * Browsers without this CSS feature keep the theme's text-on-primary color.
  */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .root[data-auto-contrast] .check,
-    .root[data-auto-contrast] .dash {
+    .check,
+    .dash {
         stroke: color(
             from var(--checkbox-color) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)

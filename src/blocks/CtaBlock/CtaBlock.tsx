@@ -15,7 +15,7 @@ export interface CtaBlockProps extends Omit<HTMLAttributes<HTMLElement>, "title"
     secondaryAction?: BlockAction;
 }
 
-/** A tinted banner that asks people to take the next step, usually near the end of a page. */
+/** A soft gray banner that asks people to take the next step, usually near the end of a page. */
 export function CtaBlock({title, description, primaryAction, secondaryAction, className, ...rest}: CtaBlockProps) {
     const titleId = useId();
     return (

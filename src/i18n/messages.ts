@@ -25,6 +25,20 @@ export interface Messages {
         last: string;
         page: (page: number) => string;
     };
+    /** DateInput: its placeholder, and the calendar's names for screen readers */
+    datePicker: {
+        placeholder: string;
+        /** The name of the calendar popup */
+        calendar: string;
+        previousMonth: string;
+        nextMonth: string;
+        time: string;
+    };
+    /** Select: the search box in its list */
+    select: {
+        search: string;
+        noResults: string;
+    };
     /** Added for screen readers to finished Stepper steps */
     stepCompleted: string;
     /** The name of the toast area */
@@ -136,6 +150,17 @@ export const en: Messages = {
         last: "Last page",
         page: page => `Page ${page}`,
     },
+    datePicker: {
+        placeholder: "Pick a date",
+        calendar: "Calendar",
+        previousMonth: "Previous month",
+        nextMonth: "Next month",
+        time: "Time",
+    },
+    select: {
+        search: "Search…",
+        noResults: "Nothing found",
+    },
     stepCompleted: "completed",
     notifications: "Notifications",
     mainNavigation: "Main",
@@ -233,6 +258,17 @@ export const fil: Messages = {
         last: "Huling pahina",
         page: page => `Pahina ${page}`,
     },
+    datePicker: {
+        placeholder: "Pumili ng petsa",
+        calendar: "Kalendaryo",
+        previousMonth: "Nakaraang buwan",
+        nextMonth: "Susunod na buwan",
+        time: "Oras",
+    },
+    select: {
+        search: "Maghanap…",
+        noResults: "Walang nahanap",
+    },
     stepCompleted: "tapos na",
     notifications: "Mga abiso",
     mainNavigation: "Pangunahin",
@@ -329,6 +365,17 @@ export const ceb: Messages = {
         first: "Unang panid",
         last: "Katapusang panid",
         page: page => `Panid ${page}`,
+    },
+    datePicker: {
+        placeholder: "Pagpili og petsa",
+        calendar: "Kalendaryo",
+        previousMonth: "Miaging bulan",
+        nextMonth: "Sunod nga bulan",
+        time: "Oras",
+    },
+    select: {
+        search: "Pangita…",
+        noResults: "Walay nakit-an",
     },
     stepCompleted: "nahuman na",
     notifications: "Mga pahibalo",

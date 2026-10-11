@@ -20,9 +20,9 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
      * - `"filled"`: a soft grey background, no border
      */
     variant?: CardVariant;
-    /** Space inside the card. A preset ("xs" 4px – "xl" 24px), a number in pixels, or any CSS length. Default "lg" (16px). */
+    /** Space inside the card. A preset ("xs" 4px – "xl" 24px), a number in pixels, or any CSS length. Default "xl" (24px). */
     padding?: Size;
-    /** Corner rounding. A number in pixels or any CSS length. Default: the --radius token. */
+    /** Corner rounding. A number in pixels or any CSS length. Default: the --radius token plus 6px. */
     radius?: number | string;
     /**
      * Lift the card a little, with a deeper shadow, on hover (and when a link or button inside it has

@@ -6,11 +6,17 @@
     line-height: 1.5;
 }
 
-.text[data-size="xs"] { --text-size: 0.75rem; }
-.text[data-size="sm"] { --text-size: 0.875rem; }
+/* Paragraphs get roomier lines (28px at 16px text), which makes long text easier to read */
+p.text {
+    line-height: 1.75;
+}
+
+/* Small text sits tighter (16px and 20px lines); large text keeps a 28px line */
+.text[data-size="xs"] { --text-size: 0.75rem; line-height: 1.3333; }
+.text[data-size="sm"] { --text-size: 0.875rem; line-height: 1.4286; }
 .text[data-size="md"] { --text-size: 1rem; }
-.text[data-size="lg"] { --text-size: 1.125rem; }
-.text[data-size="xl"] { --text-size: 1.25rem; }
+.text[data-size="lg"] { --text-size: 1.125rem; line-height: 1.5556; }
+.text[data-size="xl"] { --text-size: 1.25rem; line-height: 1.4; }
 
 .text[data-weight="normal"] { font-weight: 400; }
 .text[data-weight="medium"] { font-weight: 500; }

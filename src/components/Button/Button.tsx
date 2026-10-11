@@ -96,7 +96,7 @@ export default function Button({
     const content = (
         <span className={styles.content}>
             {leftIcon && <span className={styles.icon}>{leftIcon}</span>}
-            {children}
+            {hasContent(children) && <span className={styles.label}>{children}</span>}
             {rightIcon && <span className={styles.icon}>{rightIcon}</span>}
         </span>
     );

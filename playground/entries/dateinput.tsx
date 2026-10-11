@@ -21,7 +21,6 @@ function DateInputDemo({notInPast, description, error, ...props}: ValuesOf<typeo
     return (
         <div style={{display: "flex", flexDirection: "column", gap: 12, width: "100%"}}>
             <DateInput
-                key={String(props.withTime)}
                 description={description || undefined}
                 error={error || undefined}
                 min={notInPast ? new Date() : undefined}
@@ -38,7 +37,7 @@ function DateInputDemo({notInPast, description, error, ...props}: ValuesOf<typeo
 export const dateInputEntry = defineEntry({
     name: "DateInput",
     category: "Forms",
-    description: "A date field with the browser's own picker (great on phones). It takes and gives JavaScript Dates; withTime adds a time.",
+    description: "A date field that opens a calendar. It takes and gives JavaScript Dates; withTime adds a time.",
     layout: "centered",
     controls,
     render: values => <DateInputDemo {...values} />,

@@ -4,48 +4,48 @@
 
 :root {
     --pg-bg: #ffffff;
-    --pg-panel: #f8f9fb;
-    --pg-border: #e3e7ed;
-    --pg-border-soft: #f0f2f5;
-    --pg-text: #1c2430;
-    --pg-text-soft: #3a4452;
-    --pg-muted: #5b6573;
-    --pg-faint: #8a94a3;
-    --pg-hover: #eef1f5;
-    --pg-active-bg: #e3edff;
-    --pg-active-text: #0057c2;
-    --pg-control-bg: #f1f3f5;
+    --pg-panel: #fafafa;
+    --pg-border: #e5e5e5;
+    --pg-border-soft: #f0f0f0;
+    --pg-text: #0a0a0a;
+    --pg-text-soft: #404040;
+    --pg-muted: #737373;
+    --pg-faint: #a1a1a1;
+    --pg-hover: #f5f5f5;
+    --pg-active-bg: #f0f0f0;
+    --pg-active-text: #0a0a0a;
+    --pg-control-bg: #f5f5f5;
     --pg-input-bg: #ffffff;
-    --pg-input-border: #d5dbe3;
-    --pg-canvas: #fafbfc;
-    --pg-dot: #dfe3e8;
-    --pg-device-ring: #d5dbe3;
-    --pg-bezel: #1c2430;
-    --pg-code-bg: #1c2430;
-    --pg-code-text: #e3e7ed;
+    --pg-input-border: #e5e5e5;
+    --pg-canvas: #fafafa;
+    --pg-dot: #e5e5e5;
+    --pg-device-ring: #e5e5e5;
+    --pg-bezel: #171717;
+    --pg-code-bg: #171717;
+    --pg-code-text: #e5e5e5;
 }
 
 [data-theme="dark"] {
-    --pg-bg: #1a1b1e;
-    --pg-panel: #141517;
-    --pg-border: #2c2e33;
-    --pg-border-soft: #25262b;
-    --pg-text: #e9ecef;
-    --pg-text-soft: #c1c2c5;
-    --pg-muted: #a6a7ab;
-    --pg-faint: #7c7f86;
-    --pg-hover: #25262b;
-    --pg-active-bg: #1c3a5e;
-    --pg-active-text: #74c0fc;
-    --pg-control-bg: #25262b;
-    --pg-input-bg: #25262b;
-    --pg-input-border: #373a40;
-    --pg-canvas: #101113;
-    --pg-dot: #2c2e33;
-    --pg-device-ring: #373a40;
-    --pg-bezel: #373a40;
-    --pg-code-bg: #0b0c0e;
-    --pg-code-text: #e3e7ed;
+    --pg-bg: #0a0a0a;
+    --pg-panel: #171717;
+    --pg-border: #262626;
+    --pg-border-soft: #1f1f1f;
+    --pg-text: #fafafa;
+    --pg-text-soft: #d4d4d4;
+    --pg-muted: #a1a1a1;
+    --pg-faint: #737373;
+    --pg-hover: #1f1f1f;
+    --pg-active-bg: #262626;
+    --pg-active-text: #fafafa;
+    --pg-control-bg: #1f1f1f;
+    --pg-input-bg: #171717;
+    --pg-input-border: #2e2e2e;
+    --pg-canvas: #0f0f0f;
+    --pg-dot: #262626;
+    --pg-device-ring: #2e2e2e;
+    --pg-bezel: #2e2e2e;
+    --pg-code-bg: #111111;
+    --pg-code-text: #e5e5e5;
 }
 
 *,
@@ -56,7 +56,9 @@
 
 body {
     margin: 0;
-    font-family: system-ui, sans-serif;
+    /* Geist is loaded in index.html for the playground only; the library itself sets no font */
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
     background: var(--pg-bg);
     color: var(--pg-text);
 }
@@ -873,4 +875,564 @@ body {
     left: 0;
     transform: translateY(-100%);
     border-radius: 3px 3px 0 0;
+}
+
+/* ---------- Pages: section galleries, templates and the page builder ---------- */
+
+/* A preview that is as tall as its content: no forced full-screen height inside the iframe */
+.frame--auto {
+    min-height: 0;
+}
+
+/* An iframe that shows sections. Narrower devices are centered in the room there is. */
+.section-frame {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px var(--pg-device-ring);
+    background: var(--surface);
+}
+
+.section-frame[data-device="phone"],
+.section-frame[data-device="tablet"] {
+    border-radius: 14px;
+    box-shadow: 0 0 0 6px var(--pg-bezel);
+}
+
+.section-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* A whole page: fills the room, and scrolls inside the iframe */
+.page-preview {
+    flex: 1;
+    min-height: 0;
+    padding: 24px;
+    background-color: var(--pg-canvas);
+    background-image: radial-gradient(var(--pg-dot) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+/* Every version of one kind of section, one under the other */
+.gallery {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    min-height: 0;
+    padding: 24px 24px 64px;
+    overflow-y: auto;
+    background-color: var(--pg-canvas);
+    background-image: radial-gradient(var(--pg-dot) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+.gallery-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gallery-item-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.gallery-item-header h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.gallery-item-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--pg-muted);
+}
+
+.gallery-item-component {
+    margin-left: 6px;
+    font-family: "Geist Mono", ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--pg-faint);
+}
+
+.gallery-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.gallery-code {
+    border-radius: 8px;
+    background: var(--pg-code-bg);
+    color: var(--pg-code-text);
+    font-size: 12px;
+}
+
+.gallery-code summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+
+.gallery-code summary svg {
+    width: 14px;
+    height: 14px;
+}
+
+.gallery-code pre {
+    margin: 0;
+    padding: 4px 16px 16px;
+    overflow-x: auto;
+    font-family: "Geist Mono", ui-monospace, monospace;
+    line-height: 1.6;
+}
+
+/* Templates: which page, what it's for, and what to do with it */
+.templates-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--pg-border);
+}
+
+.templates-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 10px;
+    background: var(--pg-control-bg);
+}
+
+.templates-tab {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 7px;
+    background: none;
+    color: var(--pg-muted);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.templates-tab.is-active {
+    background: var(--pg-bg);
+    color: var(--pg-text);
+    box-shadow: 0 0 0 1px var(--pg-border);
+}
+
+.templates-note {
+    flex: 1;
+    min-width: 200px;
+    margin: 0;
+    font-size: 13px;
+    color: var(--pg-muted);
+}
+
+/* The page builder: a bar, then sections | preview | settings */
+.builder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.builder-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--pg-border);
+}
+
+.builder-bar-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.builder-select,
+.builder-name,
+.jf-field input[type="text"],
+.jf-field input[type="number"],
+.jf-field select,
+.jf-field textarea {
+    box-sizing: border-box;
+    min-height: 32px;
+    padding: 4px 8px;
+    border: 1px solid var(--pg-input-border);
+    border-radius: 6px;
+    background: var(--pg-input-bg);
+    color: var(--pg-text);
+    font: inherit;
+    font-size: 13px;
+}
+
+.builder-select {
+    max-width: 160px;
+}
+
+.builder-name {
+    width: 180px;
+    font-weight: 600;
+}
+
+.builder-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 300px;
+    min-height: 0;
+}
+
+.builder-outline,
+.builder-props {
+    min-height: 0;
+    padding: 16px 12px;
+    overflow-y: auto;
+}
+
+.builder-outline {
+    border-right: 1px solid var(--pg-border);
+}
+
+.builder-props {
+    padding: 16px;
+    border-left: 1px solid var(--pg-border);
+}
+
+.builder-outline ol {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 0 12px;
+    padding: 0;
+    list-style: none;
+}
+
+.builder-row {
+    border-radius: 6px;
+}
+
+.builder-row:hover,
+.builder-row.is-active {
+    background: var(--pg-hover);
+}
+
+.builder-row.is-active {
+    background: var(--pg-active-bg);
+}
+
+.builder-row-name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    padding: 8px 10px 4px;
+    border: none;
+    background: none;
+    color: var(--pg-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.builder-row-name small {
+    overflow: hidden;
+    color: var(--pg-muted);
+    font-size: 12px;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.builder-row-tools,
+.jf-item-tools {
+    display: flex;
+    gap: 2px;
+}
+
+.builder-row-tools {
+    padding: 0 6px 6px;
+}
+
+.builder-row-tools button,
+.jf-item-tools button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background: none;
+    color: var(--pg-muted);
+    cursor: pointer;
+}
+
+.builder-row-tools button:hover:not(:disabled),
+.jf-item-tools button:hover:not(:disabled) {
+    background: var(--pg-border);
+    color: var(--pg-text);
+}
+
+.builder-row-tools button:disabled,
+.jf-item-tools button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.builder-row-tools svg,
+.jf-item-tools svg {
+    width: 14px;
+    height: 14px;
+}
+
+.builder-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+}
+
+.builder-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
+    background: var(--pg-canvas);
+    text-align: center;
+}
+
+.builder-empty h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.builder-empty p,
+.builder-hint {
+    max-width: 420px;
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: var(--pg-muted);
+}
+
+/* The section editor's fields */
+.jf-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.jf-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--pg-muted);
+}
+
+.jf-field textarea {
+    resize: vertical;
+    line-height: 1.4;
+}
+
+.jf-field--check {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    color: var(--pg-text);
+    font-size: 13px;
+}
+
+.jf-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    margin: 0;
+    padding: 10px;
+    border: 1px solid var(--pg-border);
+    border-radius: 8px;
+}
+
+.jf-group legend {
+    padding: 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pg-text);
+}
+
+.jf-item {
+    border-radius: 6px;
+    background: var(--pg-control-bg);
+}
+
+.jf-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 4px 4px 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.jf-item-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jf-item > .jf-fields {
+    padding: 8px 10px 10px;
+}
+
+.jf-add {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 4px;
+    padding: 4px 8px;
+    border: 1px dashed var(--pg-input-border);
+    border-radius: 6px;
+    background: none;
+    color: var(--pg-text-soft);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.jf-add svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* "Add a section": every version, by kind, each with a small picture of it */
+.picker {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.picker-group h3 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.picker-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 264px);
+    gap: 12px;
+}
+
+.picker-item {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+}
+
+.picker-item:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-muted);
+}
+
+.picker-item:focus-within {
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+.picker-item-button {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    padding: 8px 10px 10px;
+    border: none;
+    outline: none; /* the card shows the focus ring */
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+
+/* The whole card is the button, picture included */
+.picker-item-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.picker-item-button span {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* The picture: a 150px tall window onto the section, which is drawn 1200px wide at 22% */
+.thumb {
+    display: flex;
+    /* Short sections (a header, a one-line footer) sit in the middle; tall ones show their top */
+    align-items: safe center;
+    width: 262px;
+    height: 150px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+
+.thumb-page {
+    flex: none;
+    width: 1200px;
+    zoom: 0.2183;
+    text-align: left;
+}
+
+/* Narrow windows: the builder's settings go under the preview */
+@media (max-width: 1100px) {
+    .builder-body {
+        grid-template-columns: 200px minmax(0, 1fr);
+    }
+
+    .builder-props {
+        grid-column: 1 / -1;
+        max-height: 40vh;
+        border-top: 1px solid var(--pg-border);
+        border-left: none;
+    }
 }

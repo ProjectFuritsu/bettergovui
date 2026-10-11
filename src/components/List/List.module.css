@@ -1,24 +1,49 @@
 .list {
     /* The spacing and size props override these (see List.tsx) */
     --list-size: 1rem;
+    /* Line height, as a plain number. Roomy like a paragraph (see Text); the bullet and icon are placed from it. */
+    --list-leading: 1.75;
     display: flex;
     flex-direction: column;
     gap: var(--list-spacing);
     margin: 0;
     padding-left: 1.5em;
     font-size: var(--list-size);
-    line-height: 1.5;
+    line-height: var(--list-leading);
     color: var(--text);
 }
 
-.list[data-size="xs"] { --list-size: 0.75rem; }
-.list[data-size="sm"] { --list-size: 0.875rem; }
+/* Small text sits tighter, the same as Text */
+.list[data-size="xs"] { --list-size: 0.75rem; --list-leading: 1.3333; }
+.list[data-size="sm"] { --list-size: 0.875rem; --list-leading: 1.4286; }
 .list[data-size="md"] { --list-size: 1rem; }
-.list[data-size="lg"] { --list-size: 1.125rem; }
-.list[data-size="xl"] { --list-size: 1.25rem; }
+.list[data-size="lg"] { --list-size: 1.125rem; --list-leading: 1.5556; }
+.list[data-size="xl"] { --list-size: 1.25rem; --list-leading: 1.4; }
 
 .item::marker {
     color: var(--list-color, var(--text-muted));
+}
+
+/*
+ * Bullets: a dot drawn a little bigger than the browser's own. (A bigger ::marker makes the line
+ * taller, so the browser's bullet is hidden and this one is placed where it was.) It's a border, not a
+ * background, so it still shows in high-contrast mode.
+ */
+ul.list > .item:not([data-with-icon]) {
+    position: relative;
+}
+
+ul.list > .item:not([data-with-icon])::marker {
+    color: transparent;
+}
+
+ul.list > .item:not([data-with-icon])::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--list-leading) * 0.5em - 0.22em); /* the middle of the first line, less half the dot */
+    inset-inline-start: -1em;
+    border: 0.22em solid var(--list-color, var(--text-muted));
+    border-radius: 50%;
 }
 
 /* With icons: no bullets, the icon takes their place */
@@ -38,7 +63,7 @@
     align-items: center;
     justify-content: center;
     width: 1.25em;
-    height: 1.5em; /* one line tall, so it lines up with the first line of text */
+    height: calc(var(--list-leading) * 1em); /* one line tall, so it lines up with the first line of text */
     color: var(--list-color, var(--primary));
 }
 

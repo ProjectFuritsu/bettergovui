@@ -1,7 +1,7 @@
 import {Moon, PanelRightClose, PanelRightOpen, RotateCw, Search, Sun} from "lucide-react";
 import {useEffect, useLayoutEffect, useRef, useState} from "react";
 // Import from the source, not dist/, so edits show up instantly
-import {Button} from "../src";
+import {Button, Toaster} from "../src";
 import {cx} from "../src/utils/cx";
 import {entries} from "./entries";
 import {CodePanel} from "./workbench/CodePanel";
@@ -9,11 +9,29 @@ import {DevicePreview} from "./workbench/DevicePreview";
 import {DEVICES, type DeviceName, type Language, type Theme} from "./workbench/devices";
 import {PropControl} from "./workbench/PropControl";
 import {CATEGORIES, defaultValues} from "./workbench/types";
+import {SECTION_GROUPS} from "./pages/presets";
+import {SHARE_HASH} from "./pages/schema";
+import {BUILDER, BuilderView, SectionGallery, TEMPLATES_PAGE, TemplatesView} from "./pages/views";
+
+// Pages of the toolkit that aren't a single component: whole pages, and each kind of page section
+const PAGES = [
+    {name: TEMPLATES_PAGE, description: "Ready-made landing pages. Copy the code, or open one in the page builder to make it yours."},
+    {name: BUILDER, description: "Mix and match sections into your own page. It's saved in this browser; share it as a link or as JSON."},
+];
+const NAV_GROUPS = [
+    {heading: "Pages", items: PAGES.map(page => page.name)},
+    {heading: "Sections", items: SECTION_GROUPS.map(group => group.name)},
+];
+const SPECIAL_NAMES = NAV_GROUPS.flatMap(group => group.items);
+
+// A share link (#build=…) opens the page builder with the shared page
+const sharedPage = () => (location.hash.startsWith(`#${SHARE_HASH}`) ? location.hash.slice(1 + SHARE_HASH.length) : undefined);
 
 // The selected component is kept in the URL (#Tabs), so a reload stays on it
 function initialEntryName() {
+    if (sharedPage()) return BUILDER;
     const fromHash = decodeURIComponent(location.hash.slice(1));
-    return entries.some(entry => entry.name === fromHash) ? fromHash : entries[0].name;
+    return entries.some(entry => entry.name === fromHash) || SPECIAL_NAMES.includes(fromHash) ? fromHash : entries[0].name;
 }
 
 const THEME_KEY = "playground-theme";
@@ -58,6 +76,7 @@ function initialTheme(): Theme {
 
 export default function App() {
     const [selectedName, setSelectedName] = useState(initialEntryName);
+    const [incoming] = useState(sharedPage);
     // Each component keeps its own edited values, so switching between them doesn't lose changes
     const [valuesByName, setValuesByName] = useState(() =>
         Object.fromEntries(entries.map(entry => [entry.name, defaultValues(entry.controls)])),
@@ -99,6 +118,13 @@ export default function App() {
     const entry = entries.find(item => item.name === selectedName) ?? entries[0];
     const values = valuesByName[entry.name];
     const code = entry.code(values);
+    // Not a component: a page of the toolkit with its own screen (see pages/views.tsx)
+    const special = SPECIAL_NAMES.includes(selectedName);
+    const sectionGroup = SECTION_GROUPS.find(group => group.name === selectedName);
+    const heading = special
+        ? {name: selectedName, description: sectionGroup?.description ?? PAGES.find(page => page.name === selectedName)?.description ?? ""}
+        : entry;
+    const viewProps = {theme, language, device, onOpen: selectEntry};
 
     function selectEntry(name: string) {
         setSelectedName(name);
@@ -114,9 +140,10 @@ export default function App() {
     const searchRef = useRef<HTMLInputElement>(null);
     const search = query.trim().toLowerCase();
     const matches = entries.filter(item => `${item.name} ${item.category}`.toLowerCase().includes(search));
+    const specialMatches = NAV_GROUPS.map(group => ({...group, items: group.items.filter(name => `${name} ${group.heading}`.toLowerCase().includes(search))}));
     // What Enter opens: a name that starts with the text, then one that contains it, then a group match
     const rank = (name: string) => (name.toLowerCase().startsWith(search) ? 0 : name.toLowerCase().includes(search) ? 1 : 2);
-    const bestMatch = [...matches].sort((a, b) => rank(a.name) - rank(b.name))[0];
+    const bestMatch = [...specialMatches.flatMap(group => group.items.map(name => ({name}))), ...matches].sort((a, b) => rank(a.name) - rank(b.name))[0];
 
     // Press "/" anywhere (except while typing in a field) to jump to the search box
     useEffect(() => {
@@ -135,7 +162,8 @@ export default function App() {
     }
 
     return (
-        <div className={cx("workbench", propsHidden && "workbench--props-hidden")}>
+        <div className={cx("workbench", (propsHidden || special) && "workbench--props-hidden")}>
+            <Toaster />
             <aside className="sidebar">
                 <div className="sidebar-top">
                     <div className="brand">UI Kit</div>
@@ -182,11 +210,28 @@ export default function App() {
                     {!query && <kbd className="sidebar-search-key" aria-hidden="true">/</kbd>}
                 </div>
                 <nav className="nav" aria-label="Components">
-                    {matches.length === 0 && (
+                    {matches.length === 0 && specialMatches.every(group => group.items.length === 0) && (
                         <p className="sidebar-empty" role="status">No components match “{query.trim()}”.</p>
                     )}
+                    {specialMatches.map(group => group.items.length > 0 && (
+                        <div key={group.heading} className="nav-group">
+                            <p className="sidebar-heading">{group.heading}</p>
+                            {group.items.map(name => (
+                                <button
+                                    key={name}
+                                    type="button"
+                                    className={cx("nav-item", name === selectedName && "is-active")}
+                                    aria-current={name === selectedName ? "page" : undefined}
+                                    onClick={() => selectEntry(name)}>
+                                    {name}
+                                </button>
+                            ))}
+                        </div>
+                    ))}
                     {CATEGORIES.map(category => {
-                        const items = matches.filter(item => item.category === category);
+                        // The blocks are listed under Sections, each with a link to its props page.
+                        // They still show up here when searched for by name.
+                        const items = matches.filter(item => item.category === category && (category !== "Blocks" || search !== "" || item.name === selectedName));
                         if (items.length === 0) return null;
                         return (
                             <div key={category} className="nav-group">
@@ -195,8 +240,8 @@ export default function App() {
                                     <button
                                         key={item.name}
                                         type="button"
-                                        className={cx("nav-item", item.name === entry.name && "is-active")}
-                                        aria-current={item.name === entry.name ? "page" : undefined}
+                                        className={cx("nav-item", item.name === selectedName && "is-active")}
+                                        aria-current={item.name === selectedName ? "page" : undefined}
                                         onClick={() => selectEntry(item.name)}>
                                         {item.name}
                                     </button>
@@ -210,8 +255,8 @@ export default function App() {
             <main className="canvas">
                 <header className="canvas-toolbar">
                     <div>
-                        <h1>{entry.name}</h1>
-                        <p>{entry.description}</p>
+                        <h1>{heading.name}</h1>
+                        <p>{heading.description}</p>
                     </div>
                     <div className="toolbar-actions">
                         <div className="device-switch" role="group" aria-label="Preview size">
@@ -245,7 +290,7 @@ export default function App() {
                                 onClick={() => setLandscape(current => !current)}
                             />
                         </div>
-                        <Button
+                        {!special && <Button
                             size="sm"
                             variant="text"
                             color="var(--pg-muted)"
@@ -255,23 +300,32 @@ export default function App() {
                             aria-expanded={!propsHidden}
                             aria-controls="props-pane"
                             onClick={() => setPropsHidden(current => !current)}
-                        />
+                        />}
                     </div>
                 </header>
 
-                <DevicePreview
-                    device={device}
-                    landscape={landscape}
-                    entryName={entry.name}
-                    values={values}
-                    theme={theme}
-                    language={language}
-                />
-
-                <CodePanel code={code} />
+                {sectionGroup ? (
+                    <SectionGallery key={sectionGroup.name} group={sectionGroup} {...viewProps} />
+                ) : selectedName === TEMPLATES_PAGE ? (
+                    <TemplatesView {...viewProps} />
+                ) : selectedName === BUILDER ? (
+                    <BuilderView {...viewProps} incoming={incoming} />
+                ) : (
+                    <>
+                        <DevicePreview
+                            device={device}
+                            landscape={landscape}
+                            entryName={entry.name}
+                            values={values}
+                            theme={theme}
+                            language={language}
+                        />
+                        <CodePanel code={code} />
+                    </>
+                )}
             </main>
 
-            <aside id="props-pane" className="props" hidden={propsHidden}>
+            <aside id="props-pane" className="props" hidden={propsHidden || special}>
                 <div className="props-header">
                     <h2>Properties</h2>
                     <button type="button" className="link-button" onClick={reset}>Reset</button>

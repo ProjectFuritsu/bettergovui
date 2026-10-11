@@ -1,9 +1,77 @@
+/* The same background as the page; the line on top is what separates it */
 .footer {
     padding-top: clamp(2.5rem, 6vw, 4rem);
     border-top: 1px solid var(--border);
-    background: var(--surface-muted);
+    background: var(--surface);
     color: var(--text);
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
+}
+
+/* ---------- tone: the footer's colors ---------- */
+
+.footer[data-tone="muted"] {
+    --surface: var(--surface-muted);
+}
+
+/*
+ * Dark with light text, in light mode too. The color tokens are set again here, so everything
+ * inside (links, lines, the button) follows without rules of its own.
+ */
+.footer[data-tone="dark"] {
+    --surface: #0a0a0a;
+    --surface-muted: #262626;
+    --text: #fafafa;
+    --text-muted: #a1a1a1;
+    --border: rgb(255 255 255 / 0.12);
+    --ring: #737373;
+    --primary: #e5e5e5;
+    --primary-contrast: #171717;
+}
+
+/* In dark mode the page is already that dark: one step lighter, so the footer still stands apart */
+[data-theme="dark"] .footer[data-tone="dark"] {
+    --surface: #171717;
+}
+
+/* ---------- card: a rounded box with space around it ---------- */
+
+.footer[data-card] {
+    /* The same space above the box as under it */
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-top: none;
+    background: transparent;
+}
+
+.footer[data-card] .panel {
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem) 0;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 10px);
+    background: var(--surface);
+    overflow: hidden; /* the big name follows the rounded corners */
+}
+
+/* ---------- heading + action: a big line and a button above the links ---------- */
+
+.cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg) var(--spacing-xl);
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+    border-bottom: 1px solid var(--border);
+}
+
+.heading {
+    max-width: 36rem;
+    margin: 0;
+    font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
 }
 
 /* The brand on the left, the link columns on the right; they stack on phones */
@@ -19,13 +87,14 @@
     display: flex;
     flex: 1 1 16rem;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     max-width: 22rem;
 }
 
 .logo {
-    font-size: 1.125rem;
-    font-weight: 800;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
 }
 
 .description,
@@ -43,15 +112,16 @@
 }
 
 .columnTitle {
-    margin: 0 0 var(--spacing-md);
+    margin: 0 0 var(--spacing-lg);
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 500;
+    line-height: 1.4;
 }
 
 .list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -60,18 +130,19 @@
 .link {
     color: var(--text-muted);
     text-decoration: none;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .link:hover {
     color: var(--text);
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
 }
 
 .link:focus-visible {
-    border-radius: 2px;
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 2px);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 2px; /* text has no box, so the ring sits a little away from the letters */
 }
 
 .bottom {
@@ -80,7 +151,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-md);
-    padding: var(--spacing-lg) 0;
+    padding: var(--spacing-xl) 0;
     border-top: 1px solid var(--border);
     font-size: 0.875rem;
 }
@@ -88,5 +159,85 @@
 .bottomLinks {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-xl);
+}
+
+/* ---------- layout="centered": everything in the middle ---------- */
+
+.footer[data-layout="centered"] .cta,
+.footer[data-layout="centered"] .top,
+.footer[data-layout="centered"] .bottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.footer[data-layout="centered"] .brand {
+    flex: none;
+    align-items: center;
+    max-width: 32rem;
+}
+
+.footer[data-layout="centered"] .columns {
+    flex: none;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, max-content));
+    justify-content: center;
+    width: 100%;
+}
+
+.footer[data-layout="centered"] .bottomLinks {
+    justify-content: center;
+}
+
+/* ---------- layout="grid": the logo on top, the link columns in cells with lines between ---------- */
+
+.footer[data-layout="grid"] .top {
+    display: block;
+    padding-bottom: 0;
+}
+
+.footer[data-layout="grid"] .brand {
+    max-width: 36rem;
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.footer[data-layout="grid"] .columns {
+    gap: 0;
+    border-top: 1px solid var(--border);
+    /* The cells draw a line on their left; this hides the first one of each row */
+    overflow: hidden;
+}
+
+.footer[data-layout="grid"] .columns > div {
+    margin-left: -1px;
+    padding: var(--spacing-xl);
+    border-left: 1px solid var(--border);
+}
+
+/* ---------- wordmark: the site's name in very large letters, as wide as the footer ---------- */
+
+.wordmark {
+    padding-top: var(--spacing-lg);
+    overflow: hidden;
+    /* A quiet version of the text color: big, but not louder than the links above it */
+    color: color-mix(in oklab, var(--text) 14%, transparent);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Before it has been measured (and without JavaScript): large, and cut off if it doesn't fit */
+.wordmark > span {
+    display: inline-block;
+    font-size: clamp(3rem, 14vw, 12rem);
+    /* The letters stand on the footer's bottom edge; tails like "g" hang below it, as on a poster */
+    margin-bottom: -0.07em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .link {
+        transition: none;
+    }
 }

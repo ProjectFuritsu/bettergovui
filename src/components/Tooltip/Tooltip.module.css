@@ -7,23 +7,34 @@
     position: fixed;
     z-index: 1000;
     width: max-content;
-    padding: 0.375rem 0.625rem;
-    border-radius: calc(var(--radius) * 0.75);
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius);
     /* The page's text and background colors swapped: dark in light mode, light in dark mode */
     background: var(--text);
     color: var(--surface);
-    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1.4;
+    font-size: 0.75rem;
+    line-height: 1.3333;
     overflow-wrap: break-word;
-    animation: fade-in 0.12s ease-out;
+    text-wrap: balance;
+    /*
+     * Fades in while growing slightly, from the side of its element.
+     * The tiny delay matters: the tooltip is measured the instant it's added to the page, and a
+     * tooltip that is already shrunk would be measured too small and placed a little off.
+     * So it waits (invisible) for that measurement, then animates and stays visible ("forwards").
+     */
+    opacity: 0;
+    animation: tooltip-in 0.15s cubic-bezier(0.4, 0, 0.2, 1) 0.01s forwards;
 }
 
-/* With the color prop: that background, with black or white text (same rule as Badge's autoContrast) */
+.tooltip[data-placement="top"] { --tooltip-from: 0 0.5rem; }
+.tooltip[data-placement="bottom"] { --tooltip-from: 0 -0.5rem; }
+.tooltip[data-placement="left"] { --tooltip-from: 0.5rem 0; }
+.tooltip[data-placement="right"] { --tooltip-from: -0.5rem 0; }
+
+/* With the color prop: that background, with black or white text, whichever is readable on it */
 .tooltip[data-colored] {
     background: var(--tooltip-color);
-    color: white;
+    color: var(--primary-contrast);
 }
 
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
@@ -37,42 +48,50 @@
     }
 }
 
-/* A small square turned 45°, half of it sticking out of the tooltip's edge */
+/* A small rounded square turned 45°, a bit less than half of it sticking out of the tooltip's edge */
 .arrow {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
     background: inherit;
     transform: rotate(45deg);
 }
 
 .tooltip[data-placement="top"] .arrow {
     bottom: -4px;
-    left: calc(var(--tooltip-arrow, 50%) - 4px);
+    left: calc(var(--tooltip-arrow, 50%) - 5px);
 }
 
 .tooltip[data-placement="bottom"] .arrow {
     top: -4px;
-    left: calc(var(--tooltip-arrow, 50%) - 4px);
+    left: calc(var(--tooltip-arrow, 50%) - 5px);
 }
 
 .tooltip[data-placement="left"] .arrow {
     right: -4px;
-    top: calc(var(--tooltip-arrow, 50%) - 4px);
+    top: calc(var(--tooltip-arrow, 50%) - 5px);
 }
 
 .tooltip[data-placement="right"] .arrow {
     left: -4px;
-    top: calc(var(--tooltip-arrow, 50%) - 4px);
+    top: calc(var(--tooltip-arrow, 50%) - 5px);
 }
 
-@keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes tooltip-in {
+    from {
+        opacity: 0;
+        scale: 0.95;
+        translate: var(--tooltip-from, 0 0);
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .tooltip {
+        opacity: 1;
         animation: none;
     }
 }

@@ -23,7 +23,7 @@ export interface BreadcrumbsProps extends Omit<HTMLAttributes<HTMLElement>, "col
     separator?: ReactNode;
     /** A preset ("xs"–"xl"), a number in pixels, or any CSS length. Default "md" (14px text). */
     size?: Size;
-    /** Color of the links: "primary" (default), "success"… or any CSS color. A deeper shade is used so they stay readable. */
+    /** Color of the links: "primary", "success"… or any CSS color. A deeper shade is used so they stay readable. Default: muted gray. */
     color?: Color;
 }
 

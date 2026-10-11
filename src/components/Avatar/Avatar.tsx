@@ -13,7 +13,7 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, "colo
     name?: string;
     /** Screen reader text for the photo. Default: the name. */
     alt?: string;
-    /** A preset (xs 24px, sm 32px, md 40px, lg 56px, xl 80px), a number in pixels, or any CSS length. Default "md". */
+    /** A preset (xs 20px, sm 24px, md 32px, lg 40px, xl 56px), a number in pixels, or any CSS length. Default "md". */
     size?: Size;
     /** Corner rounding. A number in pixels or any CSS length. Default: a full circle. */
     radius?: number | string;

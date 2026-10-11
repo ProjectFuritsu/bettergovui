@@ -22,7 +22,7 @@
 }
 
 .label {
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text);
 }
 
@@ -34,22 +34,23 @@
 .track {
     position: relative;
     height: var(--progress-height);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--text) 12%, transparent);
+    border-radius: 9999px;
+    /* A faint wash of the bar's own color, so the track and the bar belong together */
+    background: color-mix(in oklab, var(--progress-color) 20%, transparent);
     overflow: hidden;
 }
 
 .bar {
     height: 100%;
-    border-radius: inherit;
     background: var(--progress-color);
-    transition: width 0.3s ease;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Unknown amount: a short bar slides across, again and again */
 .track[data-indeterminate] .bar {
     position: absolute;
     width: 40%;
+    border-radius: inherit; /* both ends show while it slides, so both are rounded */
     animation: slide 1.4s ease-in-out infinite;
 }
 

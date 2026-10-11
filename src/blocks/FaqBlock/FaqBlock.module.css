@@ -12,3 +12,16 @@
     align-items: flex-start;
     gap: var(--spacing-md);
 }
+
+/* align="center": one column in the middle of the page, the title centered above the questions */
+[data-align="center"] .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 3rem);
+    /* Lines of text stay easy to read on wide screens */
+    max-width: 48rem;
+}
+
+[data-align="center"] .intro {
+    align-items: center;
+    text-align: center;
+}

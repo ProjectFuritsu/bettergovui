@@ -1,31 +1,25 @@
 .stepper {
     /* The size and color props override these (see Stepper.tsx) */
-    --stepper-size: 1rem;
+    --stepper-size: 0.875rem;
     --stepper-color: var(--primary);
-    /* Number color on the current step: a darker shade so it's readable (lighter in dark mode) */
-    --stepper-text: color-mix(in srgb, var(--stepper-color) 80%, black);
     /* Lets the steps react to the stepper's own width (see the @container rule below) */
     container-type: inline-size;
     font-size: var(--stepper-size);
     color: var(--text);
 }
 
-[data-theme="dark"] .stepper {
-    --stepper-text: color-mix(in srgb, var(--stepper-color) 75%, white);
-}
-
 .stepper[data-size="xs"] { --stepper-size: 0.75rem; }
-.stepper[data-size="sm"] { --stepper-size: 0.875rem; }
-.stepper[data-size="md"] { --stepper-size: 1rem; }
-.stepper[data-size="lg"] { --stepper-size: 1.125rem; }
-.stepper[data-size="xl"] { --stepper-size: 1.25rem; }
+.stepper[data-size="sm"] { --stepper-size: 0.8125rem; }
+.stepper[data-size="md"] { --stepper-size: 0.875rem; }
+.stepper[data-size="lg"] { --stepper-size: 1rem; }
+.stepper[data-size="xl"] { --stepper-size: 1.125rem; }
 
 /* ---------- Horizontal (default) ---------- */
 
 .steps {
     display: flex;
     align-items: center;
-    gap: 0.75em;
+    gap: 0.857em; /* 12px at 14px text */
     margin: 0;
     padding: 0;
     list-style: none;
@@ -36,7 +30,7 @@
     display: flex;
     flex: 1;
     align-items: center;
-    gap: 0.75em;
+    gap: 0.857em;
     min-width: 0;
 }
 
@@ -44,12 +38,14 @@
     flex: 0 0 auto;
 }
 
+/* The padding gives the focus ring some room; the negative margin takes the same room back, so nothing moves */
 .stepButton {
     display: flex;
     align-items: center;
-    gap: 0.75em;
+    gap: 0.857em;
     min-width: 0;
-    padding: 0;
+    margin: -0.25em;
+    padding: 0.25em;
     border: none;
     border-radius: var(--radius);
     background: none;
@@ -63,62 +59,70 @@ button.stepButton {
 }
 
 button.stepButton:focus-visible {
-    outline: 2px solid var(--stepper-color);
-    outline-offset: 4px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
-/* The numbered circle */
+/* The numbered circle: 32px at the default size */
 .indicator {
     display: inline-flex;
     flex-shrink: 0;
+    box-sizing: border-box;
     align-items: center;
     justify-content: center;
-    width: 2.25em;
-    height: 2.25em;
-    border: 2px solid var(--border-strong);
+    width: 2.2857em;
+    height: 2.2857em;
+    border: 1px solid var(--border);
     border-radius: 50%;
     background: var(--surface);
     color: var(--text-muted);
-    font-size: 0.875em;
-    font-weight: 700;
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    transition:
+        color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.step[data-state="active"] .indicator {
-    border-color: var(--stepper-color);
-    color: var(--stepper-text);
-}
-
+/* The current step and the done ones are filled with the color */
+.step[data-state="active"] .indicator,
 .step[data-state="completed"] .indicator {
     border-color: var(--stepper-color);
     background: var(--stepper-color);
-    color: white;
+    color: var(--primary-contrast); /* for old browsers */
 }
 
 button.stepButton:hover .indicator {
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--stepper-color) 15%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--stepper-color) 15%, transparent);
 }
 
 .check {
-    width: 1.25em;
-    height: 1.25em;
+    width: 1.143em; /* 16px at 14px text */
+    height: 1.143em;
     fill: none;
     stroke: currentColor;
-    stroke-width: 3;
+    stroke-width: 2.5;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+/* Icons passed with the icon prop */
+.indicator > svg:not(.check) {
+    width: 1.143em;
+    height: 1.143em;
 }
 
 .text {
     display: flex;
     flex-direction: column;
+    gap: 0.125em;
     min-width: 0;
     line-height: 1.3;
 }
 
 .label {
-    font-size: 0.9375em;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .step[data-state="upcoming"] .label {
@@ -126,7 +130,6 @@ button.stepButton:hover .indicator {
 }
 
 .description {
-    font-size: 0.8125em;
     color: var(--text-muted);
 }
 
@@ -134,9 +137,9 @@ button.stepButton:hover .indicator {
 .connector {
     flex: 1;
     min-width: 1em;
-    height: 2px;
-    border-radius: 1px;
+    height: 1px;
     background: var(--border);
+    transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .step[data-state="completed"] .connector {
@@ -173,11 +176,11 @@ button.stepButton:hover .indicator {
 
 .steps[data-orientation="vertical"] .connector {
     flex: none;
-    width: 2px;
+    width: 1px;
     height: 1.5em;
     min-width: 0;
-    /* Centered under the circle (circle is 2.25em wide at 0.875em text) */
-    margin: 0.25em 0 0.25em calc(0.875em * 2.25 / 2 - 1px);
+    /* Centered under the circle (2.2857em wide), with a little air above and below */
+    margin: 0.5em 0 0.5em calc(2.2857em / 2 - 0.5px);
 }
 
 /* Horizontal steppers go vertical when the stepper is narrower than about 34rem (e.g. on phones) */
@@ -196,48 +199,29 @@ button.stepButton:hover .indicator {
 
     .steps[data-orientation="horizontal"] .connector {
         flex: none;
-        width: 2px;
+        width: 1px;
         height: 1.5em;
         min-width: 0;
-        margin: 0.25em 0 0.25em calc(0.875em * 2.25 / 2 - 1px);
+        margin: 0.5em 0 0.5em calc(2.2857em / 2 - 0.5px);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .indicator {
+    .indicator,
+    .connector {
         transition: none;
     }
 }
 
 /*
- * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
- * light background (at least 4.5:1) for every color, even light ones like orange. Colors that are
- * already dark enough don't change. Dark mode keeps its own rule above, which is more specific.
- * Browsers without this CSS feature keep the rule above.
- */
-@supports (color: oklch(from red min(l, 0.5) c h)) {
-    .stepper {
-        --stepper-text: oklch(from var(--stepper-color) min(l, 0.5) c h);
-    }
-}
-
-/*
- * Dark mode: colored text is never darker than OKLCH lightness 0.72, so it stays readable on the dark
- * background for every color, even dark ones like slate gray. Colors that are already light enough
- * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
- */
-@supports (color: oklch(from red max(l, 0.72) c h)) {
-    [data-theme="dark"] .stepper {
-        --stepper-text: oklch(from var(--stepper-color) max(l, 0.72) c h);
-    }
-}
-
-/*
- * On a light color like "warning" (orange), the check on done steps picks black or white, whichever is easier
- * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ * The number or check on a filled circle picks black or white, whichever is easier to read on the
+ * color: needed for a light color like "warning" (orange), and for primary, which turns light gray in
+ * the dark theme. Always on (same rule as Badge's autoContrast). Browsers without this CSS feature
+ * keep the color made for primary.
  */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .stepper[data-auto-contrast] .step[data-state="completed"] .indicator {
+    .stepper .step[data-state="active"] .indicator,
+    .stepper .step[data-state="completed"] .indicator {
         color: color(
             from var(--stepper-color) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)

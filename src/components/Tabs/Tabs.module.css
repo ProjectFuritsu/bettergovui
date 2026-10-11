@@ -4,14 +4,14 @@
     /* Defaults. The color, radius and size props override these (see Tabs.tsx) */
     --tabs-color: var(--primary);
     --tabs-radius: var(--radius);
-    --tabs-size: 1rem;
-    /* "initial" = not set, so the fallback defaults are used (16px here, each variant's own in .list).
+    --tabs-size: 0.875rem;
+    /* "initial" = not set, so the fallback defaults are used (8px here, each variant's own in .list).
        It also stops an outer Tabs' spacing from leaking into Tabs placed inside it. */
     --tabs-gap: initial;
     --tabs-panel-gap: initial;
     display: flex;
     flex-direction: column;
-    gap: var(--tabs-panel-gap, 16px); /* space between the tab list and the panel */
+    gap: var(--tabs-panel-gap, 8px); /* space between the tab list and the panel */
 }
 
 .tabs[data-orientation="vertical"] {
@@ -19,10 +19,10 @@
 }
 
 .tabs[data-size="xs"] { --tabs-size: 0.75rem; }
-.tabs[data-size="sm"] { --tabs-size: 0.875rem; }
-.tabs[data-size="md"] { --tabs-size: 1rem; }
-.tabs[data-size="lg"] { --tabs-size: 1.125rem; }
-.tabs[data-size="xl"] { --tabs-size: 1.25rem; }
+.tabs[data-size="sm"] { --tabs-size: 0.8125rem; }
+.tabs[data-size="md"] { --tabs-size: 0.875rem; }
+.tabs[data-size="lg"] { --tabs-size: 1rem; }
+.tabs[data-size="xl"] { --tabs-size: 1.125rem; }
 
 /* ---------- List and tab (shared by all variants) ---------- */
 
@@ -40,21 +40,23 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5em; /* room for an icon next to the label */
-    padding: 0.5em 1em;
+    gap: 0.4286em; /* room for an icon next to the label */
+    padding: 0.5714em 0.857em; /* 8px 12px at the default size */
     border: none;
     background: none;
     font: inherit;
     font-size: var(--tabs-size);
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.25; /* same as the icon box, so icons never change a tab's height */
     color: var(--text-muted);
     white-space: nowrap;
     cursor: pointer;
-    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+    transition-property: color, background-color, border-color, box-shadow;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.tab:hover {
+.tab:hover:not(:disabled) {
     color: var(--text);
 }
 
@@ -71,10 +73,11 @@
     cursor: not-allowed;
 }
 
+/* The focus ring stays neutral, whatever the color prop is */
 .tab:focus-visible,
 .panel:focus-visible {
-    outline: 2px solid var(--tabs-color);
-    outline-offset: 2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 .panel {
@@ -92,10 +95,6 @@
     margin-bottom: -1px; /* sit on top of the list's border */
     border-bottom: 2px solid transparent;
     border-radius: var(--tabs-radius) var(--tabs-radius) 0 0;
-}
-
-.tab[data-variant="underline"][aria-selected="false"]:hover:not(:disabled) {
-    background: var(--surface-muted);
 }
 
 .tab[data-variant="underline"][aria-selected="true"] {
@@ -165,16 +164,17 @@
 
 .tab[data-variant="pills"][aria-selected="true"] {
     background: var(--tabs-color);
-    color: white;
+    color: var(--primary-contrast); /* for old browsers; see the end of this file */
 }
 
 /* ---------- Variant: segmented (shadcn/ui) ---------- */
 
+/* A muted bar, 36px tall at the default size; the active tab is a raised box inside it */
 .list[data-variant="segmented"] {
-    gap: var(--tabs-gap, 2px);
+    gap: var(--tabs-gap, 0px);
     padding: 3px;
     background: var(--surface-muted);
-    border-radius: var(--tabs-radius);
+    border-radius: calc(var(--tabs-radius) * 1.25); /* 10px with the default 8px radius */
 }
 
 /* Shrink to fit the tabs unless `grow` is on */
@@ -183,14 +183,25 @@
 }
 
 .tab[data-variant="segmented"] {
-    padding: 0.375em 0.875em;
-    border-radius: calc(var(--tabs-radius) - 2px);
+    padding: 0.375em 0.5714em;
+    /* Invisible until the tab is focused, or active in dark mode */
+    border: 1px solid transparent;
+    border-radius: var(--tabs-radius);
+}
+
+.tab[data-variant="segmented"]:focus-visible {
+    border-color: var(--ring);
 }
 
 .tab[data-variant="segmented"][aria-selected="true"] {
     background: var(--surface);
     color: var(--text);
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+/* Dark mode: a slightly lighter box with a thin line instead of a white one */
+[data-theme="dark"] .tab[data-variant="segmented"][aria-selected="true"] {
+    background: color-mix(in oklab, var(--input) 30%, transparent);
+    border-color: var(--input);
 }
 
 /* ---------- Icons ---------- */
@@ -207,13 +218,13 @@
 
 /* Icons grow with the tabs' size. Override with the --tabs-icon-size variable. */
 .icon svg {
-    width: var(--tabs-icon-size, 1.125em);
-    height: var(--tabs-icon-size, 1.125em);
+    width: var(--tabs-icon-size, 1.143em); /* 16px at the default size */
+    height: var(--tabs-icon-size, 1.143em);
 }
 
 /* Same padding on every side makes an icon-only tab square. Placed last so it wins over the variants. */
 .tab.iconOnly {
-    padding: 0.5em;
+    padding: 0.5714em;
 }
 
 .tab.iconOnly[data-variant="segmented"] {
@@ -221,11 +232,11 @@
 }
 
 /*
- * On a light color like "warning" (orange), the active pill's text picks black or white, whichever is easier
- * to read (same rule as Badge's autoContrast). Browsers without this CSS feature keep white.
+ * The active pill's text is black or white, whichever is easier to read on the color: always on, for any
+ * color (same rule as Badge's autoContrast). Browsers without this CSS feature keep --primary-contrast.
  */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .tabs[data-auto-contrast] .tab[data-variant="pills"][aria-selected="true"] {
+    .tab[data-variant="pills"][aria-selected="true"] {
         color: color(
             from var(--tabs-color) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)

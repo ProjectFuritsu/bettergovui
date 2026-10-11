@@ -24,7 +24,7 @@ const LINKS = [
 ];
 
 // A drawn city hall instead of a photo, so the demo needs no image file
-const CITY_HALL = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+export const CITY_HALL = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
 <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d6efd"/><stop offset="1" stop-color="#0b7d90"/></linearGradient></defs>
 <rect width="400" height="300" fill="url(#sky)"/><circle cx="320" cy="70" r="28" fill="#ffd43b" opacity=".9"/>
 <rect y="240" width="400" height="60" fill="#278039"/>
@@ -223,6 +223,7 @@ const faqControls = {
     description: {type: "text", default: "Can't find your answer? Our help desk replies within one working day."},
     action: {type: "text", default: "Contact the help desk"},
     multiple: {type: "boolean", default: false},
+    align: {type: "select", options: ["left", "center"] as const, default: "left"},
 } satisfies Controls;
 
 export const faqBlockEntry = defineEntry({
@@ -238,6 +239,7 @@ export const faqBlockEntry = defineEntry({
             description={values.description || undefined}
             action={values.action ? {label: values.action, href: "#help"} : undefined}
             multiple={values.multiple}
+            align={values.align}
             items={FAQS}
         />
     ),
@@ -248,6 +250,7 @@ export const faqBlockEntry = defineEntry({
             textProp("description", values.description),
             values.action && `action={{ label: "${values.action}", href: "/help" }}`,
             values.multiple && "multiple",
+            values.align === "center" && `align="center"`,
             "items={faqs}",
         ]);
         return `import { FaqBlock } from "bettergovregiondavaoui";
@@ -365,7 +368,7 @@ ${openTag("StatsBlock", props, "", true)}`;
 // ---------- News ----------
 
 // Colored placeholder pictures, so the demo needs no image files
-const banner = (from: string, to: string) =>
+export const banner = (from: string, to: string) =>
     `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 9"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs><rect width="16" height="9" fill="url(#g)"/></svg>`)}`;
 
 const NEWS = [
@@ -444,7 +447,7 @@ ${openTag("NewsBlock", props, "", true)}`;
 // ---------- Contact ----------
 
 // A drawn map instead of a real one, so the demo doesn't load anything from the internet
-const MAP = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+export const MAP = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
 <rect width="400" height="300" fill="#e9f2e6"/><path d="M0 210 Q120 170 200 200 T400 180 V300 H0Z" fill="#a5d8ff"/>
 <g stroke="#fff" stroke-width="10" fill="none"><path d="M0 120 H400"/><path d="M150 0 V300"/><path d="M290 0 L250 300"/></g>
 <g stroke="#ced4da" stroke-width="4" fill="none"><path d="M0 60 H400"/><path d="M60 0 V300"/><path d="M220 0 V200"/></g>

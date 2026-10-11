@@ -1,6 +1,7 @@
-/* A light band of the brand color, so the numbers stand apart from the sections around them */
+/* A faint gray band between two thin lines, so the numbers stand apart from the sections around them */
 .stats {
-    background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+    border-block: 1px solid var(--border);
+    background: color-mix(in oklab, var(--surface-muted) 50%, var(--surface));
 }
 
 .list {
@@ -10,27 +11,29 @@
     margin: 0;
 }
 
+/* A thin line on the left of each number keeps them apart, however the row wraps */
 .stat {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
-    padding-left: var(--spacing-lg);
-    border-left: 3px solid var(--primary);
+    padding-left: var(--spacing-xl);
+    border-left: 1px solid var(--border);
 }
 
 /* The label comes first for screen readers ("Permits issued: 12,480") but shows under the number */
 .label {
     order: 1;
     color: var(--text);
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .value {
     margin: 0;
-    font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.875rem, 1.5rem + 1.6vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
     font-variant-numeric: tabular-nums;
 }
 

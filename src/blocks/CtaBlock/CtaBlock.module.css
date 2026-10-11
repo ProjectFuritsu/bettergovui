@@ -1,3 +1,4 @@
+/* A soft gray panel with a thin line around it: set apart from the page without a brand color */
 .box {
     display: flex;
     flex-wrap: wrap;
@@ -5,9 +6,9 @@
     justify-content: space-between;
     gap: var(--spacing-xl);
     padding: clamp(1.5rem, 4vw, 3rem);
-    border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--border));
-    border-radius: calc(var(--radius) * 2);
-    background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 6px);
+    background: var(--surface-muted);
 }
 
 .text {

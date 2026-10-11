@@ -18,13 +18,14 @@
 .loader[data-size="lg"] { --loader-size: 2.75rem; }
 .loader[data-size="xl"] { --loader-size: 3.625rem; }
 
-/* ---------- spinner: a ring with one gap ---------- */
+/* ---------- spinner: a thin ring with a quarter missing ---------- */
 
 .loader[data-type="spinner"] {
-    border: calc(var(--loader-size) / 8) solid currentColor;
+    /* A thin line that grows with the size (2px at 24px), but is never thinner than 2px */
+    border: max(2px, calc(var(--loader-size) / 12)) solid currentColor;
     border-right-color: transparent;
     border-radius: 50%;
-    animation: spin 0.7s linear infinite;
+    animation: spin 1s linear infinite;
 }
 
 /* ---------- dots: three dots pulsing one after another ---------- */

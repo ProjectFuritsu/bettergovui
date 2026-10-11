@@ -1,15 +1,15 @@
 .toaster {
     position: fixed;
     z-index: 1100;
-    width: min(24rem, calc(100vw - 2rem));
+    width: min(22.25rem, calc(100vw - 2rem));
     /* Clicks pass through the empty area around the toasts */
     pointer-events: none;
 }
 
-.toaster[data-position^="top"] { top: 1rem; }
-.toaster[data-position^="bottom"] { bottom: 1rem; }
-.toaster[data-position$="left"] { left: 1rem; }
-.toaster[data-position$="right"] { right: 1rem; }
+.toaster[data-position^="top"] { top: 1.5rem; }
+.toaster[data-position^="bottom"] { bottom: 1.5rem; }
+.toaster[data-position$="left"] { left: 1.5rem; }
+.toaster[data-position$="right"] { right: 1.5rem; }
 
 .toaster[data-position$="center"] {
     left: 50%;
@@ -19,70 +19,136 @@
 .list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
+/*
+ * One toast. Its height opens from nothing (0fr to 1fr) and closes again when it leaves, so the
+ * toasts next to it glide to their new place. The toast inside fades in while sliding from the edge.
+ */
 .item {
+    display: grid;
+    grid-template-rows: 1fr;
+    animation: toast-open 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Cuts the toast off while the height is opening or closing */
+.clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* The space between toasts is inside, so it opens and closes with the toast */
+.gap {
+    padding-top: 0.875rem;
+}
+
+.toaster[data-position^="top"] .gap {
+    padding-top: 0;
+    padding-bottom: 0.875rem;
+}
+
+.toaster .item .toast {
+    --toast-from: 1rem;
     pointer-events: auto;
-    animation: toast-in 0.2s ease-out;
+    animation: toast-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.toaster[data-position^="top"] .item {
-    animation-name: toast-in-top;
+.toaster[data-position^="top"] .item .toast {
+    --toast-from: -1rem;
 }
 
-/* The toast is an Alert, plus a shadow so it stands out from the page */
-.toast {
-    box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
-    border-color: color-mix(in srgb, var(--alert-color) 25%, var(--surface));
+/* Leaving: fades and shrinks a little first, while the height closes behind it */
+.item[data-leaving] {
+    animation: toast-close 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+.toaster .item[data-leaving] .toast {
+    pointer-events: none;
+    animation: toast-out 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/*
+ * The toast is an Alert, restyled as a plain floating box: normal text colors, and only the icon
+ * keeps the color. (Three class names, so these win over the Alert's own variant rules.)
+ */
+.toaster .item .toast {
+    --alert-title: var(--text);
+    --alert-message: var(--text-muted);
+    padding: 1rem;
+    border-color: var(--border);
+    background: var(--surface-raised);
+    font-size: 0.8125rem;
+}
+
+/* A small filled button under the message */
 .action {
-    display: block;
+    display: flex; /* on its own line, only as wide as its label */
+    align-items: center;
+    width: fit-content;
+    height: 1.5rem;
     margin-top: 0.5rem;
-    padding: 0;
+    padding: 0 0.5rem;
     border: none;
-    background: none;
-    color: var(--alert-text);
+    border-radius: calc(var(--radius) - 4px);
+    background: var(--primary);
+    color: var(--primary-contrast);
     font: inherit;
-    font-weight: 600;
-    text-decoration: underline;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
     cursor: pointer;
+    transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action:hover {
+    background: color-mix(in oklab, var(--primary) 90%, transparent);
 }
 
 .action:focus-visible {
-    outline: 2px solid var(--alert-text);
-    outline-offset: 2px;
-    border-radius: 2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 /* Phones: full width along the top or bottom edge.
    [data-position] makes these as specific as the position rules above, so they win. */
 @media (max-width: 30rem) {
     .toaster[data-position] {
-        left: 0.5rem;
-        right: 0.5rem;
+        left: 1rem;
+        right: 1rem;
         width: auto;
         transform: none;
     }
 
-    .toaster[data-position^="top"] { top: 0.5rem; }
-    .toaster[data-position^="bottom"] { bottom: 0.5rem; }
+    .toaster[data-position^="top"] { top: 1rem; }
+    .toaster[data-position^="bottom"] { bottom: 1rem; }
+}
+
+@keyframes toast-open {
+    from { grid-template-rows: 0fr; }
+}
+
+@keyframes toast-close {
+    to { grid-template-rows: 0fr; }
 }
 
 @keyframes toast-in {
-    from { opacity: 0; transform: translateY(1rem); }
+    from { opacity: 0; transform: translateY(var(--toast-from)) scale(0.96); }
 }
 
-@keyframes toast-in-top {
-    from { opacity: 0; transform: translateY(-1rem); }
+@keyframes toast-out {
+    to { opacity: 0; transform: translateY(var(--toast-from)) scale(0.96); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .item {
+    .item,
+    .toaster .item .toast {
         animation: none;
+    }
+
+    .action {
+        transition: none;
     }
 }

@@ -2,8 +2,8 @@
     flex: none;
     width: var(--skeleton-width, 100%);
     height: var(--skeleton-height, 1rem);
-    border-radius: var(--skeleton-radius, calc(var(--radius) / 2));
-    background-color: color-mix(in srgb, var(--text) 10%, transparent);
+    border-radius: var(--skeleton-radius, var(--radius));
+    background-color: var(--surface-muted);
 }
 
 .skeleton[data-circle] {
@@ -12,17 +12,13 @@
     border-radius: 50%;
 }
 
-/* A lighter band that sweeps from left to right */
+/* Fades to half and back, slowly, again and again */
 .skeleton[data-animate] {
-    background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--surface) 55%, transparent), transparent);
-    background-repeat: no-repeat;
-    background-size: 50% 100%;
-    animation: shimmer 1.5s ease-in-out infinite;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes shimmer {
-    from { background-position: -100% 0; }
-    to { background-position: 200% 0; }
+@keyframes pulse {
+    50% { opacity: 0.5; }
 }
 
 /* lines: a paragraph of placeholder lines; the width applies to the whole block */
@@ -41,9 +37,9 @@
     width: 60%;
 }
 
+/* No pulsing for people who turn down animations in their OS settings */
 @media (prefers-reduced-motion: reduce) {
     .skeleton[data-animate] {
         animation: none;
-        background-image: none;
     }
 }

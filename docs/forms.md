@@ -40,6 +40,11 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 | `FileUpload` | `files` + `onFilesChange` (a `File[]`) | `onFilesChange={setFiles}` |
 
 `FileUpload` with a `name` also sends its files with the form, like a normal file field.
+`Select` opens its own list under the field, with a search box when there are more than 8 choices
+(`searchable` to choose yourself). `<Select native />` uses the browser's own `<select>` instead.
+`DateInput` opens a calendar; with a `name` it sends the date with the form as `2026-10-31`
+(`2026-10-31T14:30` with `withTime`). Its `ref` is the button that opens the calendar, so with
+react-hook-form use a `Controller` rather than `register`.
 
 Show errors with the `error` prop, for example `<Input error="Enter a valid email address" />`.
 The form components also accept a `ref`, so form libraries like react-hook-form work with them.
