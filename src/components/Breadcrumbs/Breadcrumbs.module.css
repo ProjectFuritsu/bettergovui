@@ -1,16 +1,13 @@
 .breadcrumbs {
     /* The size prop overrides this (see Breadcrumbs.tsx) */
     --breadcrumbs-size: 0.875rem;
-    /* The color prop overrides this (see Breadcrumbs.tsx) */
-    --breadcrumbs-color: var(--primary);
-    /* Link color: a darker shade so it's readable (lighter in dark mode) */
-    --breadcrumbs-link: color-mix(in srgb, var(--breadcrumbs-color) 80%, black);
+    /* Links are muted gray; the color prop sets --breadcrumbs-color, which the rules further down turn into a readable link color */
+    --breadcrumbs-link: var(--text-muted);
+    /* Hovering a gray link turns it the normal text color */
+    --breadcrumbs-link-hover: var(--text);
+    color: var(--text-muted);
     font-size: var(--breadcrumbs-size);
-    line-height: 1.5;
-}
-
-[data-theme="dark"] .breadcrumbs {
-    --breadcrumbs-link: color-mix(in srgb, var(--breadcrumbs-color) 75%, white);
+    line-height: 1.43;
 }
 
 .breadcrumbs[data-size="xs"] { --breadcrumbs-size: 0.75rem; }
@@ -23,10 +20,18 @@
     display: flex;
     flex-wrap: wrap; /* long trails wrap onto the next line on small screens */
     align-items: center;
-    gap: 0.375em;
+    gap: 0.4286em; /* 6px at 14px text */
     margin: 0;
     padding: 0;
     list-style: none;
+    overflow-wrap: break-word;
+}
+
+/* A little more air where there's room for it */
+@media (width >= 40em) {
+    .list {
+        gap: 0.7143em; /* 10px at 14px text */
+    }
 }
 
 .item {
@@ -39,34 +44,37 @@
 .item a {
     display: inline-flex;
     align-items: center;
-    gap: 0.375em;
+    gap: 0.4286em;
     border-radius: 4px;
     color: var(--breadcrumbs-link);
     text-decoration: none;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .item a:hover {
-    text-decoration: underline;
+    color: var(--breadcrumbs-link-hover);
 }
 
 .item a:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
-/* The current page: plain text, not a link color */
-.item [aria-current="page"] {
+/* The current page: normal text color and weight, and no hover change even when it's a link */
+.item [aria-current="page"],
+.item a[aria-current="page"]:hover {
     display: inline-flex;
     align-items: center;
-    gap: 0.375em;
+    gap: 0.4286em;
     color: var(--text);
-    font-weight: 600;
+    font-weight: 400;
+    text-decoration: none;
 }
 
 /* Icons inside items (e.g. a home icon) match the text size */
 .item svg {
-    width: 1.125em;
-    height: 1.125em;
+    width: 1.143em; /* 16px at 14px text */
+    height: 1.143em;
     flex-shrink: 0;
 }
 
@@ -86,6 +94,32 @@
     stroke-linejoin: round;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .item a {
+        transition: none;
+    }
+}
+
+/*
+ * ---------- With the color prop ----------
+ * Breadcrumbs.tsx writes the color into the style attribute as --breadcrumbs-color; that's how these
+ * rules know one was given. Colored links keep their color on hover and get an underline instead.
+ */
+.breadcrumbs[style*="--breadcrumbs-color"] {
+    /* A darker shade so it's readable (lighter in dark mode) */
+    --breadcrumbs-link: color-mix(in srgb, var(--breadcrumbs-color) 80%, black);
+    --breadcrumbs-link-hover: var(--breadcrumbs-link);
+}
+
+[data-theme="dark"] .breadcrumbs[style*="--breadcrumbs-color"] {
+    --breadcrumbs-link: color-mix(in srgb, var(--breadcrumbs-color) 75%, white);
+}
+
+.breadcrumbs[style*="--breadcrumbs-color"] .item a:not([aria-current="page"]):hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
 /*
  * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
  * light background (at least 4.5:1) for every color, even light ones like orange. Colors that are
@@ -93,7 +127,7 @@
  * Browsers without this CSS feature keep the rule above.
  */
 @supports (color: oklch(from red min(l, 0.5) c h)) {
-    .breadcrumbs {
+    .breadcrumbs[style*="--breadcrumbs-color"] {
         --breadcrumbs-link: oklch(from var(--breadcrumbs-color) min(l, 0.5) c h);
     }
 }
@@ -104,7 +138,7 @@
  * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
  */
 @supports (color: oklch(from red max(l, 0.72) c h)) {
-    [data-theme="dark"] .breadcrumbs {
+    [data-theme="dark"] .breadcrumbs[style*="--breadcrumbs-color"] {
         --breadcrumbs-link: oklch(from var(--breadcrumbs-color) max(l, 0.72) c h);
     }
 }

@@ -21,19 +21,20 @@
 .details {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-xl);
     font-style: normal; /* browsers show <address> in italics */
 }
 
 .detail {
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
+    font-size: 0.875rem;
 }
 
 .icon {
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.75;
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
@@ -43,23 +44,23 @@
     flex-direction: column;
     gap: 2px;
     min-width: 0;
-    padding-top: 2px;
     line-height: 1.5;
 }
 
 .detailLabel {
     color: var(--text-muted);
-    font-size: 0.8125rem;
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .link {
     color: var(--text);
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--text) 35%, transparent);
-    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in oklab, var(--text) 35%, transparent);
+    text-underline-offset: 4px;
     overflow-wrap: anywhere; /* long email addresses wrap on phones */
+    transition: text-decoration-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .link:hover {
@@ -67,9 +68,9 @@
 }
 
 .link:focus-visible {
-    border-radius: 2px;
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 2px);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 2px; /* text has no box, so the ring sits a little away from the letters */
 }
 
 .hours {
@@ -90,14 +91,15 @@
 
 .hoursRow dd {
     margin: 0;
-    font-weight: 600;
+    font-weight: 500;
 }
 
+/* Framed like a card */
 .map {
     min-height: 18rem;
     overflow: hidden;
     border: 1px solid var(--border);
-    border-radius: calc(var(--radius) * 2);
+    border-radius: calc(var(--radius) + 6px);
     background: var(--surface-muted);
 }
 
@@ -109,4 +111,10 @@
     min-height: 18rem;
     border: 0;
     object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .link {
+        transition: none;
+    }
 }

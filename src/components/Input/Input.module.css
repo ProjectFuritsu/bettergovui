@@ -1,39 +1,35 @@
 .root {
-    /* The size prop overrides this (see Input.tsx) */
-    --input-size: 1rem;
-    /* Error text: a darker red so small text stays readable (lighter in dark mode, below) */
-    --input-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    /* The size prop overrides this (see Input.tsx). md is 14px text in a 36px tall field. */
+    --input-size: 0.875rem;
     display: flex;
     flex-direction: column;
-    gap: 0.375em;
+    /* 8px at md, between the label, the helper text, the field and the error */
+    gap: 0.5714em;
     width: 100%;
     font-size: var(--input-size);
 }
 
-[data-theme="dark"] .root {
-    --input-error-text: color-mix(in srgb, var(--danger) 75%, white);
-}
-
 .root[data-size="xs"] { --input-size: 0.75rem; }
-.root[data-size="sm"] { --input-size: 0.875rem; }
-.root[data-size="md"] { --input-size: 1rem; }
-.root[data-size="lg"] { --input-size: 1.125rem; }
-.root[data-size="xl"] { --input-size: 1.25rem; }
+.root[data-size="sm"] { --input-size: 0.8125rem; }
+.root[data-size="md"] { --input-size: 0.875rem; }
+.root[data-size="lg"] { --input-size: 1rem; }
+.root[data-size="xl"] { --input-size: 1.125rem; }
 
 .label {
-    font-size: 0.875em;
-    font-weight: 600;
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1;
     color: var(--text);
 }
 
 .required {
-    color: var(--input-error-text);
+    color: var(--danger);
 }
 
 .description,
 .error {
     margin: 0;
-    font-size: 0.8125em;
+    font-size: 1em;
     line-height: 1.4;
 }
 
@@ -42,25 +38,37 @@
 }
 
 .error {
-    color: var(--input-error-text);
+    color: var(--danger);
 }
 
 /* The bordered box. The <input> inside has no border, so icons can sit next to it. */
 .field {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
-    gap: 0.5em;
-    padding: 0 0.75em;
-    border: 1px solid var(--border-strong);
+    gap: 0.5714em;
+    /* Same height as a Button of the same size: 36px at md, border included */
+    min-height: 2.5714em;
+    padding: 0 0.857em;
+    border: 1px solid var(--input);
     border-radius: var(--radius);
-    background: var(--surface);
+    background: transparent;
     color: var(--text-muted); /* icon color */
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: color, background-color, border-color, box-shadow;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* In the dark theme the field is a little lighter than the page, so it reads as a hole to type in */
+[data-theme="dark"] .field {
+    background: color-mix(in oklab, var(--input) 30%, transparent);
+}
+
+/* The focus ring: a soft 3px halo around the whole field */
 .field:focus-within {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+    border-color: var(--ring);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 .field[data-invalid] {
@@ -68,20 +76,29 @@
 }
 
 .field[data-invalid]:focus-within {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+    outline-color: color-mix(in oklab, var(--danger) 20%, transparent);
+}
+
+[data-theme="dark"] .field[data-invalid]:focus-within {
+    outline-color: color-mix(in oklab, var(--danger) 40%, transparent);
 }
 
 .field[data-disabled] {
-    background: var(--surface-muted);
-    opacity: 0.6;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Also when a Fieldset around it is disabled (its own rule: browsers without :has() skip only this one) */
+.field:has(.input:disabled) {
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
 .input {
     flex: 1;
+    align-self: stretch; /* as tall as the field, so a click anywhere in it lands in the input */
     min-width: 0;
-    /* Same height as a Button of the same size: 2 × 0.625em padding + 1.25em line + border */
-    padding: 0.625em 0;
+    padding: 0;
     border: none;
     outline: none; /* the field shows the focus ring instead */
     background: transparent;
@@ -99,6 +116,12 @@
     cursor: not-allowed;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .field {
+        transition: none;
+    }
+}
+
 /* ---------- Icons ---------- */
 
 .icon {
@@ -106,34 +129,24 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 1.25em;
-    height: 1.25em;
+    width: 1.143em;
+    height: 1.143em;
 }
 
+/* 16px at md */
 .icon svg {
-    width: 1.125em;
-    height: 1.125em;
+    width: 1.143em;
+    height: 1.143em;
 }
 
 /* ---------- Prefix and suffix text, e.g. "+63" or "₱" ---------- */
 
+/* Muted, so the fixed part is told apart from what's typed */
 .affix {
     flex: none;
     color: var(--text-muted);
-    font-weight: 500;
     line-height: 1.25;
     white-space: nowrap;
-}
-
-/* A thin line sets the fixed part apart from what's typed */
-.affix[data-side="prefix"] {
-    padding-right: 0.5em;
-    border-right: 1px solid var(--border);
-}
-
-.affix[data-side="suffix"] {
-    padding-left: 0.5em;
-    border-left: 1px solid var(--border);
 }
 
 /* rightSection: buttons inside the field, close to its edge */
@@ -141,5 +154,5 @@
     display: flex;
     flex: none;
     align-items: center;
-    margin-right: -0.375em;
+    margin-right: -0.5714em;
 }

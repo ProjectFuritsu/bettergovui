@@ -8,20 +8,27 @@ The colors, corner radius and spacing are CSS variables. Override them in your o
 
 ```css
 :root {
-    --primary: #1864ab;   /* your brand color */
+    --primary: #1864ab;            /* your brand color */
+    --primary-contrast: #ffffff;   /* the text on it */
     --radius: 4px;        /* less rounded corners */
 }
 ```
 
 | Variable | Used for |
 |---|---|
-| `--primary` (blue), `--secondary` (slate gray), `--tertiary` (teal), `--accent` (violet) | the brand colors |
+| `--primary` (near-black), `--secondary` (gray), `--tertiary` (teal), `--accent` (violet) | the brand colors |
+| `--primary-contrast` | text on `--primary` (near-white; near-black in dark mode) |
 | `--info`, `--success`, `--warning`, `--danger` | the status colors |
-| `--surface`, `--surface-muted` | backgrounds |
+| `--surface`, `--surface-raised`, `--surface-muted` | backgrounds: the page, things that float above it (cards, dialogs), and soft gray fills |
 | `--text`, `--text-muted` | text |
-| `--border`, `--border-strong` | lines and form control outlines |
-| `--radius` | rounded corners |
+| `--border`, `--border-strong`, `--input` | lines, stronger lines, and form control outlines |
+| `--ring` | the focus ring around whatever has keyboard focus |
+| `--shadow-xs` … `--shadow-lg` | shadows; only used by a `hoverable` Card on hover and the `elevated` Card |
+| `--radius` | rounded corners of buttons and inputs; cards and dialogs are a little rounder |
 | `--spacing-xs` … `--spacing-xl` | what the spacing presets mean |
+
+The defaults follow the [shadcn/ui](https://ui.shadcn.com) neutral look: black-and-white with soft gray lines.
+The components set no font; they use your page's. shadcn/ui uses [Geist](https://vercel.com/font).
 
 ## Dark mode
 

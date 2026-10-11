@@ -1,39 +1,36 @@
 .root {
-    /* The size prop overrides this (see Textarea.tsx) */
-    --textarea-size: 1rem;
-    --textarea-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    /* The size prop overrides this (see Textarea.tsx). md is 14px text. */
+    --textarea-size: 0.875rem;
     display: flex;
     flex-direction: column;
-    gap: 0.375em;
+    /* 8px at md, between the label, the helper text, the field and the error */
+    gap: 0.5714em;
     width: 100%;
     font-size: var(--textarea-size);
 }
 
-[data-theme="dark"] .root {
-    --textarea-error-text: color-mix(in srgb, var(--danger) 75%, white);
-}
-
 .root[data-size="xs"] { --textarea-size: 0.75rem; }
-.root[data-size="sm"] { --textarea-size: 0.875rem; }
-.root[data-size="md"] { --textarea-size: 1rem; }
-.root[data-size="lg"] { --textarea-size: 1.125rem; }
-.root[data-size="xl"] { --textarea-size: 1.25rem; }
+.root[data-size="sm"] { --textarea-size: 0.8125rem; }
+.root[data-size="md"] { --textarea-size: 0.875rem; }
+.root[data-size="lg"] { --textarea-size: 1rem; }
+.root[data-size="xl"] { --textarea-size: 1.125rem; }
 
 /* Label, description and error match Input */
 .label {
-    font-size: 0.875em;
-    font-weight: 600;
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1;
     color: var(--text);
 }
 
 .required {
-    color: var(--textarea-error-text);
+    color: var(--danger);
 }
 
 .description,
 .error {
     margin: 0;
-    font-size: 0.8125em;
+    font-size: 1em;
     line-height: 1.4;
 }
 
@@ -42,21 +39,30 @@
 }
 
 .error {
-    color: var(--textarea-error-text);
+    color: var(--danger);
 }
 
 .textarea {
     box-sizing: border-box;
     width: 100%;
-    padding: 0.625em 0.75em;
-    border: 1px solid var(--border-strong);
+    /* Never shorter than 64px at md, however few rows are asked for */
+    min-height: 4.5714em;
+    padding: 0.5714em 0.857em;
+    border: 1px solid var(--input);
     border-radius: var(--radius);
-    background: var(--surface);
+    background: transparent;
     color: var(--text);
     font: inherit;
-    line-height: 1.5;
+    line-height: 1.4286;
     resize: vertical; /* the user can drag it taller */
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: color, background-color, border-color, box-shadow;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* In the dark theme the field is a little lighter than the page, like Input */
+[data-theme="dark"] .textarea {
+    background: color-mix(in oklab, var(--input) 30%, transparent);
 }
 
 /* With autosize the height follows the text, so there's nothing to drag */
@@ -69,22 +75,32 @@
     opacity: 1;
 }
 
-.textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+/* The focus ring: a soft 3px halo, like Input */
+.textarea:focus-visible {
+    border-color: var(--ring);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 .textarea[aria-invalid="true"] {
     border-color: var(--danger);
 }
 
-.textarea[aria-invalid="true"]:focus {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+.textarea[aria-invalid="true"]:focus-visible {
+    outline-color: color-mix(in oklab, var(--danger) 20%, transparent);
+}
+
+[data-theme="dark"] .textarea[aria-invalid="true"]:focus-visible {
+    outline-color: color-mix(in oklab, var(--danger) 40%, transparent);
 }
 
 .textarea:disabled {
-    background: var(--surface-muted);
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .textarea {
+        transition: none;
+    }
 }

@@ -1,9 +1,9 @@
 .heading {
     margin: 0;
     color: var(--text);
-    font-weight: 700;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em; /* big text looks better with the letters a touch closer */
     text-wrap: balance; /* avoids a single short word on the last line */
 }
 
@@ -17,12 +17,12 @@
 }
 
 /* The big sizes scale between a phone size and a desktop size with the screen width */
-.heading[data-size="1"] { font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem); line-height: 1.2; }
+.heading[data-size="1"] { font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem); font-weight: 800; } /* the page title is extra bold */
 .heading[data-size="2"] { font-size: clamp(1.5rem, 1.25rem + 1.1vw, 1.875rem); }
 .heading[data-size="3"] { font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem); }
-.heading[data-size="4"] { font-size: 1.25rem; line-height: 1.35; }
-.heading[data-size="5"] { font-size: 1.125rem; line-height: 1.4; }
-.heading[data-size="6"] { font-size: 1rem; line-height: 1.4; }
+.heading[data-size="4"] { font-size: 1.25rem; line-height: 1.3; }
+.heading[data-size="5"] { font-size: 1.125rem; line-height: 1.3; }
+.heading[data-size="6"] { font-size: 1rem; line-height: 1.3; }
 
 /*
  * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a

@@ -2,34 +2,48 @@
     /* The color prop overrides this (see Button.tsx) */
     --btn-color: var(--primary);
     /*
-     * The color used for text and borders (outline and text variants): a darker shade
-     * (80% color + 20% black) so it's readable on a light background.
+     * Outline and text variants. Without a color prop they are plain black-and-white:
+     * normal text, a soft gray line, a soft gray tint on hover. (With a color prop these
+     * follow the color instead: see "With a color prop" below.)
      */
-    --btn-text-color: color-mix(in srgb, var(--btn-color) 80%, black);
+    --btn-text-color: var(--text);
+    --btn-line-color: var(--border);
+    --btn-hover-bg: var(--surface-muted);
+    /*
+     * Everything scales from the font size (--btn-size): the height and the side padding are in em.
+     * md is 36px tall with 16px at the sides. The presets at the bottom set their own.
+     */
+    --btn-height: 2.5714em;
+    --btn-padding-inline: 1.143em;
     position: relative; /* the loading spinner is placed on top, in the center */
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    /* Everything scales from --btn-size: padding uses em, so it grows with the font size */
-    font-size: var(--btn-size, 1rem);
+    box-sizing: border-box;
+    font-size: var(--btn-size, 0.875rem);
     line-height: 1.25;
-    padding: 0.625em 1em;
+    /* Top and bottom make up the height together with one line of text and the 1px border */
+    padding: calc((var(--btn-height) - 1.25em) / 2 - 1px) var(--btn-padding-inline);
     /* Every variant has a 1px border (invisible unless colored) so all variants are the same height */
     border: 1px solid transparent;
     border-radius: var(--radius);
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none; /* for buttons that are links (href) */
     cursor: pointer;
-    transition: background-color 0.15s;
+    transition-property: color, background-color, border-color, box-shadow;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/*
- * Dark mode: colored text and borders get a lighter shade (75% color + 25% white) instead, so
- * they're readable on the dark background. In both modes, filled backgrounds keep the real color.
- * Works for any color, including the color prop.
- */
+/* Dark mode: the hover tint is half see-through, so it also works on cards and dialogs */
 [data-theme="dark"] .button {
-    --btn-text-color: color-mix(in srgb, var(--btn-color) 75%, white);
+    --btn-hover-bg: color-mix(in oklab, var(--surface-muted) 50%, transparent);
+}
+
+/* Keyboard focus: a soft 3px ring right around the button. It stays gray for every color. */
+.button:focus-visible {
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 .button:disabled,
@@ -48,7 +62,29 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5em;
+    gap: 0.5714em;
+}
+
+/*
+ * Trim the space above the capitals and below the baseline, so the text sits exactly in the middle
+ * and the padding is measured from the letters themselves. The button stays --btn-height tall (the
+ * same as an icon-only button).
+ * Browsers without this CSS feature keep the padding above, which looks about the same.
+ */
+@supports (text-box: trim-both cap alphabetic) {
+    .button:not(.iconOnly) {
+        --btn-padding-block: calc((var(--btn-height) - 1cap) / 2 - 1px);
+        padding: var(--btn-padding-block) var(--btn-padding-inline);
+    }
+
+    .label {
+        text-box: trim-both cap alphabetic;
+    }
+
+    /* An icon is taller than the trimmed text: pull it in so it doesn't change the button's height */
+    .button:not(.iconOnly) .icon {
+        margin-block: calc((1cap - var(--btn-icon-size, 1.143em)) / 2);
+    }
 }
 
 /* ---------- Variants ---------- */
@@ -56,50 +92,51 @@
 /* filled: solid background, no border */
 .filled {
     background: var(--btn-color);
-    color: white;
-}
-
-.filled:hover:not(:disabled) {
-    /* A slightly darker shade of the color */
-    background: color-mix(in srgb, var(--btn-color) 85%, black);
+    /* For old browsers. Newer ones pick black or white below. */
+    color: var(--primary-contrast);
 }
 
 /*
- * autoContrast: black or white text, whichever is easier to read on the color.
- * Same rule as Badge.module.css: the color's WCAG brightness ("relative luminance") is compared
- * with 0.179; each channel becomes 1 (white) or 0 (black).
- * @supports: browsers without this CSS feature skip it all and keep the white text above.
+ * Black or white text, whichever is easier to read on the color: always on, for any color prop.
+ * (The default color is near-black in the light theme and light gray in the dark theme, so the
+ * text has to flip with it.) The color's WCAG brightness ("relative luminance") is compared with
+ * 0.179; each channel becomes 1 (white) or 0 (black). Same rule as Badge.module.css.
+ * This is what the autoContrast prop used to turn on; the prop still works, it just has nothing
+ * left to change.
+ * @supports: browsers without this CSS feature skip it and keep the text color above.
  */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .filled[data-auto-contrast] {
-        /* White on dark colors, black on light ones */
-        --btn-auto-text: color(
+    .filled {
+        color: color(
             from var(--btn-color) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
         );
-        /* The opposite (black on dark colors, white on light ones), for the hover effect */
-        --btn-auto-opposite: color(
-            from var(--btn-color) srgb-linear
-            clamp(0, (0.2126 * r + 0.7152 * g + 0.0722 * b - 0.179) * 10000, 1)
-            clamp(0, (0.2126 * r + 0.7152 * g + 0.0722 * b - 0.179) * 10000, 1)
-            clamp(0, (0.2126 * r + 0.7152 * g + 0.0722 * b - 0.179) * 10000, 1)
-        );
-        color: var(--btn-auto-text);
-    }
-
-    /* Hover moves the background away from the text color, so the text stays readable while hovered */
-    .filled[data-auto-contrast]:hover:not(:disabled) {
-        background: color-mix(in srgb, var(--btn-color) 85%, var(--btn-auto-opposite));
     }
 }
 
-/* outline: border only, no background */
+.filled:hover:not(:disabled) {
+    /* The color at 90%: a little of what's behind the button shows through */
+    background: color-mix(in oklab, var(--btn-color) 90%, transparent);
+}
+
+/* outline: a thin line around it, on the page's own background */
 .outline {
-    background: transparent;
+    background: var(--surface);
     color: var(--btn-text-color);
-    border-color: var(--btn-text-color);
+    border-color: var(--btn-line-color);
+}
+
+/* Dark mode: a faint see-through fill and the same line that form controls use */
+[data-theme="dark"] .outline {
+    --btn-line-color: var(--input);
+    --btn-hover-bg: color-mix(in oklab, var(--input) 50%, transparent);
+    background: color-mix(in oklab, var(--input) 30%, transparent);
+}
+
+.outline:focus-visible {
+    border-color: var(--ring);
 }
 
 /* text: no border, no background, just the text */
@@ -108,33 +145,58 @@
     color: var(--btn-text-color);
 }
 
-/* Without a background, a light tint on hover shows the button is clickable */
+/* A light tint on hover shows the button is clickable */
 .outline:hover:not(:disabled),
 .text:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--btn-color) 10%, transparent);
+    background: var(--btn-hover-bg);
+}
+
+/* ---------- With a color prop (outline and text variants) ---------- */
+
+/*
+ * The color prop arrives as an inline --btn-color (see Button.tsx), which is how these rules can
+ * tell a colored button from a default one. Text, line and hover tint then follow the color.
+ * The text uses a darker shade (80% color + 20% black) so it's readable on a light background.
+ */
+.button[style*="--btn-color"] {
+    --btn-text-color: color-mix(in srgb, var(--btn-color) 80%, black);
+    --btn-line-color: color-mix(in oklab, var(--btn-text-color) 30%, transparent);
+    --btn-hover-bg: color-mix(in oklab, var(--btn-color) 6%, transparent);
+}
+
+/*
+ * Dark mode: colored text gets a lighter shade (75% color + 25% white) instead, so it's readable
+ * on the dark background. In both modes, filled backgrounds keep the real color.
+ */
+[data-theme="dark"] .button[style*="--btn-color"] {
+    --btn-text-color: color-mix(in srgb, var(--btn-color) 75%, white);
+    --btn-line-color: color-mix(in oklab, var(--btn-text-color) 30%, transparent);
+    --btn-hover-bg: color-mix(in oklab, var(--btn-color) 10%, transparent);
 }
 
 /* ---------- Icons ---------- */
 
-/* The box is exactly one line of text tall, so an icon never changes the button's height */
+/* 16px in a 14px button. The box is as big as the icon, so an icon never changes the button's height. */
 .icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 1.25em;
-    height: 1.25em;
+    width: var(--btn-icon-size, 1.143em);
+    height: var(--btn-icon-size, 1.143em);
 }
 
 /* Icons grow with the button's size. Override with the --btn-icon-size variable. */
 .icon svg {
-    width: var(--btn-icon-size, 1.125em);
-    height: var(--btn-icon-size, 1.125em);
+    width: var(--btn-icon-size, 1.143em);
+    height: var(--btn-icon-size, 1.143em);
 }
 
-/* Same padding on every side makes an icon-only button square */
+/* As wide as it is tall makes an icon-only button square */
 .iconOnly {
-    padding: 0.625em;
+    width: var(--btn-height);
+    height: var(--btn-height);
+    padding: 0;
 }
 
 /* ---------- Loading ---------- */
@@ -166,11 +228,12 @@
 
 /* ---------- Size presets ---------- */
 
-.xs { --btn-size: 0.75rem; }
-.sm { --btn-size: 0.875rem; }
-.md { --btn-size: 1rem; }
-.lg { --btn-size: 1.125rem; }
-.xl { --btn-size: 1.25rem; }
+/* Text size, then the height and side padding that go with it (in em of that text size) */
+.xs { --btn-size: 0.75rem; --btn-height: 2.3333em; --btn-padding-inline: 0.8333em; }   /* 28px tall, 10px sides */
+.sm { --btn-size: 0.8125rem; --btn-height: 2.4615em; --btn-padding-inline: 0.9231em; } /* 32px tall, 12px sides */
+.md { --btn-size: 0.875rem; --btn-height: 2.5714em; --btn-padding-inline: 1.143em; }   /* 36px tall, 16px sides */
+.lg { --btn-size: 1rem; --btn-height: 2.5em; --btn-padding-inline: 1.5em; }            /* 40px tall, 24px sides */
+.xl { --btn-size: 1.125rem; --btn-height: 2.4444em; --btn-padding-inline: 1.5556em; }  /* 44px tall, 28px sides */
 
 /*
  * Light mode: colored text is never lighter than OKLCH lightness 0.5, so it stays readable on a
@@ -179,7 +242,7 @@
  * Browsers without this CSS feature keep the rule above.
  */
 @supports (color: oklch(from red min(l, 0.5) c h)) {
-    .button {
+    .button[style*="--btn-color"] {
         --btn-text-color: oklch(from var(--btn-color) min(l, 0.5) c h);
     }
 }
@@ -190,7 +253,7 @@
  * (e.g. orange) don't change. Browsers without this CSS feature keep the dark-mode rule above.
  */
 @supports (color: oklch(from red max(l, 0.72) c h)) {
-    [data-theme="dark"] .button {
+    [data-theme="dark"] .button[style*="--btn-color"] {
         --btn-text-color: oklch(from var(--btn-color) max(l, 0.72) c h);
     }
 }

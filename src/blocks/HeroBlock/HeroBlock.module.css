@@ -1,8 +1,6 @@
-/* A soft glow of the brand color behind the hero */
+/* A plain page-colored section: the big title does the work, not a background */
 .hero {
-    background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--primary) 10%, transparent), transparent),
-        var(--surface);
+    background: var(--surface);
 }
 
 .inner {
@@ -30,9 +28,9 @@
 
 .title {
     margin: 0;
-    font-size: clamp(2.25rem, 1.4rem + 3.5vw, 3.75rem);
-    font-weight: 800;
-    line-height: 1.08;
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.1;
     letter-spacing: -0.025em;
     text-wrap: balance;
 }
@@ -53,14 +51,110 @@
     min-width: 0;
 }
 
+/* Framed like a card: a thin line */
 .image {
     display: block;
     width: 100%;
     height: auto;
     aspect-ratio: 4 / 3;
-    border-radius: calc(var(--radius) * 2);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 6px);
     object-fit: cover;
-    box-shadow: 0 20px 48px rgb(0 0 0 / 0.14);
+}
+
+/* ---------- proof: a row of faces and a line, above the title ---------- */
+
+.proof {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.hero[data-align="center"] .proof {
+    justify-content: center;
+}
+
+.faces {
+    display: inline-flex;
+    padding-left: 0.375rem;
+}
+
+/* Each face overlaps the one before it a little (initials stay readable), with a ring in the page's color between them */
+.faces .face {
+    margin-left: -0.375rem;
+    box-shadow: 0 0 0 2px var(--surface);
+}
+
+/* ---------- cards: pictures and quotes in a row under the text ---------- */
+
+.cards {
+    display: grid;
+    /* Three in a row from tablets up; one under the other on phones */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--spacing-xl);
+    margin: clamp(2.5rem, 6vw, 4rem) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.card {
+    min-height: clamp(16rem, 30vw, 24rem);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 6px);
+    overflow: hidden;
+}
+
+.card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* The page's text and background colors swapped: dark in light mode, light in dark mode */
+.card[data-kind="quote"] {
+    border-color: transparent;
+    background: var(--text);
+    color: var(--surface);
+}
+
+.quote {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--spacing-xl);
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+    padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.quote blockquote {
+    margin: 0;
+    font-size: clamp(1.125rem, 1rem + 0.7vw, 1.5rem);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+}
+
+.quote figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    font-size: 0.875rem;
+}
+
+.quote figcaption strong {
+    font-weight: 600;
+}
+
+.quote figcaption span {
+    opacity: 0.65;
 }
 
 /* Phones: full-width buttons are easier to tap */

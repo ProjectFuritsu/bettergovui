@@ -18,4 +18,8 @@ export type {Language} from "../../src";
 // Messages between the workbench and the preview iframe
 export type FrameMessage =
     | {type: "frame-ready"}
-    | {type: "render"; entryName: string; values: ValuesOf<Controls>; theme: Theme; language: import("../../src").Language};
+    | {type: "render"; entryName: string; values: ValuesOf<Controls>; theme: Theme; language: import("../../src").Language}
+    // A page made of sections (see pages/schema.ts). With autoHeight, the frame is as tall as the page
+    // and reports that height, so the workbench can size the iframe to it.
+    | {type: "render-page"; sections: import("../pages/schema").SectionData[]; theme: Theme; language: import("../../src").Language; autoHeight: boolean}
+    | {type: "frame-height"; height: number};

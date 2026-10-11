@@ -8,13 +8,13 @@ export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
     width?: number | string;
     /** A number in pixels or any CSS length. Default "1rem", about one line of text. */
     height?: number | string;
-    /** Corner rounding. A number in pixels or any CSS length. Default: half the --radius token. */
+    /** Corner rounding. A number in pixels or any CSS length. Default: the --radius token. */
     radius?: number | string;
     /** A circle `height` wide, e.g. for an Avatar. */
     circle?: boolean;
     /** Show this many lines, like a paragraph (the last one is shorter). */
     lines?: number;
-    /** The shimmer that sweeps across. Default true. */
+    /** The slow pulse (it fades to half and back). Default true. */
     animate?: boolean;
 }
 

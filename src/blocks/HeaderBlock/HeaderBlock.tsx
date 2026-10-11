@@ -26,6 +26,11 @@ export interface HeaderBlockProps extends HTMLAttributes<HTMLElement> {
     sticky?: boolean;
     /** What screen readers call the ☰ button. Default "Menu". */
     menuLabel?: string;
+    /**
+     * "bar" (default): across the whole page, with a line under it.
+     * "pill": a rounded capsule floating in the middle, only as wide as what's in it.
+     */
+    variant?: "bar" | "pill";
 }
 
 /** A site header: logo on the left, links in the middle, a button on the right. A `<header>`. */
@@ -36,6 +41,7 @@ export function HeaderBlock({
     action,
     sticky = false,
     menuLabel,
+    variant = "bar",
     className,
     onKeyDown,
     ...rest
@@ -53,6 +59,7 @@ export function HeaderBlock({
         <header
             className={cx(styles.header, className)}
             data-sticky={sticky || undefined}
+            data-variant={variant}
             onKeyDown={event => {
                 onKeyDown?.(event);
                 if (event.key === "Escape" && open) setOpen(false);
@@ -62,7 +69,13 @@ export function HeaderBlock({
                 {logo && <a href={logoHref} className={styles.logo}>{logo}</a>}
                 {links.length > 0 && <Navbar className={styles.links}>{navLinks}</Navbar>}
                 <div className={styles.end}>
-                    {renderAction(action, {size: "sm"})}
+                    {renderAction(
+                        action,
+                        // The pill's button points onward with a small arrow
+                        variant === "pill"
+                            ? {size: "md", rightIcon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>}
+                            : {size: "sm"},
+                    )}
                     {links.length > 0 && (
                         <button
                             type="button"

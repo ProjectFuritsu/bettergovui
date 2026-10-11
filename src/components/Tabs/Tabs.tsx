@@ -68,12 +68,12 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "default
     orientation?: TabsOrientation;
     /**
      * Space between the tabs. A preset ("xs" 4px – "xl" 24px), a number in pixels, or any CSS length.
-     * Default: 4px (2px for "segmented").
+     * Default: 4px (none for "segmented").
      */
     gap?: Size;
     /**
      * Space between the tab list and the panel. A preset ("xs" 4px – "xl" 24px), a number in pixels,
-     * or any CSS length. Default: 16px.
+     * or any CSS length. Default: 8px.
      */
     panelGap?: Size;
     /** Stretch the tabs to fill the whole list. */

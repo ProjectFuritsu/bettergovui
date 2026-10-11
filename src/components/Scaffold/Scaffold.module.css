@@ -33,9 +33,22 @@
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius);
     background: var(--primary);
-    color: #fff;
-    font-weight: 600;
+    color: var(--primary-contrast); /* for old browsers */
+    font-size: 0.875rem;
+    font-weight: 500;
     text-decoration: none;
+}
+
+/* Black or white text, whichever is readable on the primary color (it turns light gray in the dark theme) */
+@supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
+    .skipLink {
+        color: color(
+            from var(--primary) srgb-linear
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+            clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
+        );
+    }
 }
 
 .skipLink:not(:focus) {
@@ -48,8 +61,8 @@
 }
 
 .skipLink:focus-visible {
-    outline: 2px solid var(--text);
-    outline-offset: 2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 /* ---------- Header ---------- */
@@ -60,8 +73,8 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    min-height: 3.5rem;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    min-height: 3.5rem; /* 56px */
+    padding: 0.375rem var(--spacing-lg);
     border-bottom: 1px solid var(--border);
     background: var(--surface);
 }
@@ -79,7 +92,12 @@
     box-sizing: border-box;
     width: var(--scaffold-navbar-width, 16rem);
     border-right: 1px solid var(--border);
-    background: var(--surface);
+    /* A sidebar is a shade off the page: barely gray in the light theme, a step lighter in the dark one */
+    background: color-mix(in oklab, var(--surface-muted) 50%, var(--surface));
+}
+
+[data-theme="dark"] .navbar {
+    background: var(--surface-raised);
 }
 
 /* The navbar's content stays in view while the page scrolls (below the header, if that's sticky), and scrolls by itself when it's long */
@@ -92,7 +110,7 @@
     gap: var(--spacing-xs);
     max-height: calc(100vh - var(--scaffold-sticky-top, 0px));
     max-height: calc(100dvh - var(--scaffold-sticky-top, 0px));
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     overflow-y: auto;
 }
 
@@ -120,35 +138,37 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: calc(var(--radius) - 2px);
+    box-sizing: border-box;
+    min-height: 2rem;
+    padding: 0.375rem var(--spacing-sm);
+    border-radius: var(--radius);
     color: var(--text);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    line-height: 1.4;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25rem;
     text-decoration: none;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :where(.navbarInner a:hover) {
     background: var(--surface-muted);
 }
 
-/* The current page: a tinted background and a bar on the left (the text stays the normal color, so it's easy to read) */
+/* The current page: the same gray, with bolder text (tinted when --navbar-color is set, like NavLink) */
 :where(.navbarInner a[aria-current="page"]) {
-    background: color-mix(in srgb, var(--primary) 12%, var(--surface));
-    box-shadow: inset 3px 0 0 var(--primary);
-    font-weight: 600;
+    background: color-mix(in oklab, var(--navbar-color, var(--surface-muted)) 12%, var(--surface-muted));
+    font-weight: 500;
 }
 
 :where(.navbarInner a:focus-visible) {
-    outline: 2px solid var(--primary);
-    outline-offset: -2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 :where(.navbarInner a svg) {
     flex: none;
-    width: 1.125rem;
-    height: 1.125rem;
+    width: 1rem;
+    height: 1rem;
 }
 
 .backdrop {
@@ -195,7 +215,9 @@
     box-sizing: border-box;
     padding: var(--spacing-lg);
     border-top: 1px solid var(--border);
-    background: var(--surface-muted);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.875rem;
 }
 
 /* ---------- Icon buttons: the burger and the navbar's close button ---------- */
@@ -213,6 +235,7 @@
     background: none;
     color: var(--text);
     cursor: pointer;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .iconButton:hover {
@@ -220,13 +243,13 @@
 }
 
 .iconButton:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 .iconButton svg {
-    width: 1.375rem;
-    height: 1.375rem;
+    width: 1.25rem;
+    height: 1.25rem;
     fill: none;
     stroke: currentColor;
     stroke-width: 2;
@@ -288,17 +311,17 @@
         left: 0;
         z-index: 300;
         width: min(var(--scaffold-navbar-width, 16rem), calc(100vw - 3rem));
-        box-shadow: 0 0 32px rgb(0 0 0 / 0.25);
         /* Off screen and hidden from keyboards and screen readers while closed */
         transform: translateX(-100%);
         visibility: hidden;
-        transition: transform 0.2s ease, visibility 0s linear 0.2s;
+        /* Slides like a sheet: out in 0.3s, in a little slower */
+        transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
     }
 
     .navbar[data-open] {
         transform: none;
         visibility: visible;
-        transition: transform 0.2s ease;
+        transition: transform 0.5s ease-in-out;
     }
 
     .navbarInner {
@@ -316,16 +339,16 @@
         inset: 0;
         z-index: 299;
         display: block;
-        background: rgb(0 0 0 / 0.45);
+        background: rgb(0 0 0 / 0.5);
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+        transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
     }
 
     .backdrop[data-open] {
         opacity: 1;
         visibility: visible;
-        transition: opacity 0.2s ease;
+        transition: opacity 0.5s ease-in-out;
     }
 
     .main {
@@ -344,7 +367,9 @@
     .navbar,
     .navbar[data-open],
     .backdrop,
-    .backdrop[data-open] {
+    .backdrop[data-open],
+    .iconButton,
+    :where(.navbarInner a) {
         transition: none;
     }
 }

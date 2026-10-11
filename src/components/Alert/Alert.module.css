@@ -1,52 +1,76 @@
 .alert {
     /* The color prop overrides this (see Alert.tsx) */
     --alert-color: var(--info);
-    /* Title and icon color: a darker shade so it stays readable (lighter in dark mode) */
+    /* The color as text (title and icon): a darker shade so it stays readable (lighter in dark mode) */
     --alert-text: color-mix(in srgb, var(--alert-color) 60%, black);
+    /* What the title and the message actually use. Toast swaps these for the normal text colors. */
+    --alert-title: var(--alert-text);
+    --alert-message: color-mix(in oklab, var(--alert-title) 90%, transparent);
     display: flex;
     gap: 0.75rem;
-    padding: 0.875rem 1rem;
-    border: 1px solid transparent;
-    border-radius: var(--radius);
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    color: var(--text);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 2px);
+    background: var(--surface-raised);
+    font-size: 0.875rem;
+    line-height: 1.43;
+    color: var(--alert-title);
 }
 
 [data-theme="dark"] .alert {
     --alert-text: color-mix(in srgb, var(--alert-color) 75%, white);
 }
 
-/* light: a soft tint of the color (works on light and dark backgrounds) */
-.alert[data-variant="light"] {
-    background: color-mix(in srgb, var(--alert-color) 12%, var(--surface));
-}
-
-/* outline: border only */
-.alert[data-variant="outline"] {
-    border-color: var(--alert-text);
-}
-
-/* filled: solid background, everything white */
-.alert[data-variant="filled"] {
-    background: var(--alert-color);
-    color: white;
-    --alert-text: white;
+/*
+ * Light mode: colored text is the color itself, only darkened when it's too light to read on a light
+ * background (e.g. orange). Never lighter than OKLCH lightness 0.58; darker colors don't change.
+ * Browsers without this CSS feature keep the darker shade above.
+ */
+@supports (color: oklch(from red min(l, 0.58) c h)) {
+    .alert {
+        --alert-text: oklch(from var(--alert-color) min(l, 0.58) c h);
+    }
 }
 
 /*
- * autoContrast: black or white text (and icon), whichever is easier to read on the color.
- * Same rule as Badge.module.css. Browsers without this CSS feature skip it and keep white.
+ * light: a plain box with normal text; only the icon carries the color.
+ * The exception is "danger": its text takes the color too, so an error can't be missed.
+ */
+.alert[data-variant="light"] {
+    --alert-title: var(--text);
+    --alert-message: var(--text-muted);
+}
+
+.alert[data-variant="light"][style*="var(--danger)"] {
+    --alert-title: var(--alert-text);
+    --alert-message: color-mix(in oklab, var(--alert-text) 90%, transparent);
+}
+
+/* outline: no background, the line takes the color */
+.alert[data-variant="outline"] {
+    border-color: color-mix(in oklab, var(--alert-text) 50%, transparent);
+    background: transparent;
+}
+
+/* filled: solid background; the text is --primary-contrast in browsers that can't pick it (see below) */
+.alert[data-variant="filled"] {
+    --alert-text: var(--primary-contrast);
+    border-color: transparent;
+    background: var(--alert-color);
+}
+
+/*
+ * Black or white text (and icon), whichever is easier to read on the color. Always on, for any color,
+ * so the autoContrast prop has nothing left to do. Same rule as Badge.module.css.
  */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .alert[data-variant="filled"][data-auto-contrast] {
+    .alert[data-variant="filled"] {
         --alert-text: color(
             from var(--alert-color) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
         );
-        color: var(--alert-text);
     }
 }
 
@@ -54,14 +78,14 @@
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
-    height: 1.5em; /* one line tall, so it lines up with the title */
+    height: 1.25em; /* as tall as the title's line, so it lines up with it */
     color: var(--alert-text);
 }
 
 .icon svg,
 .close svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1rem;
+    height: 1rem;
 }
 
 /* Drawing style of the built-in icons only, so custom icons (any icon set) keep their own */
@@ -80,14 +104,21 @@
 
 .title {
     margin: 0;
-    font-weight: 700;
-    color: var(--alert-text);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    color: var(--alert-title);
+}
+
+.message {
+    color: var(--alert-message);
 }
 
 .title + .message {
-    margin-top: 0.25rem;
+    margin-top: 0.125rem;
 }
 
+/* A small ×, like the one on Modal */
 .close {
     display: inline-flex;
     flex-shrink: 0;
@@ -95,21 +126,21 @@
     margin: -0.125rem -0.25rem 0 0;
     padding: 0.25rem;
     border: none;
-    border-radius: calc(var(--radius) / 2);
+    border-radius: 2px;
     background: none;
     color: inherit;
     cursor: pointer;
     opacity: 0.7;
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .close:hover {
     opacity: 1;
-    background: color-mix(in srgb, currentColor 10%, transparent);
 }
 
 .close:focus-visible {
-    outline: 2px solid var(--alert-text);
-    outline-offset: 1px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
     opacity: 1;
 }
 
@@ -121,5 +152,11 @@
 @supports (color: oklch(from red max(l, 0.72) c h)) {
     [data-theme="dark"] .alert:not([data-variant="filled"]) {
         --alert-text: oklch(from var(--alert-color) max(l, 0.72) c h);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .close {
+        transition: none;
     }
 }

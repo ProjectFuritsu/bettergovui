@@ -14,16 +14,18 @@ const LINKS = [
 const controls = {
     orientation: {type: "select", options: ["horizontal", "vertical"] as const, default: "horizontal"},
     gap: {type: "size", default: "", optional: true},
+    // "default" leaves the prop unset: the current page is marked in gray
+    color: {type: "themeColor", default: "default", none: "default"},
     // Not props: what the demo links have
     icons: {type: "boolean", default: true},
     badge: {type: "boolean", default: true},
 } satisfies Controls;
 
 // A component so it can remember which link was clicked
-function NavbarDemo({icons, badge, gap, ...props}: ValuesOf<typeof controls>) {
+function NavbarDemo({icons, badge, gap, color, ...props}: ValuesOf<typeof controls>) {
     const [current, setCurrent] = useState("Home");
     return (
-        <Navbar gap={gap === "" ? undefined : gap} style={{width: props.orientation === "vertical" ? 240 : undefined}} {...props}>
+        <Navbar gap={gap === "" ? undefined : gap} color={color === "default" ? undefined : color} style={{width: props.orientation === "vertical" ? 240 : undefined}} {...props}>
             {LINKS.map(({label, icon: Icon, ...link}) => (
                 <NavLink
                     key={label}

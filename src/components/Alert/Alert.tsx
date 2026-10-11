@@ -11,9 +11,9 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
     title?: ReactNode;
     /**
      * How the alert looks:
-     * - `"light"`: soft tinted background (default)
-     * - `"filled"`: solid background, white text
-     * - `"outline"`: border only, no background
+     * - `"light"`: a plain bordered box; the icon takes the color (default)
+     * - `"filled"`: solid background, with black or white text, whichever is readable on it
+     * - `"outline"`: colored border, no background
      */
     variant?: AlertVariant;
     /** "info", "success", "warning", "danger", "primary", or any CSS color. Default "info". */
@@ -25,8 +25,8 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
     /** What screen readers say for the close button. Default "Close". */
     closeLabel?: string;
     /**
-     * For `variant="filled"`: use black or white text, whichever is easier to read on the color
-     * (instead of always white). Useful for light colors like "warning".
+     * For `variant="filled"`: use black or white text, whichever is easier to read on the color.
+     * Browsers that support it now always do this, so the prop is only kept for compatibility.
      */
     autoContrast?: boolean;
 }

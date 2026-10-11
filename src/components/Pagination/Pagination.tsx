@@ -33,9 +33,9 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, "onCh
     withEdges?: boolean;
     /** A preset ("xs"–"xl"), a number in pixels, or any CSS length. Default "md". */
     size?: Size;
-    /** Color of the current page: "primary", "success"… or any CSS color. Default "primary". */
+    /** Fill the current page with a color: "primary", "success"… or any CSS color. Default: none (an outlined button). */
     color?: Color;
-    /** Black or white text on the current page, whichever is easier to read on the color. */
+    /** Black or white text on the current page, whichever is easier to read on the color. This now always happens, so the prop isn't needed. */
     autoContrast?: boolean;
     /** Turn off every button. */
     disabled?: boolean;

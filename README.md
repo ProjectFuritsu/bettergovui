@@ -35,7 +35,7 @@ Most UI kits are general-purpose. This one is made for one job: **public service
 - ♿ **Accessible by default.** Keyboard support, screen reader labels, real HTML landmarks, a skip link, readable
   contrast in light and dark mode, and less motion for people who ask for it.
 - 📱 **Light for slow phones.** No dependencies besides React, and under 50 KB gzipped. It uses the browser's own
-  date picker, dialogs and `<details>`, which work well on low-cost phones.
+  dialogs and `<details>`, which work well on low-cost phones.
 - ⚡ **A page in minutes.** `LandingPage` and 9 blocks, plus a toolkit to try everything on phone, tablet and desktop,
   and copy the code.
 
@@ -140,6 +140,16 @@ npm run dev
 ```
 
 Then open http://localhost:5173.
+
+The toolkit also helps you put a page together:
+
+- **Sections**: several ready-made versions of each page section (headers, heroes, features, footers…).
+  Copy the code of the one you like.
+- **Templates**: whole landing pages, ready to copy.
+- **Page builder**: mix and match sections into your own page and edit their texts. It is saved in your browser.
+  Share it with **Copy share link** or **Copy JSON**; whoever opens the link or pastes the JSON under **Import**
+  gets their own copy to keep building on. No account or server is involved: the page is only data, so it
+  looks the same for everyone. **Copy code** gives the page as a React component.
 
 <p align="center">
     <img src="docs/images/table-dark.png" width="900" alt="The toolkit in dark mode, showing a sortable table of applications with status badges">

@@ -8,9 +8,10 @@ The components are built to work for everyone:
 
 - **Keyboard:** everything works without a mouse, and focus is always visible.
 - **Screen readers:** components have proper labels, roles and descriptions. Errors, required fields and the current page or step are announced.
-- **Contrast:** text, links, outlines and form controls meet the WCAG contrast guidelines in light and dark mode.
-  The default `--primary` (`#0d6efd`) gives white text exactly the 4.5:1 minimum. If you change `--primary`,
-  check that white text on it is still readable, or use `autoContrast` (see below).
+- **Contrast:** text and links meet the WCAG contrast guidelines in light and dark mode. Text on a solid color is
+  black or white, whichever is easier to read, picked automatically for any color.
+  The outlines of form controls use the soft gray `--input` (the shadcn/ui look), which is below the 3:1 that WCAG
+  asks for control outlines. If you need that, set a darker one: `:root { --input: #8c8c8c; }`.
 - **Reduced motion:** animations slow down or stop when the user asks their device for less motion.
 
 A few things are up to you:

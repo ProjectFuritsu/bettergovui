@@ -1,17 +1,21 @@
-/* Looks like a key: a thicker bottom edge gives it some depth */
+/* Looks like a key: a small soft-gray tile, no outline */
 .kbd {
-    display: inline-block;
-    min-width: 1.75em;
-    padding: 0.125em 0.4em;
-    border: 1px solid var(--border-strong);
-    border-bottom-width: 2px;
-    border-radius: 4px;
-    background: var(--surface);
-    color: var(--text);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.8125em;
-    font-weight: 600;
-    line-height: 1.4;
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    /* In em of its own text: 20px tall and at least 20px wide at 12px text */
+    min-width: 1.6667em;
+    height: 1.6667em;
+    padding: 0 0.3333em;
+    border-radius: calc(var(--radius) - 4px);
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    /* The same font as the text around it (browsers give <kbd> a monospace font otherwise) */
+    font-family: inherit;
+    /* Three quarters of the text around it: 12px in normal 16px text */
+    font-size: 0.75em;
+    font-weight: 500;
+    line-height: 1;
     white-space: nowrap;
 }

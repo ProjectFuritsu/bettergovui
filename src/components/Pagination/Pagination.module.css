@@ -1,73 +1,101 @@
 .pagination {
-    /* The size and color props override these (see Pagination.tsx) */
-    --pagination-size: 1rem;
-    --pagination-color: var(--primary);
+    /*
+     * The size prop overrides this (see Pagination.tsx). The color prop sets --pagination-color, which
+     * has no default here on purpose: without it the current page is a plain outlined button.
+     */
+    --pagination-size: 0.875rem;
     font-size: var(--pagination-size);
 }
 
 .pagination[data-size="xs"] { --pagination-size: 0.75rem; }
-.pagination[data-size="sm"] { --pagination-size: 0.875rem; }
-.pagination[data-size="md"] { --pagination-size: 1rem; }
-.pagination[data-size="lg"] { --pagination-size: 1.125rem; }
-.pagination[data-size="xl"] { --pagination-size: 1.25rem; }
+.pagination[data-size="sm"] { --pagination-size: 0.8125rem; }
+.pagination[data-size="md"] { --pagination-size: 0.875rem; }
+.pagination[data-size="lg"] { --pagination-size: 1rem; }
+.pagination[data-size="xl"] { --pagination-size: 1.125rem; }
 
 .list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.375em;
+    gap: 0.2857em; /* 4px at 14px text */
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-/* Every button is at least a square, so 1-digit and 2-digit pages look alike */
+/*
+ * Every button is at least a square (36px at the default size), so 1-digit and 2-digit pages look
+ * alike. They have no border or background until hovered; the transparent border keeps them the
+ * same size as the current page, which has one.
+ */
 .control {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.25em;
-    height: 2.25em;
+    box-sizing: border-box;
+    min-width: 2.5714em;
+    height: 2.5714em;
     padding: 0 0.5em;
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius);
-    background: var(--surface);
+    background: transparent;
     color: var(--text);
     font: inherit;
-    font-size: 0.875em;
-    font-weight: 600;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
     cursor: pointer;
-    transition: background-color 0.15s, border-color 0.15s;
+    transition:
+        color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.control:hover:not(:disabled) {
+.control:hover:not(:disabled, [aria-current="page"]) {
     background: var(--surface-muted);
 }
 
 .control:focus-visible {
-    outline: 2px solid var(--pagination-color);
-    outline-offset: 2px;
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
+}
+
+.control[aria-current="page"]:focus-visible {
+    border-color: var(--ring);
 }
 
 .control:disabled {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* The current page */
+/* The current page: an outlined button, or filled with the color when the color prop is set */
 .control[aria-current="page"] {
-    border-color: var(--pagination-color);
-    background: var(--pagination-color);
-    color: white;
+    border-color: var(--pagination-color, var(--border));
+    background: var(--pagination-color, var(--surface));
+    color: var(--text); /* for old browsers */
     cursor: default;
 }
 
-/* autoContrast: black or white text on the current page. Same rule as Badge.module.css. */
+[data-theme="dark"] .control[aria-current="page"] {
+    border-color: var(--pagination-color, var(--input));
+    background: var(--pagination-color, color-mix(in oklab, var(--input) 30%, transparent));
+}
+
+/* Old browsers, with the color prop (Pagination.tsx writes it into the style attribute): the text color made for the primary color */
+.pagination[style*="--pagination-color"] .control[aria-current="page"] {
+    color: var(--primary-contrast);
+}
+
+/*
+ * Black or white text on the current page, whichever is readable on what's behind it: the color, or
+ * the page's own background when there's no color prop. Always on, so the autoContrast prop isn't
+ * needed for this anymore (it still works). Same rule as Badge.module.css.
+ */
 @supports (color: color(from red srgb-linear clamp(0, r * 2, 1) g b)) {
-    .pagination[data-auto-contrast] .control[aria-current="page"] {
+    .pagination .control[aria-current="page"] {
         color: color(
-            from var(--pagination-color) srgb-linear
+            from var(--pagination-color, var(--surface)) srgb-linear
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
             clamp(0, (0.179 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 10000, 1)
@@ -79,16 +107,23 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 1.5em;
+    min-width: 2.5714em;
+    height: 2.5714em;
     color: var(--text-muted);
 }
 
 .icon {
-    width: 1.125em;
-    height: 1.125em;
+    width: 1.143em; /* 16px at 14px text */
+    height: 1.143em;
     fill: none;
     stroke: currentColor;
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .control {
+        transition: none;
+    }
 }

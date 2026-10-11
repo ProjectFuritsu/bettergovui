@@ -1,39 +1,36 @@
 .root {
-    /* The size prop overrides this (see Select.tsx) */
-    --select-size: 1rem;
-    --select-error-text: color-mix(in srgb, var(--danger) 80%, black);
+    /* The size prop overrides this (see Select.tsx). md is 14px text in a 36px tall field. */
+    --select-size: 0.875rem;
     display: flex;
     flex-direction: column;
-    gap: 0.375em;
+    /* 8px at md, between the label, the helper text, the field and the error */
+    gap: 0.5714em;
     width: 100%;
     font-size: var(--select-size);
 }
 
-[data-theme="dark"] .root {
-    --select-error-text: color-mix(in srgb, var(--danger) 75%, white);
-}
-
 .root[data-size="xs"] { --select-size: 0.75rem; }
-.root[data-size="sm"] { --select-size: 0.875rem; }
-.root[data-size="md"] { --select-size: 1rem; }
-.root[data-size="lg"] { --select-size: 1.125rem; }
-.root[data-size="xl"] { --select-size: 1.25rem; }
+.root[data-size="sm"] { --select-size: 0.8125rem; }
+.root[data-size="md"] { --select-size: 0.875rem; }
+.root[data-size="lg"] { --select-size: 1rem; }
+.root[data-size="xl"] { --select-size: 1.125rem; }
 
 /* Label, description and error match Input */
 .label {
-    font-size: 0.875em;
-    font-weight: 600;
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1;
     color: var(--text);
 }
 
 .required {
-    color: var(--select-error-text);
+    color: var(--danger);
 }
 
 .description,
 .error {
     margin: 0;
-    font-size: 0.8125em;
+    font-size: 1em;
     line-height: 1.4;
 }
 
@@ -42,22 +39,38 @@
 }
 
 .error {
-    color: var(--select-error-text);
+    color: var(--danger);
 }
 
 /* The bordered box. The <select> fills all of it, so clicking anywhere (even the arrow) opens it. */
 .field {
+    box-sizing: border-box;
     position: relative;
     display: flex;
-    border: 1px solid var(--border-strong);
+    /* Same height as Input and Button: 36px at md, border included */
+    min-height: 2.5714em;
+    border: 1px solid var(--input);
     border-radius: var(--radius);
-    background: var(--surface);
-    transition: border-color 0.15s, box-shadow 0.15s;
+    background: transparent;
+    transition: color, background-color, border-color, box-shadow;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* In the dark theme the field is a little lighter than the page, and lighter still under the pointer */
+[data-theme="dark"] .field {
+    background: color-mix(in oklab, var(--input) 30%, transparent);
+}
+
+[data-theme="dark"] .field:hover:not(:has(.select:disabled, .trigger:disabled)) {
+    background: color-mix(in oklab, var(--input) 50%, transparent);
+}
+
+/* The focus ring: a soft 3px halo, like Input */
 .field:focus-within {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+    border-color: var(--ring);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
 }
 
 .field[data-invalid] {
@@ -65,12 +78,20 @@
 }
 
 .field[data-invalid]:focus-within {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+    outline-color: color-mix(in oklab, var(--danger) 20%, transparent);
+}
+
+[data-theme="dark"] .field[data-invalid]:focus-within {
+    outline-color: color-mix(in oklab, var(--danger) 40%, transparent);
 }
 
 .field[data-disabled] {
-    background: var(--surface-muted);
-    opacity: 0.6;
+    opacity: 0.5;
+}
+
+/* Also when a Fieldset around it is disabled (its own rule: browsers without :has() skip only this one) */
+.field:has(.select:disabled, .trigger:disabled) {
+    opacity: 0.5;
 }
 
 .select {
@@ -78,9 +99,10 @@
     flex: 1;
     min-width: 0;
     margin: 0;
-    /* Same height as Input and Button: 2 × 0.625em padding + 1.25em line + border */
-    padding: 0.625em 2.5em 0.625em 0.75em;
+    /* Room on the right for the arrow: its 16px, plus 12px on each side */
+    padding: 0 2.5714em 0 0.857em;
     border: none;
+    border-radius: inherit;
     outline: none; /* the field shows the focus ring instead */
     background: transparent;
     color: var(--text);
@@ -89,8 +111,206 @@
     cursor: pointer;
 }
 
-.field[data-left-icon] .select {
-    padding-left: 2.5em;
+.field[data-left-icon] .select,
+.field[data-left-icon] .trigger {
+    padding-left: 2.5714em;
+}
+
+/* ---------- The kit's own list (the default; `native` shows the <select> above instead) ---------- */
+
+/* The field is a button: the chosen text (or the grey placeholder), cut with "…" when it's too long */
+.trigger {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0 2.5714em 0 0.857em;
+    border: none;
+    border-radius: inherit;
+    outline: none; /* the field shows the focus ring instead */
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+}
+
+.trigger:disabled {
+    cursor: not-allowed;
+}
+
+.trigger[data-empty] {
+    color: var(--text-muted);
+}
+
+.value {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* The real <select>: there for forms and onChange, but not seen. Kept under the field's middle,
+   so the browser's "choose an item" message points at the field. */
+.hiddenSelect {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.popover {
+    /* The size prop overrides this (see Select.tsx), so the list grows with the field */
+    --select-size: 0.875rem;
+    position: fixed;
+    /* Above everything else on the page */
+    z-index: 1000;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* Never taller than the room under (or above) the field; the choices scroll inside */
+    max-height: min(24em, var(--select-room, 24em));
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 4px);
+    background: var(--surface-raised);
+    color: var(--text);
+    font-size: var(--select-size);
+    line-height: 1.25;
+    overflow: hidden;
+    /* Fades in while growing slightly, from the side of the field */
+    transform-origin: var(--select-origin, top) left;
+    animation: select-in 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.popover[data-size="xs"] { --select-size: 0.75rem; }
+.popover[data-size="sm"] { --select-size: 0.8125rem; }
+.popover[data-size="md"] { --select-size: 0.875rem; }
+.popover[data-size="lg"] { --select-size: 1rem; }
+.popover[data-size="xl"] { --select-size: 1.125rem; }
+
+@keyframes select-in {
+    from {
+        opacity: 0;
+        scale: 0.95;
+    }
+}
+
+/* The search box: stays at the top while the choices scroll */
+.search {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.5714em;
+    padding: 0 0.857em;
+    border-bottom: 1px solid var(--border);
+}
+
+.searchIcon,
+.check {
+    flex: none;
+    width: 1.143em;
+    height: 1.143em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.searchIcon {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.searchInput {
+    flex: 1;
+    min-width: 0;
+    height: 2.857em;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+}
+
+.searchInput::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+.list {
+    flex: 1;
+    min-height: 0;
+    padding: 0.4286em;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    outline: none;
+}
+
+/* A heading above a group of choices (from <optgroup label>) */
+.group {
+    padding: 0.5714em 0.714em 0.2857em;
+    color: var(--text-muted);
+    font-size: 0.857em;
+}
+
+/* One choice: 36px at md. A long one wraps onto more lines instead of being cut. */
+.option {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 0.5714em;
+    min-height: 2.5714em;
+    padding: 0.4286em 0.714em;
+    border-radius: var(--radius);
+    cursor: pointer;
+    user-select: none;
+}
+
+.optionLabel {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Under the pointer, or where the keyboard is */
+.option[data-active] {
+    background: var(--surface-muted);
+}
+
+.option[aria-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.check {
+    color: var(--text-muted);
+}
+
+.empty {
+    padding: 1.143em 0.714em;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* On touch screens: taller choices, and 16px search text so iPhones don't zoom in on it */
+@media (pointer: coarse) {
+    .option {
+        min-height: 3.143em;
+    }
+
+    .searchInput {
+        font-size: max(1em, 16px);
+    }
 }
 
 /* The placeholder is grey, like an Input's placeholder */
@@ -104,7 +324,7 @@
  */
 .select option,
 .select optgroup {
-    background-color: var(--surface);
+    background-color: var(--surface-raised);
     color: var(--text);
 }
 
@@ -116,13 +336,24 @@
     cursor: not-allowed;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .field {
+        transition: none;
+    }
+
+    .popover {
+        animation: none;
+    }
+}
+
 /* ---------- Icons: drawn on top, clicks pass through to the select ---------- */
 
+/* 16px at md */
 .icon {
     position: absolute;
     top: 50%;
-    width: 1.125em;
-    height: 1.125em;
+    width: 1.143em;
+    height: 1.143em;
     transform: translateY(-50%);
     color: var(--text-muted);
     pointer-events: none;
@@ -134,15 +365,17 @@
 }
 
 .leftIcon {
-    left: 0.75em;
+    left: 0.857em;
     display: inline-flex;
 }
 
+/* The arrow is half as strong as the text next to it */
 .chevron {
-    right: 0.75em;
+    right: 0.857em;
     fill: none;
     stroke: currentColor;
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+    opacity: 0.5;
 }

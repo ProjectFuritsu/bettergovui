@@ -37,7 +37,7 @@ export interface TableProps<Row> extends Omit<TableHTMLAttributes<HTMLTableEleme
     data: Row[];
     /** A field (or function) that's unique for each row, like an id. Default: the row's position. */
     rowKey?: keyof Row | ((row: Row, index: number) => Key);
-    /** The table's title, shown above it. It's also the table's name for screen readers, so use one. */
+    /** The table's title, shown under it in muted text. It's also the table's name for screen readers, so use one. */
     caption?: ReactNode;
     /** A light background on every other row, to help eyes follow wide rows. */
     striped?: boolean;

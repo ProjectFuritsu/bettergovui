@@ -1,0 +1,239 @@
+/* The label, helper text, error and the field's box come from Input.module.css. */
+
+/* The field is a button: the calendar icon, then the date (or the grey placeholder) */
+.trigger {
+    width: 100%;
+    font: inherit;
+    line-height: 1.25;
+    text-align: left;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.trigger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.trigger[data-empty] .value {
+    color: var(--text-muted);
+}
+
+.value {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 16px at md */
+.icon {
+    flex: none;
+    width: 1.143em;
+    height: 1.143em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    color: var(--text-muted);
+}
+
+/* ---------- The calendar ---------- */
+
+.popover {
+    /* The size prop overrides this (see DateInput.tsx), so the calendar grows with the field */
+    --input-size: 0.875rem;
+    /* One day: 38px at md. The calendar is 7 of these wide. */
+    --day-size: 2.7143em;
+    position: fixed;
+    z-index: 1000;
+    box-sizing: border-box;
+    padding: 0.857em;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 4px);
+    background: var(--surface-raised);
+    color: var(--text);
+    font-size: var(--input-size);
+    line-height: 1.25;
+    /* Fades in while growing slightly, from the side of the field */
+    transform-origin: top left;
+    animation: calendar-in 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.popover[data-side="top"] {
+    transform-origin: bottom left;
+}
+
+.popover[data-size="xs"] { --input-size: 0.75rem; }
+.popover[data-size="sm"] { --input-size: 0.8125rem; }
+.popover[data-size="md"] { --input-size: 0.875rem; }
+.popover[data-size="lg"] { --input-size: 1rem; }
+.popover[data-size="xl"] { --input-size: 1.125rem; }
+
+@keyframes calendar-in {
+    from {
+        opacity: 0;
+        scale: 0.95;
+    }
+}
+
+/* Previous month, the month's name, next month */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5714em;
+}
+
+.month {
+    font-weight: 500;
+}
+
+.nav,
+.day {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--day-size);
+    height: var(--day-size);
+    padding: 0;
+    border: none;
+    border-radius: var(--radius);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: color, background-color;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav svg {
+    width: 1.143em;
+    height: 1.143em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.nav:hover:not(:disabled),
+.day:hover:not(:disabled):not([data-selected]) {
+    background: var(--surface-muted);
+}
+
+.nav:focus-visible,
+.day:focus-visible {
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
+    /* Above the days next to it, so they don't cover the ring */
+    position: relative;
+    z-index: 1;
+}
+
+.nav:disabled,
+.day:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* Days sit side by side, with 8px between the weeks */
+.grid {
+    border-collapse: separate;
+    border-spacing: 0 0.5714em;
+    margin: -0.5714em 0;
+}
+
+.weekday {
+    width: var(--day-size);
+    height: var(--day-size);
+    padding: 0;
+    color: var(--text-muted);
+    font-size: 0.857em;
+    font-weight: 400;
+    text-align: center;
+}
+
+.cell {
+    padding: 0;
+}
+
+.day {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Days of the month before and after */
+.day[data-outside] {
+    color: var(--text-muted);
+}
+
+.day[data-today] {
+    background: var(--surface-muted);
+}
+
+.day[data-selected] {
+    background: var(--primary);
+    color: var(--primary-contrast);
+}
+
+/* ---------- The time, with withTime ---------- */
+
+.time {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.857em;
+    margin-top: 0.857em;
+    padding-top: 0.857em;
+    border-top: 1px solid var(--border);
+}
+
+.timeLabel {
+    font-weight: 500;
+}
+
+.timeInput {
+    box-sizing: border-box;
+    min-height: 2.5714em;
+    padding: 0 0.857em;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+}
+
+[data-theme="dark"] .timeInput {
+    background: color-mix(in oklab, var(--input) 30%, transparent);
+}
+
+.timeInput:focus-visible {
+    border-color: var(--ring);
+    outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 0;
+}
+
+.timeInput:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Typed, not picked: no browser clock button */
+.timeInput::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .popover {
+        animation: none;
+    }
+
+    .nav,
+    .day {
+        transition: none;
+    }
+}
